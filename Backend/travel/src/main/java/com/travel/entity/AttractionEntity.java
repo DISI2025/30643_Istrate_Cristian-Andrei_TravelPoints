@@ -28,6 +28,9 @@ public class AttractionEntity {
     private String offers;
 
     @Column(nullable = false)
+    private String category;
+
+    @Column(nullable = false)
     private double latitude;
 
     @Column(nullable = false)
