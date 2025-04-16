@@ -35,4 +35,8 @@ public class AttractionService {
     public AttractionEntity updateOrAddAttraction(AttractionEntity attractionEntity) {
         return attractionRepository.save(attractionEntity);
     }
+
+    public void deleteAttraction(Long id) {
+        attractionRepository.deleteById(id);
+    }
 }
