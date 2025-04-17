@@ -1,7 +1,10 @@
 package com.travel.controller;
 
+import com.travel.dtos.AttractionRequestDTO;
+import com.travel.dtos.AttractionResponseDTO;
 import com.travel.entity.AttractionEntity;
 import com.travel.entity.ItemNotFoundException;
+import com.travel.mapper.AttractionMapper;
 import com.travel.service.AttractionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -10,8 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
 
 
 // port 8081 is assigned FOR NOW to be the port for the frontend server
@@ -28,17 +31,17 @@ public class AttractionController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<AttractionEntity>> getAllAdmins() {
-        List<AttractionEntity> admins = attractionService.getAllAttractions();
-        return new ResponseEntity<>(admins, HttpStatus.OK);
+    public ResponseEntity<List<AttractionResponseDTO>> getAllAdmins() {
+        List<AttractionResponseDTO> attractions = attractionService.getAllAttractions();
+        return new ResponseEntity<>(attractions, HttpStatus.OK);
     }
 
     @GetMapping("find/{id}")
     public ResponseEntity<?> getAdminById(@PathVariable("id") Long id) {
         try {
-            Optional<AttractionEntity> attractionEntity = attractionService.getAttractionById(id);
-            return new ResponseEntity<>(attractionEntity, HttpStatus.OK);
-        } catch (ItemNotFoundException e) {
+            AttractionResponseDTO existing = attractionService.getAttractionById(id);
+            return new ResponseEntity<>(existing, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>("Attraction with id: " + id + " not found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -46,31 +49,41 @@ public class AttractionController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addAdmin(@RequestBody AttractionEntity attractionEntity) {
+    public ResponseEntity<?> addAdmin(@RequestBody AttractionRequestDTO attractionRequestDTO) {
         try {
-            AttractionEntity saved = attractionService.updateOrAddAttraction(attractionEntity);
+            AttractionResponseDTO saved = attractionService.addAttraction(attractionRequestDTO);
             return new ResponseEntity<>(saved, HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>("Missing required fields", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Missing required field: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateAttraction(@RequestBody AttractionEntity attractionEntity) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateAttraction(@PathVariable("id") Long id, @RequestBody AttractionRequestDTO attractionRequestDTO) {
         try {
-            Optional<AttractionEntity> existing = attractionService.getAttractionById(attractionEntity.getId());
-            if (existing.isEmpty()) {
-                return new ResponseEntity<>("Attraction with id: " + attractionEntity.getId() + " not found", HttpStatus.NOT_FOUND);
-            }
-            AttractionEntity updated = attractionService.updateOrAddAttraction(attractionEntity);
-            return new ResponseEntity<>(updated, HttpStatus.OK);
+            AttractionResponseDTO existing = attractionService.getAttractionById(id);
+            existing = attractionService.updateAttraction(id, attractionRequestDTO);
+            return new ResponseEntity<>(existing, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("Attraction with id: " + id + " not found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage() + " " + e.getClass().getName(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteAttraction(@PathVariable("id") Long id) {
+        try {
+            attractionService.deleteAttraction(id);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("Attraction with id: " + id + " not found", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
