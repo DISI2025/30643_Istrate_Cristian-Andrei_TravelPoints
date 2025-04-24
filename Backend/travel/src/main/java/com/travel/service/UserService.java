@@ -61,4 +61,12 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public UserResponseDTO registerUser(UserRequestDTO userRequestDTO) {
+        if (userRepository.findByEmail(userRequestDTO.getEmail()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
+        }
+        UserEntity user = userMapper.toEntity(userRequestDTO);
+        return userMapper.toDTO(userRepository.save(user));
+    }
+
 }

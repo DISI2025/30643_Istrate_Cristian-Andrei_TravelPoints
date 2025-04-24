@@ -11,7 +11,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
-@RequestMapping("/attraction")
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
 
@@ -48,5 +48,11 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseDTO> register(@RequestBody UserRequestDTO userRequestDTO) {
+        UserResponseDTO createdUser = userService.registerUser(userRequestDTO);
+        return ResponseEntity.status(201).body(createdUser);
     }
 }
