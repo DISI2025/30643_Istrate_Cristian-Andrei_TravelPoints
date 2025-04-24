@@ -62,12 +62,20 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public UserResponseDTO registerUser(UserRequestDTO userRequestDTO) {
+        if (userRepository.findByEmail(userRequestDTO.getEmail()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
+        }
+        UserEntity user = userMapper.toEntity(userRequestDTO);
+        return userMapper.toDTO(userRepository.save(user));
+    }
+
     public UserResponseDTO loginUser(LoginRequestDTO loginRequest) {
         UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
 
         if (!user.getPassword().equals(loginRequest.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
 
         return userMapper.toDTO(user);
