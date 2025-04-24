@@ -1,5 +1,6 @@
 package com.travel.service;
 
+import com.travel.dtos.LoginRequestDTO;
 import com.travel.entity.UserEntity;
 import com.travel.mapper.UserMapper;
 import com.travel.dtos.UserRequestDTO;
@@ -61,4 +62,14 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public UserResponseDTO loginUser(LoginRequestDTO loginRequest) {
+        UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
+
+        if (!user.getPassword().equals(loginRequest.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+        }
+
+        return userMapper.toDTO(user);
+    }
 }
