@@ -1,5 +1,6 @@
 package com.travel.controller;
 
+import com.travel.dtos.LoginRequestDTO;
 import com.travel.dtos.UserRequestDTO;
 import com.travel.service.UserService;
 import com.travel.dtos.UserResponseDTO;
@@ -54,5 +55,11 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> register(@RequestBody UserRequestDTO userRequestDTO) {
         UserResponseDTO createdUser = userService.registerUser(userRequestDTO);
         return ResponseEntity.status(201).body(createdUser);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+        UserResponseDTO user = userService.loginUser(loginRequestDTO);
+        return ResponseEntity.ok(user);
     }
 }
