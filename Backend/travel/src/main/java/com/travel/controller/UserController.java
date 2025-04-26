@@ -4,11 +4,15 @@ import com.travel.dtos.LoginRequestDTO;
 import com.travel.dtos.UserRequestDTO;
 import com.travel.service.UserService;
 import com.travel.dtos.UserResponseDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -52,14 +56,26 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> register(@RequestBody UserRequestDTO userRequestDTO) {
-        UserResponseDTO createdUser = userService.registerUser(userRequestDTO);
-        return ResponseEntity.status(201).body(createdUser);
+    public ResponseEntity<?> register(@Valid @RequestBody UserRequestDTO userRequestDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getAllErrors()
+                    .stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(", "));
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+        return ResponseEntity.status(201).body(userService.registerUser(userRequestDTO));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
-        UserResponseDTO user = userService.loginUser(loginRequestDTO);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getAllErrors()
+                    .stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(", "));
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+        return ResponseEntity.ok(userService.loginUser(loginRequestDTO));
     }
 }
