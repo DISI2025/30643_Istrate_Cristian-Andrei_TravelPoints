@@ -1,15 +1,16 @@
 package com.travel.service;
 
-import com.travel.dtos.LoginRequestDTO;
 import com.travel.entity.UserEntity;
 import com.travel.mapper.UserMapper;
 import com.travel.dtos.UserRequestDTO;
 import com.travel.dtos.UserResponseDTO;
+import com.travel.dtos.LoginRequestDTO;
 import org.springframework.http.HttpStatus;
 import com.travel.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -17,11 +18,13 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponseDTO addUser(UserRequestDTO userRequestDTO) {
@@ -29,6 +32,9 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
         UserEntity user = userMapper.toEntity(userRequestDTO);
+        if (user.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         return userMapper.toDTO(userRepository.save(user));
     }
 
@@ -48,7 +54,7 @@ public class UserService {
                     user.setName(userRequestDTO.getName());
                     user.setEmail(userRequestDTO.getEmail());
                     if (userRequestDTO.getPassword() != null) {
-                        user.setPassword(userRequestDTO.getPassword());
+                        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
                     }
                     return userMapper.toDTO(userRepository.save(user));
                 })
@@ -67,17 +73,18 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
         UserEntity user = userMapper.toEntity(userRequestDTO);
+        if (user.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         return userMapper.toDTO(userRepository.save(user));
     }
 
     public UserResponseDTO loginUser(LoginRequestDTO loginRequest) {
         UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
-
-        if (!user.getPassword().equals(loginRequest.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
-
         return userMapper.toDTO(user);
     }
 }
