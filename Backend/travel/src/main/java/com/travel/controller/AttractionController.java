@@ -6,10 +6,14 @@ import com.travel.entity.AttractionEntity;
 import com.travel.entity.ItemNotFoundException;
 import com.travel.mapper.AttractionMapper;
 import com.travel.service.AttractionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,13 +35,13 @@ public class AttractionController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<AttractionResponseDTO>> getAllAdmins() {
+    public ResponseEntity<List<AttractionResponseDTO>> getAllAttractions() {
         List<AttractionResponseDTO> attractions = attractionService.getAllAttractions();
         return new ResponseEntity<>(attractions, HttpStatus.OK);
     }
 
     @GetMapping("find/{id}")
-    public ResponseEntity<?> getAdminById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getAttractionById(@PathVariable("id") Long id) {
         try {
             AttractionResponseDTO existing = attractionService.getAttractionById(id);
             return new ResponseEntity<>(existing, HttpStatus.OK);
@@ -49,7 +53,7 @@ public class AttractionController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addAdmin(@RequestBody AttractionRequestDTO attractionRequestDTO) {
+    public ResponseEntity<?> addAttraction(@Valid @RequestBody AttractionRequestDTO attractionRequestDTO) {
         try {
             AttractionResponseDTO saved = attractionService.addAttraction(attractionRequestDTO);
             return new ResponseEntity<>(saved, HttpStatus.CREATED);

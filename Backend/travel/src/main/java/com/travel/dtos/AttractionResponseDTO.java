@@ -10,8 +10,8 @@ public class AttractionResponseDTO {
     private String location;
     private String offers;
     private String category;
-    private double latitude;
-    private double longitude;
-    private double price;
-    private double oldPrice;
+    private Double latitude;
+    private Double longitude;
+    private Double price;
+    private Double oldPrice;
 }

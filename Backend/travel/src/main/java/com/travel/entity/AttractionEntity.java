@@ -31,15 +31,15 @@ public class AttractionEntity {
     private String category;
 
     @Column(nullable = false)
-    private double latitude;
+    private Double latitude;
 
     @Column(nullable = false)
-    private double longitude;
+    private Double longitude;
 
     @Column(nullable = false)
-    private double price;
+    private Double price;
 
     @Column(nullable = false)
-    private double oldPrice;
+    private Double oldPrice;
 
 }
