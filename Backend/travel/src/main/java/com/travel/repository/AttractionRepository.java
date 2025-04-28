@@ -22,6 +22,8 @@ public interface AttractionRepository extends JpaRepository<AttractionEntity,Lon
 
     List<AttractionEntity> findByPriceLessThan(Double price);
 
+    List<AttractionEntity> findByNameContainingIgnoreCase(String name);
+
 
 
 }

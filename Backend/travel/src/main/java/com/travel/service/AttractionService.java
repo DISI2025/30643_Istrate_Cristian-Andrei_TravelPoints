@@ -81,7 +81,7 @@ public class AttractionService {
         if (price != null) {
             filteredAttractions = attractionRepository.findByPriceLessThan(price);
         } else {
-            filteredAttractions = attractionRepository.findAll(); // Or throw an exception if no price is provided
+            filteredAttractions = attractionRepository.findAll();
         }
 
         if (filteredAttractions.isEmpty()) {
@@ -92,6 +92,23 @@ public class AttractionService {
                 .map(attractionMapper::toDTO)
                 .toList();
     }
+
+    public List<AttractionResponseDTO> filterAttractionsByName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Attraction name cannot be null or empty.");
+        }
+
+        List<AttractionEntity> filteredAttractions = attractionRepository.findByNameContainingIgnoreCase(name);
+
+        if (filteredAttractions.isEmpty()) {
+            throw new NoSuchElementException("No attractions found with the name: " + name);
+        }
+
+        return filteredAttractions.stream()
+                .map(attractionMapper::toDTO)
+                .toList();
+    }
+
 
 
 

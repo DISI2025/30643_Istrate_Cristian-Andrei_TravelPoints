@@ -95,6 +95,23 @@ public class AttractionController {
         }
     }
 
+    @GetMapping("/filterByName")
+    public ResponseEntity<?> filterAttractionsByName(
+            @RequestParam(required = false) String name
+    ) {
+        try {
+            List<AttractionResponseDTO> attractions = attractionService.filterAttractionsByName(name);
+            return new ResponseEntity<>(attractions, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>("Attraction name cannot be null or empty.", HttpStatus.BAD_REQUEST);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("No attractions found with the name: " + name, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
 
 
