@@ -86,10 +86,6 @@ public class AttractionService {
     }
 
     public List<AttractionResponseDTO> filterAttractionsByName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Attraction name cannot be null or empty.");
-        }
-
         List<AttractionEntity> filteredAttractions = attractionRepository.findByNameContainingIgnoreCase(name);
 
         if (filteredAttractions.isEmpty()) {
@@ -100,6 +96,7 @@ public class AttractionService {
                 .map(attractionMapper::toDTO)
                 .toList();
     }
+
 
 
     public AttractionResponseDTO addAttraction(AttractionRequestDTO attraction) {
