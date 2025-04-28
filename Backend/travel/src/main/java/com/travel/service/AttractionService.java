@@ -42,6 +42,59 @@ public class AttractionService {
         return attractionRepository.findAll().stream().map(attraction -> attractionMapper.toDTO(attraction)).toList();
     }
 
+
+    public List<AttractionResponseDTO> filterAttractionsByLocation(String location) {
+        List<AttractionEntity> filteredAttractions;
+
+        if (location != null ) {
+            filteredAttractions = attractionRepository.findByLocation(location);
+       } else {
+            filteredAttractions = attractionRepository.findAll();
+        }
+
+        if (filteredAttractions.isEmpty()) {
+            throw new NoSuchElementException("No attractions found for the given location.");
+        }
+
+        return filteredAttractions.stream()
+                .map(attractionMapper::toDTO)
+                .toList();
+    }
+
+
+    public List<AttractionResponseDTO> filterAttractionsByCategory(String category) {
+        List<AttractionEntity> filteredAttractions = attractionRepository.findByCategory(category);
+
+        if (filteredAttractions.isEmpty()) {
+            throw new NoSuchElementException("No attractions found for the given category: " + category);
+        }
+
+        return filteredAttractions.stream()
+                .map(attractionMapper::toDTO)
+                .toList();
+    }
+
+
+    public List<AttractionResponseDTO> filterAttractionsByPrice(Double price) {
+        List<AttractionEntity> filteredAttractions;
+
+        if (price != null) {
+            filteredAttractions = attractionRepository.findByPriceLessThan(price);
+        } else {
+            filteredAttractions = attractionRepository.findAll(); // Or throw an exception if no price is provided
+        }
+
+        if (filteredAttractions.isEmpty()) {
+            throw new NoSuchElementException("No attractions found for the given price.");
+        }
+
+        return filteredAttractions.stream()
+                .map(attractionMapper::toDTO)
+                .toList();
+    }
+
+
+
     public AttractionResponseDTO addAttraction(AttractionRequestDTO attraction) {
         return attractionMapper.toDTO(attractionRepository.save(attractionMapper.toEntity(attraction)));
     }

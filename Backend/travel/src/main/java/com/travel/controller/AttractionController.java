@@ -52,6 +52,52 @@ public class AttractionController {
         }
     }
 
+    @GetMapping("/filterByLocation")
+    public ResponseEntity<?> filterAttractionsByLocation(
+            @RequestParam(required = false) String location
+    ) {
+        try {
+            List<AttractionResponseDTO> attractions = attractionService.filterAttractionsByLocation(location);
+            return new ResponseEntity<>(attractions, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("No attractions found for the given location.", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @GetMapping("/filterByCategory")
+    public ResponseEntity<?> filterAttractionsByCategory(
+            @RequestParam String category
+    ) {
+        try {
+            List<AttractionResponseDTO> attractions = attractionService.filterAttractionsByCategory(category);
+            return new ResponseEntity<>(attractions, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("No attractions found for the given category: " + category, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/filterByPrice")
+    public ResponseEntity<?> filterAttractionsByPrice(
+            @RequestParam(required = false) Double price
+    ) {
+        try {
+            List<AttractionResponseDTO> attractions = attractionService.filterAttractionsByPrice(price);
+            return new ResponseEntity<>(attractions, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("No attractions found for the given price.", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+
     @PostMapping("/add")
     public ResponseEntity<?> addAttraction(@Valid @RequestBody AttractionRequestDTO attractionRequestDTO) {
         try {
