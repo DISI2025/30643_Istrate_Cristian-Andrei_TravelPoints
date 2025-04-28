@@ -42,6 +42,53 @@ public class AttractionService {
         return attractionRepository.findAll().stream().map(attraction -> attractionMapper.toDTO(attraction)).toList();
     }
 
+
+    public List<AttractionResponseDTO> filterAttractionsByLocation(String location) {
+        List<AttractionEntity> filteredAttractions = attractionRepository.findByLocation(location);
+
+        if (filteredAttractions.isEmpty()) {
+            throw new NoSuchElementException("No attractions found for the given location.");
+        }
+
+        return filteredAttractions.stream()
+                .map(attractionMapper::toDTO)
+                .toList();
+    }
+
+
+    public List<AttractionResponseDTO> filterAttractionsByCategory(String category) {
+        List<AttractionEntity> filteredAttractions = attractionRepository.findByCategory(category);
+
+        if (filteredAttractions.isEmpty()) {
+            throw new NoSuchElementException("No attractions found for the given category: " + category);
+        }
+
+        return filteredAttractions.stream()
+                .map(attractionMapper::toDTO)
+                .toList();
+    }
+
+
+    public List<AttractionResponseDTO> filterAttractionsByPriceRange(Double minPrice, Double maxPrice) {
+        if (minPrice > maxPrice) {
+            throw new IllegalArgumentException("Minimum price cannot be greater than maximum price.");
+        }
+
+        List<AttractionEntity> filteredAttractions = attractionRepository.findByPriceBetween(minPrice, maxPrice);
+
+        if (filteredAttractions.isEmpty()) {
+            throw new NoSuchElementException("No attractions found in the given price range.");
+        }
+
+        return filteredAttractions.stream()
+                .map(attractionMapper::toDTO)
+                .toList();
+    }
+
+
+
+
+
     public AttractionResponseDTO addAttraction(AttractionRequestDTO attraction) {
         return attractionMapper.toDTO(attractionRepository.save(attractionMapper.toEntity(attraction)));
     }

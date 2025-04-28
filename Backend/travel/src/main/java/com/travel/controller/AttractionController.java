@@ -7,12 +7,16 @@ import com.travel.entity.ItemNotFoundException;
 import com.travel.mapper.AttractionMapper;
 import com.travel.service.AttractionService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +30,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/attraction")
+@Validated
 public class AttractionController {
     private final AttractionService attractionService;
 
@@ -51,6 +56,58 @@ public class AttractionController {
             return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/filterByLocation")
+    public ResponseEntity<?> filterAttractionsByLocation(
+            @RequestParam @NotBlank(message = "Location must not be blank") String location
+    ) {
+        try {
+            List<AttractionResponseDTO> attractions = attractionService.filterAttractionsByLocation(location);
+            return new ResponseEntity<>(attractions, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("No attractions found for the given location.", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @GetMapping("/filterByCategory")
+    public ResponseEntity<?> filterAttractionsByCategory(
+            @RequestParam String category
+    ) {
+        try {
+            List<AttractionResponseDTO> attractions = attractionService.filterAttractionsByCategory(category);
+            return new ResponseEntity<>(attractions, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("No attractions found for the given category: " + category, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+    @GetMapping("/filterByPriceRange")
+    public ResponseEntity<?> filterAttractionsByPriceRange(
+            @RequestParam @NotNull(message = "Minimum price must not be null") @Positive(message = "Minimum price must be positive") Double minPrice,
+            @RequestParam @NotNull(message = "Maximum price must not be null") @Positive(message = "Maximum price must be positive") Double maxPrice
+    ) {
+        try {
+            List<AttractionResponseDTO> attractions = attractionService.filterAttractionsByPriceRange(minPrice, maxPrice);
+            return new ResponseEntity<>(attractions, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>("Invalid price range: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("No attractions found in the given price range.", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+
 
     @PostMapping("/add")
     public ResponseEntity<?> addAttraction(@Valid @RequestBody AttractionRequestDTO attractionRequestDTO) {
