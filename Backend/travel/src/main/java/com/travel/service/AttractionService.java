@@ -85,7 +85,17 @@ public class AttractionService {
                 .toList();
     }
 
+    public List<AttractionResponseDTO> filterAttractionsByName(String name) {
+        List<AttractionEntity> filteredAttractions = attractionRepository.findByNameContainingIgnoreCase(name);
 
+        if (filteredAttractions.isEmpty()) {
+            throw new NoSuchElementException("No attractions found with the name: " + name);
+        }
+
+        return filteredAttractions.stream()
+                .map(attractionMapper::toDTO)
+                .toList();
+    }
 
 
 
