@@ -44,13 +44,7 @@ public class AttractionService {
 
 
     public List<AttractionResponseDTO> filterAttractionsByLocation(String location) {
-        List<AttractionEntity> filteredAttractions;
-
-        if (location != null ) {
-            filteredAttractions = attractionRepository.findByLocation(location);
-       } else {
-            filteredAttractions = attractionRepository.findAll();
-        }
+        List<AttractionEntity> filteredAttractions = attractionRepository.findByLocation(location);
 
         if (filteredAttractions.isEmpty()) {
             throw new NoSuchElementException("No attractions found for the given location.");
@@ -75,23 +69,23 @@ public class AttractionService {
     }
 
 
-    public List<AttractionResponseDTO> filterAttractionsByPrice(Double price) {
-        List<AttractionEntity> filteredAttractions;
-
-        if (price != null) {
-            filteredAttractions = attractionRepository.findByPriceLessThan(price);
-        } else {
-            filteredAttractions = attractionRepository.findAll(); // Or throw an exception if no price is provided
+    public List<AttractionResponseDTO> filterAttractionsByPriceRange(Double minPrice, Double maxPrice) {
+        if (minPrice > maxPrice) {
+            throw new IllegalArgumentException("Minimum price cannot be greater than maximum price.");
         }
 
+        List<AttractionEntity> filteredAttractions = attractionRepository.findByPriceBetween(minPrice, maxPrice);
+
         if (filteredAttractions.isEmpty()) {
-            throw new NoSuchElementException("No attractions found for the given price.");
+            throw new NoSuchElementException("No attractions found in the given price range.");
         }
 
         return filteredAttractions.stream()
                 .map(attractionMapper::toDTO)
                 .toList();
     }
+
+
 
 
 

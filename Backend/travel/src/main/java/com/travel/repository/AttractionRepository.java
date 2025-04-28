@@ -20,8 +20,6 @@ public interface AttractionRepository extends JpaRepository<AttractionEntity,Lon
 
     List<AttractionEntity> findByCategory(String category);
 
-    List<AttractionEntity> findByPriceLessThan(Double price);
 
-
-
+    List<AttractionEntity> findByPriceBetween(Double minPrice, Double maxPrice);
 }
