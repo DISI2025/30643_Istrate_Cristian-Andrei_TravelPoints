@@ -1,33 +1,26 @@
 import { Card, Form, Input, Button } from "antd";
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import "./registration.css";
 
 export default function Registration() {
   const [form] = Form.useForm();
 
   const handleSubmit = (values: any) => {
-    console.log("Form values:", values);
+    console.log("Form values:", values); // Temporary: for testing before API integration
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        backgroundColor: "#F5EEDD",
-      }}
-    >
+    <div className="registrationPage">
       <Card
-        title={<span style={{ color: "#077A7D" }}>Register</span>}
-        style={{ width: 400, boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)" }}
+        className="registrationCard"
+        title={<span className="registrationTitle">Register</span>}
       >
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <Form.Item
             name="name"
             label="Name"
-            style={{ color: "#06202B" }}
+            className="registrationForm"
             rules={[{ required: true, message: "Please input your name!" }]}
           >
             <Input prefix={<UserOutlined />} placeholder="Name" />
@@ -36,7 +29,7 @@ export default function Registration() {
           <Form.Item
             name="email"
             label="Email"
-            style={{ color: "#06202B" }}
+            className="registrationForm"
             rules={[
               { required: true, message: "Please input your email!" },
               { type: "email", message: "The input is not valid E-mail!" },
@@ -48,7 +41,7 @@ export default function Registration() {
           <Form.Item
             name="password"
             label="Password"
-            style={{ color: "#06202B" }}
+            className="registrationForm"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
             <Input.Password prefix={<LockOutlined />} placeholder="Password" />
@@ -60,10 +53,10 @@ export default function Registration() {
             </Button>
           </Form.Item>
 
-          <div style={{ textAlign: "center" }}>
+          <div className="registrationQuestion">
             Already have an account?{" "}
             <Link to="/login">
-              <span style={{ color: "#077A7D" }}>Login</span>
+              <span className="registrationToLoginLink">Login</span>
             </Link>
           </div>
         </Form>
