@@ -1,33 +1,26 @@
 import { Card, Form, Input, Button } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import "./login.css";
 
 export default function Login() {
   const [form] = Form.useForm();
 
   const handleSubmit = (values: any) => {
-    console.log("Form values:", values);
+    console.log("Form values:", values); // Temporary: for testing before API integration
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        backgroundColor: "#F5EEDD",
-      }}
-    >
+    <div className="loginPage">
       <Card
-        title={<span style={{ color: "#077A7D" }}>Login</span>}
-        style={{ width: 400, boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)" }}
+        className="loginCard"
+        title={<span className="loginTitle">Login</span>}
       >
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <Form.Item
             name="email"
             label="Email"
-            style={{ color: "#06202B" }}
+            className="loginForm"
             rules={[
               { required: true, message: "Please input your email!" },
               { type: "email", message: "The input is not valid E-mail!" },
@@ -39,7 +32,7 @@ export default function Login() {
           <Form.Item
             name="password"
             label="Password"
-            style={{ color: "#06202B" }}
+            className="loginForm"
             rules={[{ required: true, message: "Please input your password!" }]}
           >
             <Input.Password prefix={<LockOutlined />} placeholder="Password" />
@@ -51,10 +44,10 @@ export default function Login() {
             </Button>
           </Form.Item>
 
-          <div style={{ textAlign: "center" }}>
+          <div className="loginQuestion">
             Don't have an account?{" "}
             <Link to="/register">
-              <span style={{ color: "#077A7D" }}>Register</span>
+              <span className="loginToRegistrationLink">Register</span>
             </Link>
           </div>
         </Form>
