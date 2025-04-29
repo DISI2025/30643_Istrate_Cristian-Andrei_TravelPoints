@@ -2,6 +2,8 @@ package com.travel.service;
 
 import com.travel.dtos.VisitRequestDTO;
 import com.travel.dtos.VisitResponseDTO;
+import com.travel.entity.AttractionEntity;
+import com.travel.entity.UserEntity;
 import com.travel.entity.VisitEntity;
 import com.travel.mapper.VisitMapper;
 import com.travel.repository.AttractionRepository;
@@ -32,6 +34,22 @@ public class VisitService {
         this.visitMapper = visitMapper;
     }
 
+    private UserEntity checkUser(Long userId){
+        Optional<UserEntity> user = userRepository.findById(userId);
+        if(user.isEmpty()){
+            throw new RuntimeException("User with id: " + userId + " does not exist");
+        }
+        return user.get();
+    }
+
+    private AttractionEntity checkAttraction(Long attractionId){
+        Optional<AttractionEntity> attraction = attractionRepository.findAttractionById(attractionId);
+        if(attraction.isEmpty()){
+            throw new RuntimeException("Attraction with id: " + attractionId + " does not exist");
+        }
+        return attraction.get();
+    }
+
     public VisitResponseDTO getVisitById(Long id) {
         Optional<VisitEntity> result = visitRepository.findVisitEntityById(id);
         if(result.isEmpty()){
@@ -45,29 +63,23 @@ public class VisitService {
     }
 
     public VisitResponseDTO addVisit(VisitRequestDTO visitRequestDTO) {
-        Long attractionId = visitRequestDTO.getAttraction().getId();
-        Long userId = visitRequestDTO.getUser().getId();
-        if(attractionRepository.findAttractionById(attractionId).isEmpty()){
-            throw new RuntimeException("Attraction with id: " + attractionId + " does not exist");
+        VisitEntity visit = visitMapper.toEntity(visitRequestDTO);
+        Optional<VisitEntity> exist = visitRepository.findVisitEntityByAttractionIdAndUserId(visitRequestDTO.getAttractionId(),visitRequestDTO.getUserId());
+        if(exist.isPresent()){
+            throw new RuntimeException("User with id: " + visitRequestDTO.getUserId() + " already visited the attraction with id: " + visitRequestDTO.getAttractionId());
         }
-        if(userRepository.existsById(userId)){
-            throw new RuntimeException("User with id: " + userId + " does not exist");
-        }
-        return visitMapper.toDTO(visitRepository.save(visitMapper.toEntity(visitRequestDTO)));
+        visit.setAttraction(checkAttraction(visitRequestDTO.getAttractionId()));
+        visit.setUser(checkUser(visitRequestDTO.getUserId()));
+        return visitMapper.toDTO(visitRepository.save(visit));
     }
 
     public VisitResponseDTO updateVisit(Long id, VisitRequestDTO visitRequestDTO) {
-        VisitEntity visitEntity = visitMapper.toEntity(visitRequestDTO);
-        Long attractionId = visitRequestDTO.getAttraction().getId();
-        Long userId = visitRequestDTO.getUser().getId();
-        if(attractionRepository.findAttractionById(attractionId).isEmpty()){
-            throw new RuntimeException("Attraction with id: " + attractionId + " does not exist");
-        }
-        if(userRepository.existsById(userId)){
-            throw new RuntimeException("User with id: " + userId + " does not exist");
-        }
-        visitEntity.setId(id);
-        return visitMapper.toDTO(visitRepository.save(visitEntity));
+        VisitEntity visit = visitMapper.toEntity(visitRequestDTO);
+
+        visit.setAttraction(checkAttraction(visitRequestDTO.getAttractionId()));
+        visit.setUser(checkUser(visitRequestDTO.getUserId()));
+        visit.setId(id);
+        return visitMapper.toDTO(visitRepository.save(visit));
     }
 
     public void deleteVisit(Long id) {
@@ -76,17 +88,21 @@ public class VisitService {
     }
 
     public List<VisitResponseDTO> getAttractionVisits(Long attractionId){
+        checkAttraction(attractionId);
         List<VisitEntity> result = visitRepository.findVisitEntitiesByAttractionId(attractionId);
         return result.stream().map(visit -> visitMapper.toDTO(visit)).toList();
     }
 
     public List<VisitResponseDTO> getUserVisits(Long userId){
+        checkUser(userId);
         List<VisitEntity> result = visitRepository.findVisitEntitiesByUserId(userId);
         return result.stream().map(visit -> visitMapper.toDTO(visit)).toList();
     }
 
     public List<VisitResponseDTO> getUserAndAttractionVisit(Long attractionId, Long userId){
         Optional<VisitEntity> result = visitRepository.findVisitEntityByAttractionIdAndUserId(attractionId,userId);
+        checkAttraction(attractionId);
+        checkUser(userId);
         if(result.isEmpty()){
             throw new RuntimeException("Visit with userId: " + userId + " and attractionId: " + attractionId + " does not exist");
         }

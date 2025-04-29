@@ -10,9 +10,9 @@ import java.sql.Date;
 
 public class VisitRequestDTO {
     @NotNull
-    private AttractionEntity attraction;
+    private Long attractionId;
     @NotNull
-    private UserEntity user;
+    private Long userId;
     @NotNull
     private Date visitTimestamp;
 }
