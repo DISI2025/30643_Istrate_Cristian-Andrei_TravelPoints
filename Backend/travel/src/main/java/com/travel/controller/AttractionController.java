@@ -3,7 +3,7 @@ package com.travel.controller;
 import com.travel.dtos.AttractionRequestDTO;
 import com.travel.dtos.AttractionResponseDTO;
 import com.travel.entity.AttractionEntity;
-import com.travel.entity.ItemNotFoundException;
+import com.travel.exceptions.ItemNotFoundException;
 import com.travel.mapper.AttractionMapper;
 import com.travel.service.AttractionService;
 import jakarta.validation.Valid;
