@@ -1,0 +1,66 @@
+import { Card, Form, Input, Button } from "antd";
+import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import "./registration.css";
+
+export default function Registration() {
+  const [form] = Form.useForm();
+
+  const handleSubmit = (values: any) => {
+    console.log("Form values:", values); // Temporary: for testing before API integration
+  };
+
+  return (
+    <div className="registrationPage">
+      <Card
+        className="registrationCard"
+        title={<span className="registrationTitle">Register</span>}
+      >
+        <Form form={form} layout="vertical" onFinish={handleSubmit}>
+          <Form.Item
+            name="name"
+            label="Name"
+            className="registrationForm"
+            rules={[{ required: true, message: "Please input your name!" }]}
+          >
+            <Input prefix={<UserOutlined />} placeholder="Name" />
+          </Form.Item>
+
+          <Form.Item
+            name="email"
+            label="Email"
+            className="registrationForm"
+            rules={[
+              { required: true, message: "Please input your email!" },
+              { type: "email", message: "The input is not valid E-mail!" },
+            ]}
+          >
+            <Input prefix={<MailOutlined />} placeholder="Email" />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            label="Password"
+            className="registrationForm"
+            rules={[{ required: true, message: "Please input your password!" }]}
+          >
+            <Input.Password prefix={<LockOutlined />} placeholder="Password" />
+          </Form.Item>
+
+          <Form.Item>
+            <Button color="cyan" variant="solid" htmlType="submit" block>
+              Register
+            </Button>
+          </Form.Item>
+
+          <div className="registrationQuestion">
+            Already have an account?{" "}
+            <Link to="/login">
+              <span className="registrationToLoginLink">Login</span>
+            </Link>
+          </div>
+        </Form>
+      </Card>
+    </div>
+  );
+}
