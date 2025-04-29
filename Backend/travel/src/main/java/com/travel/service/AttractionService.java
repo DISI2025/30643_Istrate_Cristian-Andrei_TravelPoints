@@ -8,6 +8,9 @@ import com.travel.mapper.AttractionMapper;
 import com.travel.repository.AttractionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -95,6 +98,12 @@ public class AttractionService {
         return filteredAttractions.stream()
                 .map(attractionMapper::toDTO)
                 .toList();
+    }
+
+    public Page<AttractionResponseDTO> getAllAttractionsPageable(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<AttractionEntity> page = attractionRepository.findAll(pageable);
+        return page.map(attractionMapper::toDTO);
     }
 
 
