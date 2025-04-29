@@ -2,23 +2,16 @@ package com.travel.controller;
 
 import com.travel.dtos.AttractionRequestDTO;
 import com.travel.dtos.AttractionResponseDTO;
-import com.travel.entity.AttractionEntity;
-import com.travel.entity.ItemNotFoundException;
-import com.travel.mapper.AttractionMapper;
 import com.travel.service.AttractionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 
 // port 8081 is assigned FOR NOW to be the port for the frontend server

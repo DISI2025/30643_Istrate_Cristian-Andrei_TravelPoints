@@ -3,7 +3,6 @@ package com.travel.service;
 import com.travel.dtos.AttractionRequestDTO;
 import com.travel.dtos.AttractionResponseDTO;
 import com.travel.entity.AttractionEntity;
-import com.travel.entity.ItemNotFoundException;
 import com.travel.mapper.AttractionMapper;
 import com.travel.repository.AttractionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * attraction service class
