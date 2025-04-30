@@ -5,6 +5,7 @@ import axios from "axios";
 import { Card, Button } from "antd";
 import "./attractionsDetails.css";
 import generalImage from "../../assets/colosseum.jpg"
+import { getAttractionById } from "../../api/attractionApi";
 
 export default function AttractionDetail() {
     const { id } = useParams();
@@ -12,16 +13,24 @@ export default function AttractionDetail() {
     const [attraction, setAttraction] = useState<any>(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:9090/attraction/find/${id}`)
-            .then(res => setAttraction(res.data))
-            .catch(err => {
+        if (!id) return;
+
+        const fetchAttraction = async () => {
+            try {
+                const data = await getAttractionById(id);
+                setAttraction(data);
+            } catch (err) {
                 console.error(err);
                 notification.error({
                     message: "Failed to load attraction details. Please try again later.",
-                    description:  err +"."
+                    description: String(err),
                 });
-            });
+            }
+        };
+
+        fetchAttraction();
     }, [id]);
+
 
     if (!attraction) return <div className="loading">Loading attraction...</div>;
 
