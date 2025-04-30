@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, Button } from "antd";
 import "./attractionsDetails.css";
-import generalImage from "./coloseum.jpg"
+import generalImage from "../../assets/colosseum.jpg"
 
 export default function AttractionDetail() {
     const { id } = useParams();
