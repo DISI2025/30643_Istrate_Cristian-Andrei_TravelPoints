@@ -1,4 +1,3 @@
-// File: management.tsx
 import React, { useEffect, useState, useCallback } from 'react';
 import { Table, Button, Input, Layout, Modal, Form, message } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
@@ -33,7 +32,7 @@ export default function Management() {
                 id: 1,
                 name: 'Eiffel Tower',
                 descriptionText: 'Iconic landmark',
-                descriptionAudio: 'https://audio.example.com/eiffel.mp3',
+                descriptionAudio: 'idk.mp3',
                 location: 'Paris',
                 offers: 'Free tour included',
                 latitude: 48.8584,
@@ -45,7 +44,7 @@ export default function Management() {
                 id: 2,
                 name: 'Statue of Liberty',
                 descriptionText: 'Historic statue',
-                descriptionAudio: 'https://audio.example.com/liberty.mp3',
+                descriptionAudio: 'idk.mp3',
                 location: 'NYC',
                 offers: 'Guided tour',
                 latitude: 40.6892,
@@ -74,6 +73,7 @@ export default function Management() {
 
     const handleEdit = (item: Attraction) => {
         setEditingItem(item);
+        form.setFieldsValue(item);
         setIsModalOpen(true);
     };
 
@@ -84,7 +84,7 @@ export default function Management() {
     };
 
     const handleSave = () => {
-        form.validateFields().then(values => {
+        form.validateFields().then(_ => {
             if (editingItem) {
                 message.success('Updated attraction');
             } else {
