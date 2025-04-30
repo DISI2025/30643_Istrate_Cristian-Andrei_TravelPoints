@@ -1,22 +1,3 @@
-.attractionsPage {
-    background-color: #F5EEDD;
-    padding: 24px;
-    min-height: 100vh;
-}
-
-.attractionsTitle {
-    text-align: center;
-    color: #06202B;
-    margin-bottom: 24px;
-}
-
-
-
-.attractionsPage .ant-row {
-    margin-left: -16px;
-    margin-right: -16px;
-}
-
 .attractionCard {
     background-color: #ffffff;
     border-color: #077A7D;
@@ -36,6 +17,28 @@
     padding-top: 10px;
 }
 
+.attractionsPage {
+    background-color: #F5EEDD;
+    padding: 24px;
+    min-height: 100vh;
+}
+
+.attractionsTitle {
+    text-align: center;
+    color: #06202B;
+    margin-bottom: 24px;
+}
+
+.filtersContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: flex-start;
+    margin-left: 64px;
+    margin-bottom: 32px;
+}
+
+
 
 
 .attractionCardLink {
@@ -43,6 +46,11 @@
     color: inherit;
     display: block;
     height: 100%;
+}
+
+.attractionsPage .ant-row {
+    margin-left: -16px; /* Ensure gutter is consistent */
+    margin-right: -16px;
 }
 
 .ant-row {
@@ -57,9 +65,49 @@
     padding-right: 16px;
 }
 
+.ant-pagination {
+    display: flex;
+    justify-content: center;
+    background-color: #F5EEDD;
+}
+
 .attractionCard:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     background-color: #077A7D;
 }
+
+
+.ant-btn-primary {
+    background-color: #06202B !important;
+    border-color: #06202B !important;
+    color: white !important;
+}
+
+.ant-btn-primary:hover{
+    background-color: #077A7D !important;
+    border-color: #077A7D !important;
+    color: white !important;
+}
+
+
+.customSlider .ant-slider-track {
+    background-color: #06202B;
+}
+
+.customSlider:hover .ant-slider-track {
+    background-color: #077A7D;
+}
+
+.customSlider .ant-slider-handle {
+    border-color: #06202B;
+    background-color: #06202B;
+}
+
+.customSlider:hover .ant-slider-handle {
+    border-color: #077A7D;
+    background-color: #077A7D;
+}
+
+
 
