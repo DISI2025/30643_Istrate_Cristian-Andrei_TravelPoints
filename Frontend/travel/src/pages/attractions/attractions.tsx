@@ -1,5 +1,3 @@
-import {attractions} from "./mockData";
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, Row } from "antd";
@@ -8,13 +6,13 @@ import "./attractions.css";
 import generalImage from "../../assets/colosseum.jpg"
 
 
-type Attraction = {
+interface Attraction  {
     id: number;
     name: string;
     location: string;
     category: string;
     price: number;
-};
+}
 
 export default function Attractions() {
 
@@ -29,7 +27,7 @@ export default function Attractions() {
     return (
         <div className="attractionsPage">
             <h1 className="attractionsTitle">Explore Attractions</h1>
-            <Row gutter={[16, 16]} style={{ marginTop: 20, justifyContent: "center" }}>
+            <Row className="attractionsRow">
                 {attractions.map(attraction => (
                     <Link
                         to={`/attractions/${attraction.id}`}
@@ -39,7 +37,7 @@ export default function Attractions() {
                         <Card
                             className="attractionCard"
                             hoverable
-                            cover={<img alt="Attraction" src={generalImage} style={{ objectFit: "cover", height: 180 }} />}
+                            cover={<img alt="Attraction" src={generalImage}  className="attractionImage" />}
                         >
                             <div className="cardContent">
                                 <h3>{attraction.name}</h3>

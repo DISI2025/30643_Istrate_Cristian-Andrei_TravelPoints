@@ -63,3 +63,14 @@
     background-color: #077A7D;
 }
 
+.attractionsRow {
+    margin-top: 20px;
+    justify-content: center;
+}
+
+/* Style for the image inside the card */
+.attractionImage {
+    object-fit: cover;
+    height: 180px;
+}
+
