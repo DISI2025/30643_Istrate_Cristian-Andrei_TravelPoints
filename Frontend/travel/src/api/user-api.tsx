@@ -8,7 +8,6 @@ export const registerUser = async (values: {
   password: string;
 }) => {
   try {
-    console.log("Registration values:", values);
     const response = await axios.post(`${BASE_URL}/register`, values);
     return response.data;
   } catch (error: any) {
