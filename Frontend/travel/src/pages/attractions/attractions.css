@@ -1,0 +1,106 @@
+.attractionsPage {
+    background-color: #F5EEDD;
+    padding: 24px;
+    min-height: 100vh;
+}
+
+.attractionsTitle {
+    text-align: center;
+    color: #06202B;
+    margin-bottom: 24px;
+}
+
+.filtersContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 32px;
+}
+
+.attractionCard {
+    background-color: #7AE2CF;
+    border-color: #077A7D;
+    color: #06202B;
+    width: 300px; /* Fixed width equivalent to about 30 letters */
+    height: 280px; /* Set a fixed height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    transition: transform 0.2s ease-in-out;
+    margin: 16px; /* Space between cards horizontally and vertically */
+}
+
+
+.attractionCardLink {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+}
+
+.attractionsPage .ant-row {
+    margin-left: -16px; /* Ensure gutter is consistent */
+    margin-right: -16px;
+}
+
+.ant-row {
+    display: flex;
+    justify-content: center; /* Centers all cards horizontally */
+    flex-wrap: wrap; /* Ensures cards wrap when the screen size is smaller */
+    gap: 16px; /* Adds space between the cards */
+}
+
+.ant-row .ant-col {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.ant-pagination {
+    display: flex;
+    justify-content: center;
+    background-color: #F5EEDD;
+}
+
+.attractionCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #077A7D;
+}
+
+
+/* Button custom primary color and hover */
+.ant-btn-primary {
+    background-color: #06202B !important;
+    border-color: #06202B !important;
+    color: white !important;
+}
+
+.ant-btn-primary:hover{
+    background-color: #077A7D !important;
+    border-color: #077A7D !important;
+    color: white !important;
+}
+
+
+.customSlider .ant-slider-track {
+    background-color: #06202B;
+}
+
+.customSlider:hover .ant-slider-track {
+    background-color: #077A7D;
+}
+
+.customSlider .ant-slider-handle {
+    border-color: #06202B;
+    background-color: #06202B;
+}
+
+.customSlider:hover .ant-slider-handle {
+    border-color: #077A7D;
+    background-color: #077A7D;
+}
+
