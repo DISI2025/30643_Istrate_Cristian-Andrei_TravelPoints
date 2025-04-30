@@ -33,7 +33,7 @@ export default function Attractions() {
 
     const fetchAllAttractions = async () => {
         try {
-            const res = await axios.get("http://localhost:8080/attraction/all");
+            const res = await axios.get("http://localhost:9090/attraction/all");
             if (res.data) {
                 const allAttractions: Attraction[] = res.data;
                 const uniqueLocations = Array.from(new Set(allAttractions.map(a => a.location)));
@@ -48,7 +48,7 @@ export default function Attractions() {
 
     const fetchAttractions = async (page: number = 1) => {
         try {
-            const res = await axios.get("http://localhost:8080/attraction/getAllPageable", {
+            const res = await axios.get("http://localhost:9090/attraction/getAllPageable", {
                 params: {
                     pageNumber: page - 1,
                     pageSize: 4,
@@ -97,7 +97,7 @@ export default function Attractions() {
                 params = { minPrice, maxPrice: priceRange[1] };
             }
 
-            const res = await axios.get(`http://localhost:8080/attraction${endpoint}`, { params });
+            const res = await axios.get(`http://localhost:9090/attraction${endpoint}`, { params });
 
             if (res.data) {
                 setAttractions(res.data);
