@@ -1,6 +1,6 @@
 .attractionDetailContainer {
     padding: 40px;
-    background-color: #F5EEDD;
+    background-color: var(--cream);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -10,13 +10,13 @@
 .backButton {
     align-self: flex-start;
     margin-bottom: 20px;
-    background-color: #7AE2CF;
+    background-color: var(--aqua);
     border: none;
-    color: #06202B;
+    color: var(--deep-teal);
 }
 
 .attractionDetailCard {
-    background-color: #ffffff;
+    background-color: white;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     padding: 32px;
@@ -25,7 +25,7 @@
 }
 
 .detailTitle {
-    color: #077A7D;
+    color: var(--teal);
     font-size: 32px;
     margin-bottom: 24px;
     text-align: center;
@@ -34,28 +34,29 @@
 .detailField {
     font-size: 16px;
     margin-bottom: 12px;
-    color: #06202B;
+    color: var(--deep-teal);
 }
 
 .oldPrice {
     text-decoration: line-through;
     color: red;
+    margin-left: 10px;
 }
 
 .loading {
     text-align: center;
     font-size: 24px;
     padding-top: 100px;
-    color: #06202B;
+    color: var(--deep-teal);
 }
 
 .locationLink {
-    color: #077A7D;
+    color: var(--teal);
     text-decoration: underline;
 }
 
 .locationLink:hover {
-    color: #06202B;
+    color: var(--deep-teal);
 }
 
 

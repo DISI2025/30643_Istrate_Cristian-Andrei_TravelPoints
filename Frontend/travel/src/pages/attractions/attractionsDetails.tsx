@@ -41,7 +41,7 @@ export default function AttractionDetail() {
                 <p className="detailField">
                     <strong>Price:</strong> ${attraction.price}
                     {attraction.oldPrice && (
-                        <span className="oldPrice" style={{ marginLeft: 10 }}>${attraction.oldPrice}</span>
+                        <span className="oldPrice" >${attraction.oldPrice}</span>
                     )}
                 </p>
                 <p className="detailField"><strong>Description:</strong> {attraction.descriptionText}</p>
