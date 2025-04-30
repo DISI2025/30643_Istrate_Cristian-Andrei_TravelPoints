@@ -9,6 +9,7 @@ import java.util.Date;
 public class WishlistResponseDTO {
 
     private Long Id;
+    private UserResponseDTO user;
     private AttractionResponseDTO attraction;
     private Date addedAt;
 
