@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Card, Row } from "antd";
+import { Link } from "react-router-dom";
+import "./attractions.css";
+import generalImage from "../../assets/colosseum.jpg"
+
 
 type Attraction = {
     id: number;
@@ -25,13 +30,33 @@ export default function Attractions() {
     return (
         <div className="attractionsPage">
             <h1 className="attractionsTitle">Explore Attractions</h1>
-            <ul>
+            <Row gutter={[16, 16]} style={{ marginTop: 20, justifyContent: "center" }}>
                 {attractions.map(attraction => (
-                    <li key={attraction.id}>
-                        <strong>{attraction.name}</strong> - {attraction.location}, {attraction.category}, ${attraction.price}
-                    </li>
+                    <Link
+                        to={`/attractions/${attraction.id}`}
+                        key={attraction.id}
+                        className="attractionCardLink"
+                    >
+                        <Card
+                            className="attractionCard"
+                            hoverable
+                            cover={<img alt="Attraction" src={generalImage} style={{ objectFit: "cover", height: 180 }} />}
+                        >
+                            <div className="cardContent">
+                                <h3>{attraction.name}</h3>
+                                <p><strong>Location:</strong> {attraction.location}</p>
+                                <p><strong>Category:</strong> {attraction.category}</p>
+                                <p><strong>Price:</strong> ${attraction.price}</p>
+                            </div>
+                        </Card>
+
+
+                    </Link>
                 ))}
-            </ul>
+            </Row>
+
         </div>
     );
+
+
 }
