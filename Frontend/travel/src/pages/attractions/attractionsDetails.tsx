@@ -11,7 +11,7 @@ export default function AttractionDetail() {
     const [attraction, setAttraction] = useState<any>(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/attraction/find/${id}`)
+        axios.get(`http://localhost:9090/attraction/find/${id}`)
             .then(res => setAttraction(res.data))
             .catch(err => console.error(err));
     }, [id]);
