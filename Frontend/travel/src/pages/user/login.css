@@ -1,0 +1,28 @@
+.loginPage{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--cream);
+}
+
+.loginCard {
+    width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.loginTitle{
+    color: var(--teal);
+}
+
+.loginForm{
+    color: var(--deep-teal);
+}
+
+.loginQuestion{
+    text-align: center;
+}
+
+.loginToRegistrationLink{
+    color: var(--teal);
+}
