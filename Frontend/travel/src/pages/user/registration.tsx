@@ -30,7 +30,7 @@ export default function Registration() {
                     return Promise.resolve();
                   }
                   return Promise.reject(
-                    "Name must start with an uppercase letter and contain only letters and spaces"
+                    "Name must start with an uppercase letter and contain only letters and spaces!"
                   );
                 },
               },
@@ -68,7 +68,7 @@ export default function Registration() {
                     return Promise.resolve();
                   }
                   return Promise.reject(
-                    "Password must start with an uppercase letter, be at least 6 characters, and contain at least one number"
+                    "Password must start with an uppercase letter, be at least 6 characters, and contain at least one number!"
                   );
                 },
               },
