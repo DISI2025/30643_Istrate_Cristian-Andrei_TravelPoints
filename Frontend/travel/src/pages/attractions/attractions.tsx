@@ -1,8 +1,6 @@
+import {attractions} from "./mockData";
+
 export default function Attractions() {
-    const attractions = [
-        { id: 1, name: "Eiffel Tower", location: "Paris", category: "Monument", price: 25 },
-        { id: 2, name: "Statue of Liberty", location: "New York", category: "Landmark", price: 30 },
-    ];
 
     return (
         <div className="attractionsPage">
