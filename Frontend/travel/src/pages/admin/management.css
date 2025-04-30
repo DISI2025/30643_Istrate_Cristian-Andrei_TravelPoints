@@ -1,0 +1,61 @@
+body, html, .managementPage {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: var(--cream);
+    color: var(--deep-teal);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.managementLayout {
+    min-height: 100vh;
+    background-color: var(--cream);
+}
+
+.managementHeader {
+    background-color: var(--teal);
+    color: var(--deep-teal);
+    font-size: 24px;
+    padding-left: 24px;
+    display: flex;
+    align-items: center;
+}
+
+.managementContent {
+    margin: 0;
+    padding: 24px;
+    background-color: var(--cream);
+}
+
+.managementControls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.managementSearch {
+    width: 300px;
+}
+
+.ant-card, .ant-table, .ant-modal-content, .ant-form {
+    background-color: white !important;
+    border-radius: 8px;
+}
+
+.ant-modal-header, .ant-modal-footer {
+    background-color: white !important;
+}
+
+.ant-btn-primary {
+    background-color: var(--teal);
+    border-color: var(--teal);
+}
+
+.ant-btn-primary:hover, .ant-btn-primary:focus {
+    background-color: var(--teal);
+    border-color: var(--teal);
+}
+
+.managementLayout > .ant-layout-sider {
+    display: none !important;
+}
