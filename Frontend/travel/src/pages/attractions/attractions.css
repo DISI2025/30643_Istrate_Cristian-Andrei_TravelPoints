@@ -17,3 +17,150 @@
     margin-right: -16px;
 }
 
+.attractionCard {
+    background-color: white;
+    border-color: var(--teal);
+    color: var(--deep-teal);
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    transition: transform 0.2s ease-in-out;
+    margin: 16px;
+}
+
+.cardContent {
+    padding-top: 10px;
+}
+
+
+
+
+.filtersContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: flex-start;
+    margin-left: 64px;
+    margin-bottom: 32px;
+}
+
+
+
+
+.attractionCardLink {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+}
+
+
+.ant-row {
+    display: flex;
+    justify-content: center; /* Centers all cards horizontally */
+    flex-wrap: wrap; /* Ensures cards wrap when the screen size is smaller */
+    gap: 16px; /* Adds space between the cards */
+}
+
+.ant-row .ant-col {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.ant-pagination {
+    display: flex;
+    justify-content: center;
+    background-color: var(--cream);
+}
+
+.attractionCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: var(--teal);
+}
+
+.attractionsRow {
+    margin-top: 20px;
+    justify-content: center;
+}
+
+/* Style for the image inside the card */
+.attractionImage {
+    object-fit: cover;
+    height: 180px;
+}
+
+
+.ant-btn-primary {
+    background-color: var(--deep-teal) !important;
+    border-color: var(--deep-teal) !important;
+    color: white !important;
+}
+
+.ant-btn-primary:hover{
+    background-color: var(--teal) !important;
+    border-color: var(--teal) !important;
+    color: white !important;
+}
+
+
+.customSlider .ant-slider-track {
+    background-color: var(--deep-teal);
+}
+
+.customSlider:hover .ant-slider-track {
+    background-color: var(--teal);
+}
+
+.customSlider .ant-slider-handle {
+    border-color: var(--deep-teal);
+    background-color: var(--deep-teal);
+}
+
+.customSlider:hover .ant-slider-handle {
+    border-color: var(--teal);
+    background-color: var(--teal);
+}
+
+.filterButton {
+    margin-bottom: 20px;
+    margin-left: 64px;
+}
+
+.attractionInput {
+    width: 200px;
+    height: 33px;
+    margin-right: 16px;
+}
+
+.attractionSelect {
+    width: 200px;
+    height: 33px;
+    margin-right: 16px;
+}
+
+.attractionCategorySelect {
+    width: 200px;
+    height: 33px;
+    margin-right: 16px;
+}
+
+.priceRangeContainer {
+    width: 250px;
+    margin-right: 16px;
+}
+
+.priceRangeLabel {
+    color: var(--deep-teal);
+}
+
+
+.paginationStyles {
+    margin-top: 20px;
+    text-align: center;
+}
+
