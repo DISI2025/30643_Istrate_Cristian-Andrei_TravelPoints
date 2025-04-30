@@ -1,15 +1,8 @@
-import {attractions} from "./mockData";
-
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
+import {Attraction} from "../../models/attractionModel"
+import {notification} from "antd";
 
-type Attraction = {
-    id: number;
-    name: string;
-    location: string;
-    category: string;
-    price: number;
-};
 
 export default function Attractions() {
 
@@ -18,7 +11,7 @@ export default function Attractions() {
     useEffect(() => {
         axios.get("http://localhost:9090/attraction/getAllPageable?pageNumber=0&pageSize=5")
             .then(res => setAttractions(res.data.content))
-            .catch(() => alert("Failed to load attractions"));
+            .catch((err) => notification.error({message: "Failed to load attractions", description: err + "."}));
     }, []);
 
     return (
@@ -27,7 +20,8 @@ export default function Attractions() {
             <ul>
                 {attractions.map(attraction => (
                     <li key={attraction.id}>
-                        <strong>{attraction.name}</strong> - {attraction.location}, {attraction.category}, ${attraction.price}
+                        <strong>{attraction.name}</strong> - {attraction.location}, {attraction.category},
+                        ${attraction.price}
                     </li>
                 ))}
             </ul>

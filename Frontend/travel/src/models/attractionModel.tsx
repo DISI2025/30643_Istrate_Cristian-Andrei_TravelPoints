@@ -1,0 +1,7 @@
+export type Attraction = {
+    id: number;
+    name: string;
+    location: string;
+    category: string;
+    price: number;
+};
