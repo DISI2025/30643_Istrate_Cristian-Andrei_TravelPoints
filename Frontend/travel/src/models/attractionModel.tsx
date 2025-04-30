@@ -1,4 +1,4 @@
-export type Attraction = {
+export interface Attraction {
     id: number;
     name: string;
     location: string;
