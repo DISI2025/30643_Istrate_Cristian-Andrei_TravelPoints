@@ -1,12 +1,12 @@
 .attractionsPage {
-    background-color: #F5EEDD;
+    background-color:var(--cream) ;
     padding: 24px;
     min-height: 100vh;
 }
 
 .attractionsTitle {
     text-align: center;
-    color: #06202B;
+    color: var(--deep-teal);
     margin-bottom: 24px;
 }
 
