@@ -1,18 +1,26 @@
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
-import { Card, Form, Input, Button } from "antd";
+import { Card, Form, Input, Button, notification } from "antd";
 import { registerUser } from "../../api/user-api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./registration.css";
 
 export default function Registration() {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   const handleSubmit = async (values: any) => {
     try {
-      const result = await registerUser(values);
-      console.log("Registration success:", result);
+      await registerUser(values);
+      notification.success({
+        message: "Registration Complete",
+        description: "Welcome!",
+      });
+      navigate("/");
     } catch (err: any) {
-      console.error("Registration failed:", err);
+      notification.error({
+        message: "Registration Failed",
+        description: err + ".",
+      });
     }
   };
 
