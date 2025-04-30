@@ -8,6 +8,7 @@ import {
 } from "antd";
 import "./attractions.css";
 import generalImage from "../../assets/colosseum.jpg";
+import { getAllAttractions, getAttractionsPageable, getFilteredAttractions } from "../../api/attractionApi";
 
 const {Option} = Select;
 
@@ -29,14 +30,11 @@ export default function Attractions() {
 
     const fetchAllAttractions = async () => {
         try {
-            const res = await axios.get("http://localhost:9090/attraction/all");
-            if (res.data) {
-                const allAttractions: Attraction[] = res.data;
-                const uniqueLocations = Array.from(new Set(allAttractions.map(a => a.location)));
-                const uniqueCategories = Array.from(new Set(allAttractions.map(a => a.category)));
-                setLocations(uniqueLocations);
-                setCategories(uniqueCategories);
-            }
+            const allAttractions: Attraction[] = await getAllAttractions();
+            const uniqueLocations = Array.from(new Set(allAttractions.map(a => a.location)));
+            const uniqueCategories = Array.from(new Set(allAttractions.map(a => a.category)));
+            setLocations(uniqueLocations);
+            setCategories(uniqueCategories);
         } catch (err) {
             notification.error({
                 message: "Failed to load filter data",
@@ -47,16 +45,10 @@ export default function Attractions() {
 
     const fetchAttractions = async (page: number = 1) => {
         try {
-            const res = await axios.get("http://localhost:9090/attraction/getAllPageable", {
-                params: {
-                    pageNumber: page - 1,
-                    pageSize: 4,
-                },
-            });
-
-            if (res.data && res.data.content) {
-                setAttractions(res.data.content);
-                setTotalAttractions(res.data.totalElements);
+            const data = await getAttractionsPageable(page - 1, 4);
+            if (data?.content) {
+                setAttractions(data.content);
+                setTotalAttractions(data.totalElements);
             } else {
                 setAttractions([]);
                 setTotalAttractions(0);
@@ -70,55 +62,31 @@ export default function Attractions() {
     };
 
     const fetchFilteredAttractions = async () => {
-            const {name, location, category, priceRange} = filters;
-            const isEmpty =
-                !name && !location && !category && priceRange[0] === 0 && priceRange[1] === 100;
+        const { name, location, category, priceRange } = filters;
+        const isEmpty = !name && !location && !category && priceRange[0] === 0 && priceRange[1] === 100;
 
-            if (isEmpty) {
-                fetchAttractions(1);
-                return;
-            }
-
-            try {
-                let endpoint = "";
-                let params: any = {};
-
-                const minPrice = priceRange[0] === 0 ? 1 : priceRange[0];
-
-                if (name) {
-                    endpoint = "/filterByName";
-                    params = {name};
-                } else if (location) {
-                    endpoint = "/filterByLocation";
-                    params = {location};
-                } else if (category) {
-                    endpoint = "/filterByCategory";
-                    params = {category};
-                } else if (priceRange) {
-                    endpoint = "/filterByPriceRange";
-                    params = {minPrice, maxPrice: priceRange[1]};
-                }
-
-                const res = await axios.get(`http://localhost:9090/attraction${endpoint}`, {params});
-
-                if (res.data) {
-                    setAttractions(res.data);
-                    setTotalAttractions(res.data.length);
-                } else {
-                    setAttractions([]);
-                    setTotalAttractions(0);
-                    notification.error({
-                        message: "No attractions found with the given filters"
-                    });
-                }
-            } catch (err) {
-                notification.error({
-                    message: "No attractions found with the given filters",
-                    description: err + ".",
-                });
-            }
+        if (isEmpty) {
+            fetchAttractions(1);
+            return;
         }
-    ;
+
+        try {
+            const data = await getFilteredAttractions(filters);
+            if (data) {
+                setAttractions(data);
+                setTotalAttractions(data.length);
+            } else {
+                setAttractions([]);
+                setTotalAttractions(0);
+                notification.error({ message: "No attractions found with the given filters" });
+            }
+        } catch (err) {
+            notification.error({
+                message: "No attractions found with the given filters",
+                description: err + ".",
+            });
+        }
+    };
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
