@@ -1,0 +1,76 @@
+.attractionDetailContainer {
+    padding: 40px;
+    background-color: #F5EEDD;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.backButton {
+    align-self: flex-start;
+    margin-bottom: 20px;
+    background-color: #7AE2CF;
+    border: none;
+    color: #06202B;
+}
+
+.attractionDetailCard {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 32px;
+    max-width: 700px;
+    width: 100%;
+}
+
+.detailTitle {
+    color: #077A7D;
+    font-size: 32px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.detailField {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: #06202B;
+}
+
+.oldPrice {
+    text-decoration: line-through;
+    color: red;
+}
+
+.loading {
+    text-align: center;
+    font-size: 24px;
+    padding-top: 100px;
+    color: #06202B;
+}
+
+.locationLink {
+    color: #077A7D;
+    text-decoration: underline;
+}
+
+.locationLink:hover {
+    color: #06202B;
+}
+
+
+.imageGallery {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.galleryImage {
+    width: 180px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
