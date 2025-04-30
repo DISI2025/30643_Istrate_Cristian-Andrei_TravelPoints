@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { notification } from "antd";
 import axios from "axios";
 import { Card, Button } from "antd";
 import "./attractionsDetails.css";
@@ -13,7 +14,13 @@ export default function AttractionDetail() {
     useEffect(() => {
         axios.get(`http://localhost:9090/attraction/find/${id}`)
             .then(res => setAttraction(res.data))
-            .catch(err => console.error(err));
+            .catch(err => {
+                console.error(err);
+                notification.error({
+                    message: "Failed to load attraction details. Please try again later.",
+                    description:  err +"."
+                });
+            });
     }, [id]);
 
     if (!attraction) return <div className="loading">Loading attraction...</div>;
