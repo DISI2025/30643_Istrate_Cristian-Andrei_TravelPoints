@@ -1,27 +1,20 @@
-:root {
-    --color-dark-blue: #04161f;
-    --color-teal: #066b6e;
-    --color-light-teal: #6fd2bf;
-    --color-cream: #f5eedd;
-}
-
 body, html, .managementPage {
     margin: 0;
     padding: 0;
     height: 100vh;
-    background-color: var(--color-cream);
-    color: #04161f;
+    background-color: var(--cream);
+    color: var(--deep-teal);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .managementLayout {
     min-height: 100vh;
-    background-color: var(--color-cream);
+    background-color: var(--cream);
 }
 
 .managementHeader {
-    background-color: var(--color-light-teal);
-    color: var(--color-dark-blue);
+    background-color: var(--teal);
+    color: var(--deep-teal);
     font-size: 24px;
     padding-left: 24px;
     display: flex;
@@ -31,7 +24,7 @@ body, html, .managementPage {
 .managementContent {
     margin: 0;
     padding: 24px;
-    background-color: var(--color-cream);
+    background-color: var(--cream);
 }
 
 .managementControls {
@@ -54,16 +47,15 @@ body, html, .managementPage {
 }
 
 .ant-btn-primary {
-    background-color: var(--color-light-teal);
-    border-color: var(--color-light-teal);
+    background-color: var(--teal);
+    border-color: var(--teal);
 }
 
 .ant-btn-primary:hover, .ant-btn-primary:focus {
-    background-color: #5ccbb3;
-    border-color: #5ccbb3;
+    background-color: var(--teal);
+    border-color: var(--teal);
 }
 
-/* Remove sidebar completely */
 .managementLayout > .ant-layout-sider {
     display: none !important;
 }

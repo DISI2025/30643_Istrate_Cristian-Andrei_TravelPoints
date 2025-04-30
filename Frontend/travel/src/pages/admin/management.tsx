@@ -3,21 +3,11 @@ import { Table, Button, Input, Layout, Modal, Form, message } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import './management.css';
+import {Attraction} from '../../models/attractionEntity'
+import {attractions} from './mockDataAttractions';
 
 const { Header, Content } = Layout;
 
-interface Attraction {
-    id: number;
-    name: string;
-    descriptionText: string;
-    descriptionAudio: string;
-    location: string;
-    offers: string;
-    latitude: number;
-    longitude: number;
-    price: number;
-    oldPrice: number;
-}
 
 export default function Management() {
     const [data, setData] = useState<Attraction[]>([]);
@@ -27,32 +17,6 @@ export default function Management() {
     const [editingItem, setEditingItem] = useState<Attraction | null>(null);
 
     const fetchData = useCallback(() => {
-        const attractions: Attraction[] = [
-            {
-                id: 1,
-                name: 'Eiffel Tower',
-                descriptionText: 'Iconic landmark',
-                descriptionAudio: 'idk.mp3',
-                location: 'Paris',
-                offers: 'Free tour included',
-                latitude: 48.8584,
-                longitude: 2.2945,
-                price: 25,
-                oldPrice: 30,
-            },
-            {
-                id: 2,
-                name: 'Statue of Liberty',
-                descriptionText: 'Historic statue',
-                descriptionAudio: 'idk.mp3',
-                location: 'NYC',
-                offers: 'Guided tour',
-                latitude: 40.6892,
-                longitude: -74.0445,
-                price: 20,
-                oldPrice: 25,
-            },
-        ];
         setData(attractions);
     }, []);
 
