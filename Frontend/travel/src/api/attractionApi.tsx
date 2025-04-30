@@ -40,3 +40,8 @@ export const getFilteredAttractions = async (filters: any) => {
     return res.data;
 };
 
+export const getAttractionById = async (id: string) => {
+    const res = await axios.get(`http://localhost:9090/attraction/find/${id}`);
+    return res.data;
+};
+
