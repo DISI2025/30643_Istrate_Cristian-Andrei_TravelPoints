@@ -5,7 +5,7 @@ import type { ColumnsType } from 'antd/es/table';
 import './management.css';
 
 const { Header, Content } = Layout;
-
+//idk
 interface Attraction {
     id: number;
     name: string;
