@@ -21,7 +21,20 @@ export default function Registration() {
             name="name"
             label="Name"
             className="registrationForm"
-            rules={[{ required: true, message: "Please input your name!" }]}
+            rules={[
+              { required: true, message: "Please input your name!" },
+              {
+                validator: (_, value) => {
+                  const nameRegex = /^[A-Z][a-zA-Z\s]*$/;
+                  if (!value || nameRegex.test(value)) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    "Name must start with an uppercase letter and contain only letters and spaces!"
+                  );
+                },
+              },
+            ]}
           >
             <Input prefix={<UserOutlined />} placeholder="Name" />
           </Form.Item>
@@ -42,7 +55,24 @@ export default function Registration() {
             name="password"
             label="Password"
             className="registrationForm"
-            rules={[{ required: true, message: "Please input your password!" }]}
+            rules={[
+              { required: true, message: "Please input your password!" },
+              {
+                validator: (_, value) => {
+                  const passwordRegex = /^[A-Z][A-Za-z\d]{5,}$/;
+                  const hasNumber = /\d/;
+                  if (
+                    !value ||
+                    (passwordRegex.test(value) && hasNumber.test(value))
+                  ) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    "Password must start with an uppercase letter, be at least 6 characters, and contain at least one number!"
+                  );
+                },
+              },
+            ]}
           >
             <Input.Password prefix={<LockOutlined />} placeholder="Password" />
           </Form.Item>
