@@ -18,6 +18,10 @@ public class WishlistEntity {
     @JoinColumn(name = "attraction_id", nullable = false)
     private AttractionEntity attraction;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
     @Column(nullable = false)
     private Date addedAt;
 
