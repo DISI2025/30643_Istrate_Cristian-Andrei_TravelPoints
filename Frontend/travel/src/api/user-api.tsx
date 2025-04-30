@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080/user";
+const BASE_URL = "http://localhost:9090/user";
 
 export const registerUser = async (values: {
   name: string;
