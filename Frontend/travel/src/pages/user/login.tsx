@@ -1,13 +1,24 @@
-import { Card, Form, Input, Button } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Card, Form, Input, Button, notification } from "antd";
+import { loginUser } from "../../api/user-api";
+import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
 
 export default function Login() {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
-  const handleSubmit = (values: any) => {
-    console.log("Form values:", values); // Temporary: for testing before API integration
+  const handleSubmit = async (values: any) => {
+    try {
+      await loginUser(values);
+      notification.success({
+        message: "Successfully logged in",
+        description: "Welcome back!",
+      });
+      navigate("/");
+    } catch (err: any) {
+      notification.error({ message: "Login Failed", description: err + "." });
+    }
   };
 
   return (
