@@ -17,7 +17,7 @@ export default function Attractions() {
     const [attractions, setAttractions] = useState<Attraction[]>([]);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/attraction/getAllPageable?pageNumber=0&pageSize=5")
+        axios.get("http://localhost:9090/attraction/getAllPageable?pageNumber=0&pageSize=5")
             .then(res => setAttractions(res.data.content))
             .catch(() => alert("Failed to load attractions"));
     }, []);
