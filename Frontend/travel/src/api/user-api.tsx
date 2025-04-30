@@ -12,7 +12,9 @@ export const registerUser = async (values: {
     const response = await axios.post(`${BASE_URL}/register`, values);
     return response.data;
   } catch (error: any) {
-    throw error.response?.data || "Registration failed";
+    const rawMessage = error.response?.data || "Something went wrong";
+    const match = rawMessage.match(/"(.*?)"/);
+    throw match ? match[1] : rawMessage;
   }
 };
 
@@ -21,6 +23,8 @@ export const loginUser = async (values: { name: string; password: string }) => {
     const response = await axios.post(`${BASE_URL}/login`, values);
     return response.data;
   } catch (error: any) {
-    throw error.response?.data || "Login failed";
+    const rawMessage = error.response?.data || "Something went wrong";
+    const match = rawMessage.match(/"(.*?)"/);
+    throw match ? match[1] : rawMessage;
   }
 };
