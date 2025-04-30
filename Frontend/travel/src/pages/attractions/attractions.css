@@ -1,7 +1,26 @@
+.attractionsPage {
+    background-color:var(--cream) ;
+    padding: 24px;
+    min-height: 100vh;
+}
+
+.attractionsTitle {
+    text-align: center;
+    color: var(--deep-teal);
+    margin-bottom: 24px;
+}
+
+
+
+.attractionsPage .ant-row {
+    margin-left: -16px;
+    margin-right: -16px;
+}
+
 .attractionCard {
-    background-color: #ffffff;
-    border-color: #077A7D;
-    color: #06202B;
+    background-color: white;
+    border-color: var(--teal);
+    color: var(--deep-teal);
     width: 300px;
     display: flex;
     flex-direction: column;
@@ -17,17 +36,8 @@
     padding-top: 10px;
 }
 
-.attractionsPage {
-    background-color: #F5EEDD;
-    padding: 24px;
-    min-height: 100vh;
-}
 
-.attractionsTitle {
-    text-align: center;
-    color: #06202B;
-    margin-bottom: 24px;
-}
+
 
 .filtersContainer {
     display: flex;
@@ -48,10 +58,6 @@
     height: 100%;
 }
 
-.attractionsPage .ant-row {
-    margin-left: -16px; /* Ensure gutter is consistent */
-    margin-right: -16px;
-}
 
 .ant-row {
     display: flex;
@@ -68,46 +74,93 @@
 .ant-pagination {
     display: flex;
     justify-content: center;
-    background-color: #F5EEDD;
+    background-color: var(--cream);
 }
 
 .attractionCard:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    background-color: #077A7D;
+    background-color: var(--teal);
+}
+
+.attractionsRow {
+    margin-top: 20px;
+    justify-content: center;
+}
+
+/* Style for the image inside the card */
+.attractionImage {
+    object-fit: cover;
+    height: 180px;
 }
 
 
 .ant-btn-primary {
-    background-color: #06202B !important;
-    border-color: #06202B !important;
+    background-color: var(--deep-teal) !important;
+    border-color: var(--deep-teal) !important;
     color: white !important;
 }
 
 .ant-btn-primary:hover{
-    background-color: #077A7D !important;
-    border-color: #077A7D !important;
+    background-color: var(--teal) !important;
+    border-color: var(--teal) !important;
     color: white !important;
 }
 
 
 .customSlider .ant-slider-track {
-    background-color: #06202B;
+    background-color: var(--deep-teal);
 }
 
 .customSlider:hover .ant-slider-track {
-    background-color: #077A7D;
+    background-color: var(--teal);
 }
 
 .customSlider .ant-slider-handle {
-    border-color: #06202B;
-    background-color: #06202B;
+    border-color: var(--deep-teal);
+    background-color: var(--deep-teal);
 }
 
 .customSlider:hover .ant-slider-handle {
-    border-color: #077A7D;
-    background-color: #077A7D;
+    border-color: var(--teal);
+    background-color: var(--teal);
+}
+
+.filterButton {
+    margin-bottom: 20px;
+    margin-left: 64px;
+}
+
+.attractionInput {
+    width: 200px;
+    height: 33px;
+    margin-right: 16px;
+}
+
+.attractionSelect {
+    width: 200px;
+    height: 33px;
+    margin-right: 16px;
+}
+
+.attractionCategorySelect {
+    width: 200px;
+    height: 33px;
+    margin-right: 16px;
+}
+
+.priceRangeContainer {
+    width: 250px;
+    margin-right: 16px;
+}
+
+.priceRangeLabel {
+    color: var(--deep-teal);
 }
 
 
+.paginationStyles {
+    margin-top: 20px;
+    text-align: center;
+}
 
