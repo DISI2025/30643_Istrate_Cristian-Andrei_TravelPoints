@@ -1,22 +1,24 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
-import {Card, Button, Row, Select, Slider, Input, Pagination, message,
+import {
+    Card, Button, Row, Select, Slider, Input, Pagination, message,
 } from "antd";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import "./attractions.css";
 import generalImage from "../../assets/colosseum.jpg";
 
-const { Option } = Select;
+const {Option} = Select;
 
-type Attraction = {
+interface Attraction {
     id: number;
     name: string;
     location: string;
     category: string;
     price: number;
-};
+}
 
 export default function Attractions() {
+
     const [attractions, setAttractions] = useState<Attraction[]>([]);
     const [locations, setLocations] = useState<string[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
@@ -68,7 +70,7 @@ export default function Attractions() {
     };
 
     const fetchFilteredAttractions = async () => {
-        const { name, location, category, priceRange } = filters;
+        const {name, location, category, priceRange} = filters;
         const isEmpty =
             !name && !location && !category && priceRange[0] === 0 && priceRange[1] === 100;
 
@@ -85,19 +87,19 @@ export default function Attractions() {
 
             if (name) {
                 endpoint = "/filterByName";
-                params = { name };
+                params = {name};
             } else if (location) {
                 endpoint = "/filterByLocation";
-                params = { location };
+                params = {location};
             } else if (category) {
                 endpoint = "/filterByCategory";
-                params = { category };
+                params = {category};
             } else if (priceRange) {
                 endpoint = "/filterByPriceRange";
-                params = { minPrice, maxPrice: priceRange[1] };
+                params = {minPrice, maxPrice: priceRange[1]};
             }
 
-            const res = await axios.get(`http://localhost:9090/attraction${endpoint}`, { params });
+            const res = await axios.get(`http://localhost:9090/attraction${endpoint}`, {params});
 
             if (res.data) {
                 setAttractions(res.data);
@@ -128,12 +130,11 @@ export default function Attractions() {
 
             <Button
                 type="primary"
-                style={{ marginBottom: 20, marginLeft: 64 }}
+                className="filterButton"
                 onClick={() => setShowFilters(prev => !prev)}
             >
                 {showFilters ? "Hide Filters" : "Show Filters"}
             </Button>
-
 
 
             {showFilters && (
@@ -141,17 +142,17 @@ export default function Attractions() {
                     <Input
                         placeholder="Attraction Name"
                         value={filters.name}
-                        onChange={e => setFilters(prev => ({ ...prev, name: e.target.value }))}
-                        style={{ width: 200, height: 33, marginRight: 16 }}
+                        onChange={e => setFilters(prev => ({...prev, name: e.target.value}))}
+                        className="attractionInput"
                     />
 
                     <Select
                         placeholder="Select Location"
                         allowClear
-                        style={{ width: 200, height: 33, marginRight: 16 }}
+                        className="attractionSelect"
                         value={filters.location || undefined}
                         onChange={value => {
-                            setFilters(prev => ({ ...prev, location: value || "" }));
+                            setFilters(prev => ({...prev, location: value || ""}));
                             if (!value) {
                                 fetchAttractions(1); // refetch default results when cleared
                             }
@@ -167,10 +168,10 @@ export default function Attractions() {
                     <Select
                         placeholder="Select Category"
                         allowClear
-                        style={{ width: 200, height: 33, marginRight: 16 }}
+                        className="attractionCategorySelect"
                         value={filters.category || undefined}
                         onChange={value => {
-                            setFilters(prev => ({ ...prev, category: value || "" }));
+                            setFilters(prev => ({...prev, category: value || ""}));
                             if (!value) {
                                 fetchAttractions(1); // refetch default results when cleared
                             }
@@ -183,15 +184,15 @@ export default function Attractions() {
                         ))}
                     </Select>
 
-                    <div style={{ width: 250, marginRight: 16 }}>
-                        <span style={{ color: "#06202B" }}>Price Range:</span>
+                    <div className="priceRangeContainer">
+                        <span className="priceRangeLabel">Price Range:</span>
                         <Slider
                             className="customSlider"
                             range
                             min={0}
                             max={100}
                             value={filters.priceRange}
-                            onChange={value => setFilters(prev => ({ ...prev, priceRange: value }))}
+                            onChange={value => setFilters(prev => ({...prev, priceRange: value}))}
                         />
                     </div>
 
@@ -200,8 +201,7 @@ export default function Attractions() {
                     </Button>
                 </div>
             )}
-
-            <Row gutter={[16, 16]} style={{ marginTop: 20, justifyContent: "center" }}>
+            <Row className="attractionsRow">
                 {attractions.map(attraction => (
                     <Link
                         to={`/attractions/${attraction.id}`}
@@ -211,13 +211,8 @@ export default function Attractions() {
                         <Card
                             className="attractionCard"
                             hoverable
-                            cover={
-                                <img
-                                    alt="Attraction"
-                                    src={generalImage}
-                                    style={{ objectFit: "cover", height: 180 }}
-                                />
-                            }
+                            cover={<img alt="Attraction" src={generalImage} className="attractionImage"/>}
+
                         >
                             <div className="cardContent">
                                 <h3>{attraction.name}</h3>
@@ -241,7 +236,7 @@ export default function Attractions() {
                         pageSize={4}
                         onChange={handlePageChange}
                         showSizeChanger={false}
-                        style={{ marginTop: 20, textAlign: "center" }}
+                        className="paginationStyles"
                     />
                 )}
         </div>
