@@ -1,3 +1,5 @@
+import {attractions} from "./mockData";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -10,10 +12,7 @@ type Attraction = {
 };
 
 export default function Attractions() {
-    const attractionsMock = [
-        { id: 1, name: "Eiffel Tower", location: "Paris", category: "Monument", price: 25 },
-        { id: 2, name: "Statue of Liberty", location: "New York", category: "Landmark", price: 30 },
-    ];
+
     const [attractions, setAttractions] = useState<Attraction[]>([]);
 
     useEffect(() => {
