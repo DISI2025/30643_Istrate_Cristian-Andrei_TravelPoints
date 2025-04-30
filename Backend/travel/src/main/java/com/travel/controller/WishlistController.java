@@ -60,7 +60,7 @@ public class WishlistController {
     public ResponseEntity<?> deleteWishlist(@PathVariable("id") Long id) {
         try {
             wishlistService.deleteWishlist(id);
-            return new ResponseEntity<>(true, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("Wishlist with id: " + id + " not found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {

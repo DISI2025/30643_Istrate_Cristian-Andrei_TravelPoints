@@ -10,7 +10,9 @@ import com.travel.repository.AttractionRepository;
 import com.travel.repository.UserRepository;
 import com.travel.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -77,7 +79,9 @@ public class WishlistService {
     }
 
     public void deleteWishlist(Long id) {
-        this.getWishlistById(id);
+        if(!wishlistRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Wishlist not found");
+        }
         wishlistRepository.deleteById(id);
     }
 }
