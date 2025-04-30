@@ -1,21 +1,15 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {Attraction} from "../../models/attractionModel"
+import {notification} from "antd";
+import {Link} from "react-router-dom";
 import {
     Card, Button, Row, Select, Slider, Input, Pagination, message,
 } from "antd";
-import {Link} from "react-router-dom";
 import "./attractions.css";
 import generalImage from "../../assets/colosseum.jpg";
 
 const {Option} = Select;
-
-interface Attraction {
-    id: number;
-    name: string;
-    location: string;
-    category: string;
-    price: number;
-}
 
 export default function Attractions() {
 
@@ -44,7 +38,10 @@ export default function Attractions() {
                 setCategories(uniqueCategories);
             }
         } catch (err) {
-            message.error("Failed to load filter data.");
+            notification.error({
+                message: "Failed to load filter data",
+                description: err + ".",
+            });
         }
     };
 
@@ -65,54 +62,63 @@ export default function Attractions() {
                 setTotalAttractions(0);
             }
         } catch (err) {
-            message.error("Failed to load attractions.");
+            notification.error({
+                message: "Failed to load attractions",
+                description: err + ".",
+            });
         }
     };
 
     const fetchFilteredAttractions = async () => {
-        const {name, location, category, priceRange} = filters;
-        const isEmpty =
-            !name && !location && !category && priceRange[0] === 0 && priceRange[1] === 100;
+            const {name, location, category, priceRange} = filters;
+            const isEmpty =
+                !name && !location && !category && priceRange[0] === 0 && priceRange[1] === 100;
 
-        if (isEmpty) {
-            fetchAttractions(1);
-            return;
-        }
-
-        try {
-            let endpoint = "";
-            let params: any = {};
-
-            const minPrice = priceRange[0] === 0 ? 1 : priceRange[0];
-
-            if (name) {
-                endpoint = "/filterByName";
-                params = {name};
-            } else if (location) {
-                endpoint = "/filterByLocation";
-                params = {location};
-            } else if (category) {
-                endpoint = "/filterByCategory";
-                params = {category};
-            } else if (priceRange) {
-                endpoint = "/filterByPriceRange";
-                params = {minPrice, maxPrice: priceRange[1]};
+            if (isEmpty) {
+                fetchAttractions(1);
+                return;
             }
 
-            const res = await axios.get(`http://localhost:9090/attraction${endpoint}`, {params});
+            try {
+                let endpoint = "";
+                let params: any = {};
 
-            if (res.data) {
-                setAttractions(res.data);
-                setTotalAttractions(res.data.length);
-            } else {
-                setAttractions([]);
-                setTotalAttractions(0);
-                message.error("No attractions found with the given filters.");
+                const minPrice = priceRange[0] === 0 ? 1 : priceRange[0];
+
+                if (name) {
+                    endpoint = "/filterByName";
+                    params = {name};
+                } else if (location) {
+                    endpoint = "/filterByLocation";
+                    params = {location};
+                } else if (category) {
+                    endpoint = "/filterByCategory";
+                    params = {category};
+                } else if (priceRange) {
+                    endpoint = "/filterByPriceRange";
+                    params = {minPrice, maxPrice: priceRange[1]};
+                }
+
+                const res = await axios.get(`http://localhost:9090/attraction${endpoint}`, {params});
+
+                if (res.data) {
+                    setAttractions(res.data);
+                    setTotalAttractions(res.data.length);
+                } else {
+                    setAttractions([]);
+                    setTotalAttractions(0);
+                    notification.error({
+                        message: "No attractions found with the given filters"
+                    });
+                }
+            } catch (err) {
+                notification.error({
+                    message: "No attractions found with the given filters",
+                    description: err + ".",
+                });
             }
-        } catch (err) {
-            message.error("No attractions found with the given filters.");
         }
-    };
+    ;
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -212,7 +218,6 @@ export default function Attractions() {
                             className="attractionCard"
                             hoverable
                             cover={<img alt="Attraction" src={generalImage} className="attractionImage"/>}
-
                         >
                             <div className="cardContent">
                                 <h3>{attraction.name}</h3>
@@ -221,6 +226,8 @@ export default function Attractions() {
                                 <p><strong>Price:</strong> ${attraction.price}</p>
                             </div>
                         </Card>
+
+
                     </Link>
                 ))}
             </Row>
