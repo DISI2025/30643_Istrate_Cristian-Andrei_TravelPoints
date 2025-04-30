@@ -1,0 +1,19 @@
+.attractionsPage {
+    background-color:var(--cream) ;
+    padding: 24px;
+    min-height: 100vh;
+}
+
+.attractionsTitle {
+    text-align: center;
+    color: var(--deep-teal);
+    margin-bottom: 24px;
+}
+
+
+
+.attractionsPage .ant-row {
+    margin-left: -16px;
+    margin-right: -16px;
+}
+

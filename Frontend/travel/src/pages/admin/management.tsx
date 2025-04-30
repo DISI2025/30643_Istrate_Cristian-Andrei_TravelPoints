@@ -1,10 +1,11 @@
+// File: management.tsx
 import React, { useEffect, useState, useCallback } from 'react';
-import { Table, Button, Input, Layout, Modal, Form, message, Menu } from 'antd';
+import { Table, Button, Input, Layout, Modal, Form, message } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import './management.css';
 
-const { Header, Content, Sider } = Layout;
+const { Header, Content } = Layout;
 
 interface Attraction {
     id: number;
@@ -32,7 +33,7 @@ export default function Management() {
                 id: 1,
                 name: 'Eiffel Tower',
                 descriptionText: 'Iconic landmark',
-                descriptionAudio: 'idk.mp3',
+                descriptionAudio: 'https://audio.example.com/eiffel.mp3',
                 location: 'Paris',
                 offers: 'Free tour included',
                 latitude: 48.8584,
@@ -44,7 +45,7 @@ export default function Management() {
                 id: 2,
                 name: 'Statue of Liberty',
                 descriptionText: 'Historic statue',
-                descriptionAudio: 'idk.mp3',
+                descriptionAudio: 'https://audio.example.com/liberty.mp3',
                 location: 'NYC',
                 offers: 'Guided tour',
                 latitude: 40.6892,
@@ -60,6 +61,12 @@ export default function Management() {
         fetchData();
     }, [fetchData]);
 
+    useEffect(() => {
+        if (isModalOpen && editingItem) {
+            form.setFieldsValue(editingItem);
+        }
+    }, [isModalOpen, editingItem, form]);
+
     const handleDelete = (id: number) => {
         message.success(`Deleted attraction with ID ${id}`);
         fetchData();
@@ -67,7 +74,6 @@ export default function Management() {
 
     const handleEdit = (item: Attraction) => {
         setEditingItem(item);
-        form.setFieldsValue(item);
         setIsModalOpen(true);
     };
 
@@ -107,10 +113,10 @@ export default function Management() {
         {
             title: 'Actions',
             render: (_, record) => (
-                <>
+                <span>
                     <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} style={{ marginRight: 8 }} />
                     <Button icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.id)} />
-                </>
+                </span>
             ),
         },
     ];
@@ -118,26 +124,56 @@ export default function Management() {
     return (
         <div className="managementPage">
             <Layout className="managementLayout">
-                <Sider className="managementSider">
-                    <Menu theme="dark" mode="inline" defaultSelectedKeys={['attractions']}>
-                        <Menu.Item key="attractions">Attractions</Menu.Item>
-                    </Menu>
-                </Sider>
-                <Layout>
-                    <Header className="managementHeader">Admin Dashboard</Header>
-                    <Content className="managementContent">
-                        <div className="managementControls">
-                            <Input.Search
-                                placeholder="Search by name"
-                                value={searchText}
-                                onChange={(e) => setSearchText(e.target.value)}
-                                className="managementSearch"
-                            />
-                            <Button icon={<PlusOutlined />} type="primary" onClick={handleAdd}>Add</Button>
-                        </div>
-                        <Table columns={columns} dataSource={filteredData} rowKey="id" pagination={{ pageSize: 5 }} />
-                    </Content>
-                </Layout>
+                <Header className="managementHeader">Admin Dashboard</Header>
+                <Content className="managementContent">
+                    <div className="managementControls">
+                        <Input.Search
+                            placeholder="Search by name"
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            className="managementSearch"
+                        />
+                        <Button icon={<PlusOutlined />} type="primary" onClick={handleAdd}>Add</Button>
+                    </div>
+                    <Table columns={columns} dataSource={filteredData} rowKey="id" pagination={{ pageSize: 5 }} />
+                    <Modal
+                        open={isModalOpen}
+                        onCancel={() => setIsModalOpen(false)}
+                        onOk={handleSave}
+                        title={editingItem ? 'Edit' : 'Add'}
+                        okText={editingItem ? 'Update' : 'Create'}
+                    >
+                        <Form form={form} layout="vertical">
+                            <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="descriptionText" label="Description Text" rules={[{ required: true }]}>
+                                <Input.TextArea />
+                            </Form.Item>
+                            <Form.Item name="descriptionAudio" label="Description Audio" rules={[{ required: true }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="location" label="Location" rules={[{ required: true }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="offers" label="Offers" rules={[{ required: true }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="latitude" label="Latitude" rules={[{ required: true }]}>
+                                <Input type="number" />
+                            </Form.Item>
+                            <Form.Item name="longitude" label="Longitude" rules={[{ required: true }]}>
+                                <Input type="number" />
+                            </Form.Item>
+                            <Form.Item name="price" label="Price" rules={[{ required: true }]}>
+                                <Input type="number" />
+                            </Form.Item>
+                            <Form.Item name="oldPrice" label="Old Price" rules={[{ required: true }]}>
+                                <Input type="number" />
+                            </Form.Item>
+                        </Form>
+                    </Modal>
+                </Content>
             </Layout>
         </div>
     );
