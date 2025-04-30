@@ -10,8 +10,12 @@ import com.travel.repository.AttractionRepository;
 import com.travel.repository.UserRepository;
 import com.travel.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -51,6 +55,18 @@ public class WishlistService {
         return attraction.get();
     }
 
+    public WishlistResponseDTO getWishlistById(Long id) {
+        Optional<WishlistEntity> result = wishlistRepository.findById(id);
+        if(result.isEmpty()){
+            throw new NoSuchElementException("The wishlist with the id: " + id + " does not exist");
+        }
+        return wishlistMapper.toDTO(result.get());
+    }
+
+    public List<WishlistResponseDTO> getAllWishlists() {
+        return wishlistRepository.findAll().stream().map(wishlist -> wishlistMapper.toDTO(wishlist)).toList();
+    }
+    
     public WishlistResponseDTO addWishlist(WishlistRequestDTO wishlistRequestDTO) {
         WishlistEntity wishlist = wishlistMapper.toEntity(wishlistRequestDTO);
         Optional<WishlistEntity> exist = wishlistRepository.findByAttractionIdAndUserId(wishlistRequestDTO.getAttractionId(), wishlistRequestDTO.getUserId());
@@ -60,5 +76,12 @@ public class WishlistService {
         wishlist.setAttraction(checkAttraction(wishlistRequestDTO.getAttractionId()));
         wishlist.setUser(checkUser(wishlistRequestDTO.getUserId()));
         return wishlistMapper.toDTO(wishlistRepository.save(wishlist));
+    }
+
+    public void deleteWishlist(Long id) {
+        if(!wishlistRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Wishlist not found");
+        }
+        wishlistRepository.deleteById(id);
     }
 }
