@@ -13,19 +13,7 @@
 
 
 .attractionsPage .ant-row {
-    margin-left: -16px; /* Ensure gutter is consistent */
+    margin-left: -16px;
     margin-right: -16px;
-}
-
-.ant-row {
-    display: flex;
-    justify-content: center; /* Centers all cards horizontally */
-    flex-wrap: wrap; /* Ensures cards wrap when the screen size is smaller */
-    gap: 16px; /* Adds space between the cards */
-}
-
-.ant-row .ant-col {
-    padding-left: 16px;
-    padding-right: 16px;
 }
 
