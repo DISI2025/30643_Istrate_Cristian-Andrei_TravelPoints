@@ -1,41 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import { List, Card, Button, message, Typography, Modal, Select, Slider, Input } from 'antd';
-import {DeleteOutlined, DollarOutlined} from '@ant-design/icons';
+import { List, Card, Button, message, Typography, Modal, Select } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import { getAllWishlists, deleteWishlist } from '../../api/wishlistApi';
+import { getVisitsOfUser } from '../../api/visitApi';
 import { WishlistResponse } from '../../models/wishlist/wishlistResponse';
+import { VisitResponse } from '../../models/visit/visitResponse';
 import generalImage from "../../assets/colosseum.jpg";
 import './wishlist.css';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-export default function Wishlist() {
-    const [wishlists, setWishlists] = useState<WishlistResponse[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [filters, setFilters] = useState({
-        name: "",
-        location: "",
-        priceRange: [0, 100],
-    });
-    const [locations, setLocations] = useState<string[]>([]);
-    const [shouldFetch, setShouldFetch] = useState<boolean>(true);
+type ItemType = WishlistResponse | VisitResponse;
 
+export default function Wishlist() {
+    const [mode, setMode] = useState<'wishlist' | 'visit'>('wishlist');
+    const [data, setData] = useState<ItemType[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const userId = JSON.parse(localStorage.getItem("user") || "{}")?.id;
 
-    const fetchWishlists = async () => {
+    const fetchData = async () => {
         try {
             setLoading(true);
-            const all = await getAllWishlists();
-            const userWishlists = all.filter((item: WishlistResponse) => item.user.id === userId);
-            const filteredWishlists = userWishlists.filter((item: WishlistResponse) => {
-                const matchName = item.attraction.name.toLowerCase().includes(filters.name.toLowerCase());
-                const matchLocation = filters.location ? item.attraction.location === filters.location : true;
-                const matchPrice = item.attraction.price >= filters.priceRange[0] && item.attraction.price <= filters.priceRange[1];
-                return matchName && matchLocation && matchPrice;
-            });
-            setWishlists(filteredWishlists);
+            if (mode === 'wishlist') {
+                const all = await getAllWishlists();
+                const userWishlists = all.filter((item: WishlistResponse) => item.user.id === userId);
+                setData(userWishlists);
+            } else {
+                const userVisits = await getVisitsOfUser(userId);
+                setData(userVisits);
+            }
         } catch (error) {
-            message.error("Failed to fetch wishlists");
+            message.error("Failed to fetch data");
         } finally {
             setLoading(false);
         }
@@ -52,7 +48,7 @@ export default function Wishlist() {
                 try {
                     await deleteWishlist(id);
                     message.success("Wishlist item deleted");
-                    fetchWishlists();
+                    fetchData();
                 } catch (error) {
                     message.error("Failed to delete wishlist item");
                 }
@@ -60,74 +56,29 @@ export default function Wishlist() {
         });
     };
 
-    const handleFilterChange = (updatedFilters: any) => {
-        setFilters(prev => ({ ...prev, ...updatedFilters }));
-    };
-
-    const handleApplyFilters = () => {
-        setShouldFetch(true);
-    };
-
     useEffect(() => {
-        if (shouldFetch) {
-            fetchWishlists();
-            setShouldFetch(false);
-        }
-    }, [shouldFetch]);
-
-    useEffect(() => {
-        const fetchLocations = async () => {
-            setLocations(["Paris", "Rome", "London", "New York"]);
-        };
-
-        fetchLocations();
-    }, []);
+        fetchData();
+    }, [mode]);
 
     return (
         <div className="wishlist-container">
-            <Title level={2} className="wishlist-title">Your Wishlist</Title>
+            <Title level={2} className="wishlist-title">Your {mode === 'wishlist' ? 'Wishlist' : 'Visits'}</Title>
 
             <div className="filters-container">
-                <Input
-                    placeholder="Attraction Name"
-                    value={filters.name}
-                    onChange={e => handleFilterChange({ name: e.target.value })}
-                    className="attractionInput"
-                />
-
                 <Select
-                    placeholder="Select Location"
-                    allowClear
-                    className="attractionSelect"
-                    value={filters.location || undefined}
-                    onChange={value => handleFilterChange({ location: value })}
+                    defaultValue="wishlist"
+                    onChange={(value) => setMode(value as 'wishlist' | 'visit')}
+                    style={{ width: 200, marginBottom: 24 }}
                 >
-                    {locations.map(loc => (
-                        <Option key={loc} value={loc}>
-                            {loc}
-                        </Option>
-                    ))}
+                    <Option value="wishlist">Wishlist</Option>
+                    <Option value="visit">Visits</Option>
                 </Select>
-                <DollarOutlined className="price-icon" />
-                <div className="priceRangeContainer">
-                    <Slider
-                        range
-                        min={0}
-                        max={100}
-                        value={filters.priceRange}
-                        onChange={value => handleFilterChange({ priceRange: value })}
-                    />
-                </div>
-
-                <Button type="primary" onClick={handleApplyFilters}>
-                    Apply Filters
-                </Button>
             </div>
 
             <List
                 loading={loading}
                 grid={{ gutter: 16, column: 1 }}
-                dataSource={wishlists}
+                dataSource={data}
                 renderItem={item => (
                     <List.Item className="wishlist-item">
                         <Card className="wishlist-card">
@@ -139,19 +90,34 @@ export default function Wishlist() {
                                 />
                                 <div className="wishlist-text">
                                     <Title level={4}>{item.attraction.name}</Title>
-                                    <Text strong>Description:</Text> <Text>{item.attraction.descriptionText}</Text><br />
-                                    <Text strong>Location:</Text> <Text>{item.attraction.location}</Text><br />
-                                    <Text strong>Price:</Text> <Text>${item.attraction.price}</Text>
+
+                                    {"visitTimestamp" in item && (
+                                        <>
+                                            <Text strong>Visited On:</Text>{" "}
+                                            <Text>
+                                                {new Date(item.visitTimestamp as string).toLocaleDateString()}
+                                            </Text><br />
+                                        </>
+                                    )}
+
+                                    <Text strong>Location:</Text>{" "}
+                                    <Text>{item.attraction.location}</Text><br />
+
+                                    <Text strong>Price:</Text>{" "}
+                                    <Text>${item.attraction.price}</Text>
                                 </div>
-                                <div className="wishlist-actions">
-                                    <Button
-                                        danger
-                                        icon={<DeleteOutlined />}
-                                        onClick={() => handleDelete(item.id)}
-                                    >
-                                        Delete
-                                    </Button>
-                                </div>
+
+                                {"addedAt" in item && (
+                                    <div className="wishlist-actions">
+                                        <Button
+                                            danger
+                                            icon={<DeleteOutlined />}
+                                            onClick={() => handleDelete(item.id)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </div>
+                                )}
                             </div>
                         </Card>
                     </List.Item>
