@@ -42,14 +42,14 @@ public class AttractionController {
     }
 
     @GetMapping("/all")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<List<AttractionResponseDTO>> getAllAttractions() {
         List<AttractionResponseDTO> attractions = attractionService.getAllAttractions();
         return new ResponseEntity<>(attractions, HttpStatus.OK);
     }
 
     @GetMapping("find/{id}")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> getAttractionById(@PathVariable("id") Long id) {
         try {
             AttractionResponseDTO existing = attractionService.getAttractionById(id);
@@ -62,7 +62,7 @@ public class AttractionController {
     }
 
     @GetMapping("/filterByLocation")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> filterAttractionsByLocation(
             @RequestParam @NotBlank(message = "Location must not be blank") String location
     ) {
@@ -78,7 +78,7 @@ public class AttractionController {
 
 
     @GetMapping("/filterByCategory")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> filterAttractionsByCategory(
             @RequestParam String category
     ) {
@@ -95,7 +95,7 @@ public class AttractionController {
 
 
     @GetMapping("/filterByPriceRange")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> filterAttractionsByPriceRange(
             @RequestParam @NotNull(message = "Minimum price must not be null") @Positive(message = "Minimum price must be positive") Double minPrice,
             @RequestParam @NotNull(message = "Maximum price must not be null") @Positive(message = "Maximum price must be positive") Double maxPrice
@@ -113,7 +113,7 @@ public class AttractionController {
     }
 
     @GetMapping("/filterByName")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> filterAttractionsByName(
             @RequestParam @NotBlank(message = "Attraction name must not be blank") String name
     ) {
@@ -128,7 +128,7 @@ public class AttractionController {
     }
 
     @GetMapping("/getAllPageable")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> getAllAttractionsPageable(
             @RequestParam(defaultValue = "0") int pageNumber,
             @RequestParam(defaultValue = "5") int pageSize

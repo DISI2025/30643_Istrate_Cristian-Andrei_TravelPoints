@@ -62,7 +62,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> register(@Valid @RequestBody UserRequestDTO userRequestDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getAllErrors()
@@ -75,7 +75,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getAllErrors()

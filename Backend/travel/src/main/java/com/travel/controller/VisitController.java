@@ -28,35 +28,35 @@ public class VisitController {
     }
 
     @GetMapping("/all")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<List<VisitResponseDTO>> getAllVisits() {
         List<VisitResponseDTO> visits = visitService.getAllVisits();
         return new ResponseEntity<>(visits, HttpStatus.OK);
     }
 
     @GetMapping("/ofAttraction/{attractionId}")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<List<VisitResponseDTO>> getVisitsOfAttraction(@PathVariable("attractionId") Long attractionId) {
         List<VisitResponseDTO> visits = visitService.getAttractionVisits(attractionId);
         return new ResponseEntity<>(visits, HttpStatus.OK);
     }
 
     @GetMapping("/ofUser/{userId}")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<List<VisitResponseDTO>> getVisitsOfUser(@PathVariable("userId") Long userId) {
         List<VisitResponseDTO> visits = visitService.getUserVisits(userId);
         return new ResponseEntity<>(visits, HttpStatus.OK);
     }
 
     @GetMapping("/attractionAndUser/{attractionId}/{userId}")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<List<VisitResponseDTO>> getVisitOfUserAndAttraction(@PathVariable("userId") Long userId,@PathVariable("attractionId") Long attractionId) {
         List<VisitResponseDTO> visits = visitService.getUserAndAttractionVisit(attractionId,userId);
         return new ResponseEntity<>(visits, HttpStatus.OK);
     }
 
     @GetMapping("find/{id}")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> getVisitById(@PathVariable("id") Long id) {
         try {
             VisitResponseDTO existing = visitService.getVisitById(id);
@@ -69,7 +69,7 @@ public class VisitController {
     }
 
     @PostMapping("/add")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> addVisit(@Valid @RequestBody VisitRequestDTO visitRequestDTO) {
         try {
             VisitResponseDTO saved = visitService.addVisit(visitRequestDTO);
@@ -82,7 +82,7 @@ public class VisitController {
     }
 
     @PutMapping("/update/{id}")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> updateVisit(@PathVariable("id") Long id, @RequestBody VisitRequestDTO visitRequestDTO) {
         try {
             VisitResponseDTO existing = visitService.getVisitById(id);
@@ -97,7 +97,7 @@ public class VisitController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> deleteVisit(@PathVariable("id") Long id) {
         try {
             visitService.deleteVisit(id);
