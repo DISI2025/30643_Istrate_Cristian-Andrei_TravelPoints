@@ -34,7 +34,7 @@ export default function AttractionDetail() {
         fetchAttraction();
     }, [id]);
 
-    const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!).id : null;
+    const userId = localStorage.getItem("id");
 
     const toggleWishlist = async () => {
         if (!userId || !attraction?.id) {

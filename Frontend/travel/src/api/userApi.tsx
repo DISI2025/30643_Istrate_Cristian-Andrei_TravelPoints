@@ -27,3 +27,9 @@ export const loginUser = async (values: { name: string; password: string }) => {
     throw match ? match[1] : rawMessage;
   }
 };
+
+export const logoutUser = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("isAuthenticated");
+  localStorage.removeItem("isAdmin");
+};

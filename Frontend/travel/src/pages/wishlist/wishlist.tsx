@@ -12,7 +12,7 @@ export default function Wishlist() {
     const [wishlists, setWishlists] = useState<WishlistResponse[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
-    const userId = JSON.parse(localStorage.getItem("user") || "{}")?.id;
+    const userId = localStorage.getItem("id");
 
     const fetchWishlists = async () => {
         try {
