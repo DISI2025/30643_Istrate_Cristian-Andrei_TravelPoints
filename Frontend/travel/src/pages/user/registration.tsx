@@ -1,20 +1,14 @@
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { Card, Form, Input, Button, notification } from "antd";
-import { registerUser } from "../../api/user-api";
+import { TokenPayload } from "../../models/tokenModel";
 import { Link, useNavigate } from "react-router-dom";
-import "./registration.css";
+import { registerUser } from "../../api/userApi";
 import { jwtDecode } from "jwt-decode";
+import "./registration.css";
 
 export default function Registration() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-
-  interface TokenPayload {
-    sub: string;
-    id: number;
-    admin: boolean;
-    exp: number;
-  }
 
   const handleSubmit = async (values: any) => {
     try {

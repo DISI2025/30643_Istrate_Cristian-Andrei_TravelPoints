@@ -1,20 +1,14 @@
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Card, Form, Input, Button, notification } from "antd";
+import { TokenPayload } from "../../models/tokenModel";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../../api/user-api";
+import { loginUser } from "../../api/userApi";
 import { jwtDecode } from "jwt-decode";
 import "./login.css";
 
 export default function Login() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-
-  interface TokenPayload {
-    sub: string;
-    id: number;
-    admin: boolean;
-    exp: number;
-  }
 
   const handleSubmit = async (values: any) => {
     try {
