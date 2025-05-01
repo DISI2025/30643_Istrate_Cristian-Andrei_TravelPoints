@@ -10,7 +10,9 @@ export default function Login() {
 
   const handleSubmit = async (values: any) => {
     try {
-      await loginUser(values);
+      const userData = await loginUser(values);
+      localStorage.setItem("user", JSON.stringify(userData));
+
       notification.success({
         message: "Successfully logged in",
         description: "Welcome back!",
