@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Table, Button, Input, Layout, Modal, Form, message, notification } from 'antd';
+import { Table, Button, Input, Layout, Modal, Form, notification } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import './management.css';
@@ -36,18 +36,32 @@ export default function Management() {
         fetchData();
     }, [fetchData]);
 
-    const handleDelete = async (id: number) => {
-        try {
-            await deleteAttraction(id);
-            message.success(`Deleted attraction with ID ${id}`);
-            fetchData();
-        } catch (err) {
-            notification.error({
-                message: "Failed to delete attraction",
-                description: String(err),
-            });
-        }
+    const handleDelete = (id: number, name: string) => {
+        Modal.confirm({
+            title: 'Confirm Deletion',
+            content: `Are you sure you want to delete "${name}"?`,
+            okText: 'Yes, Delete',
+            okType: 'danger',
+            cancelText: 'Cancel',
+            centered: true,
+            onOk: async () => {
+                try {
+                    await deleteAttraction(id);
+                    notification.success({
+                        message: 'Attraction deleted',
+                        description: `Successfully deleted attraction "${name}".`,
+                    });
+                    fetchData();
+                } catch (err) {
+                    notification.error({
+                        message: 'Failed to delete attraction',
+                        description: String(err),
+                    });
+                }
+            }
+        });
     };
+
 
     const handleEdit = (item: Attraction) => {
         setEditingItem(item);
@@ -106,8 +120,8 @@ export default function Management() {
             title: 'Actions',
             render: (_, record) => (
                 <span>
-          <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} style={{ marginRight: 8 }} />
-          <Button icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.id)} />
+          <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} />
+          <Button icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.id, record.name)} />
         </span>
             ),
         },
