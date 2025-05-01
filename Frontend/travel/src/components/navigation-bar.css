@@ -1,12 +1,12 @@
 .customNavbar {
-  background-color: #077a7d;
+  background-color: var(--teal);
   display: flex;
   align-items: center;
   padding: 0 20px;
 }
 
 .logo {
-  color: #f5eedd;
+  color: var(--cream);
   font-size: 22px;
   font-weight: bold;
   margin-right: 30px;
@@ -20,16 +20,16 @@
 }
 
 .menu a {
-  color: #f5eedd !important;
+  color: var(--cream) !important;
 }
 
 .menu a:hover {
-  color: #7ae2cf !important;
+  color: var(--aqua) !important;
 }
 
 .ant-menu-item-selected {
-  background-color: #06202b !important;
-  color: #7ae2cf !important;
+  background-color: var(--deep-teal) !important;
+  color: var(--teal) !important;
 }
 
 .menu .loginItem {
