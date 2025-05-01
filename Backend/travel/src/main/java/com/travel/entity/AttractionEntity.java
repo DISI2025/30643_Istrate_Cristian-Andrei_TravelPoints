@@ -3,6 +3,9 @@ package com.travel.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @Table(name = "attractions")
@@ -41,5 +44,8 @@ public class AttractionEntity {
 
     @Column(nullable = false)
     private Double oldPrice;
+
+    @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VisitEntity> visits = new ArrayList<>();
 
 }
