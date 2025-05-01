@@ -4,7 +4,12 @@ import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import './management.css';
 import { Attraction } from '../../models/attractionEntity';
-import {getAllAttractions, createAttraction, updateAttraction} from "../../api/attractionApi";
+import {
+    getAllAttractions,
+    createAttraction,
+    updateAttraction,
+    deleteAttraction
+} from "../../api/attractionApi";
 
 const { Header, Content } = Layout;
 
@@ -21,7 +26,7 @@ export default function Management() {
             setData(allAttractions);
         } catch (err) {
             notification.error({
-                message: "Failed to load filter data",
+                message: "Failed to load data",
                 description: String(err),
             });
         }
@@ -31,27 +36,24 @@ export default function Management() {
         fetchData();
     }, [fetchData]);
 
-    const handleDelete = (id: number) => {
-        message.success(`Deleted attraction with ID ${id}`);
-        fetchData();
+    const handleDelete = async (id: number) => {
+        try {
+            await deleteAttraction(id);
+            message.success(`Deleted attraction with ID ${id}`);
+            fetchData();
+        } catch (err) {
+            notification.error({
+                message: "Failed to delete attraction",
+                description: String(err),
+            });
+        }
     };
 
     const handleEdit = (item: Attraction) => {
         setEditingItem(item);
         setIsModalOpen(true);
         setTimeout(() => {
-            form.setFieldsValue({
-                name: item.name,
-                descriptionText: item.descriptionText,
-                descriptionAudio: item.descriptionAudio,
-                location: item.location,
-                offers: item.offers,
-                category: item.category,
-                latitude: item.latitude,
-                longitude: item.longitude,
-                price: item.price,
-                oldPrice: item.oldPrice
-            });
+            form.setFieldsValue(item);
         }, 0);
     };
 
@@ -67,8 +69,7 @@ export default function Management() {
         form.validateFields().then(async (values) => {
             try {
                 if (editingItem) {
-                    const payload = { ...values, id: editingItem.id };
-                    await updateAttraction(payload);
+                    await updateAttraction({ ...values, id: editingItem.id });
                     notification.success({ message: 'Attraction updated successfully!' });
                 } else {
                     await createAttraction(values);
@@ -82,8 +83,6 @@ export default function Management() {
                     description: String(error),
                 });
             }
-        }).catch(info => {
-            //console.log('Validate Failed:', info);
         });
     };
 
@@ -107,9 +106,9 @@ export default function Management() {
             title: 'Actions',
             render: (_, record) => (
                 <span>
-                    <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} style={{ marginRight: 8 }} />
-                    <Button icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.id)} />
-                </span>
+          <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} style={{ marginRight: 8 }} />
+          <Button icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.id)} />
+        </span>
             ),
         },
     ];
@@ -136,20 +135,31 @@ export default function Management() {
                         title={editingItem ? 'Edit' : 'Add'}
                         okText={editingItem ? 'Update' : 'Create'}
                     >
-                        <Form
-                            form={form}
-                            layout="vertical"
-                            onFinish={(values) => console.log({ values })}
-                            onFinishFailed={({ errorFields }) => console.log({ errorFields })}
-                        >
-                            <Form.Item name="name" label="Name" rules={[{ required: true }]} children={<Input />} />
-                            <Form.Item name="descriptionText" label="Description Text" rules={[{ required: true }]} children={<Input.TextArea />} />
-                            <Form.Item name="descriptionAudio" label="Description Audio" rules={[{ required: true }]} children={<Input />} />
-                            <Form.Item name="location" label="Location" rules={[{ required: true }]} children={<Input />} />
-                            <Form.Item name="offers" label="Offers" rules={[{ required: true }]} children={<Input />} />
-                            <Form.Item name="category" label="Category" rules={[{ required: true }]} children={<Input />} />
-                            <Form.Item name="latitude" label="Latitude" rules={[{ required: true }]} children={<Input type="number" />} />
-                            <Form.Item name="longitude" label="Longitude" rules={[{ required: true }]} children={<Input type="number" />} />
+                        <Form form={form} layout="vertical">
+                            <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="descriptionText" label="Description Text" rules={[{ required: true }]}>
+                                <Input.TextArea />
+                            </Form.Item>
+                            <Form.Item name="descriptionAudio" label="Description Audio" rules={[{ required: true }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="location" label="Location" rules={[{ required: true }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="offers" label="Offers" rules={[{ required: true }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="category" label="Category" rules={[{ required: true }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="latitude" label="Latitude" rules={[{ required: true }]}>
+                                <Input type="number" />
+                            </Form.Item>
+                            <Form.Item name="longitude" label="Longitude" rules={[{ required: true }]}>
+                                <Input type="number" />
+                            </Form.Item>
                             <Form.Item
                                 name="price"
                                 label="Price"
@@ -165,7 +175,9 @@ export default function Management() {
                             >
                                 <Input type="number" />
                             </Form.Item>
-                            <Form.Item name="oldPrice" label="Old Price" rules={[{ required: true }]} children={<Input type="number" />} />
+                            <Form.Item name="oldPrice" label="Old Price" rules={[{ required: true }]}>
+                                <Input type="number" />
+                            </Form.Item>
                         </Form>
                     </Modal>
                 </Content>

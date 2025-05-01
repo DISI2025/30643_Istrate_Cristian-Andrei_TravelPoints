@@ -55,4 +55,9 @@ export const updateAttraction = async (attraction: any) => {
     return res.data;
 };
 
+export const deleteAttraction = async (id: any) => {
+    const res = await axios.delete(`${BASE_URL}/delete/${id}`);
+    return res.data;
+};
+
 
