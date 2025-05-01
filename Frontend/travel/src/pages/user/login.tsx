@@ -18,6 +18,7 @@ export default function Login() {
       localStorage.setItem("token", token);
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("isAdmin", decoded.admin.toString());
+      localStorage.setItem("id", decoded.id.toString());
 
       notification.success({
         message: "Successfully logged in",
