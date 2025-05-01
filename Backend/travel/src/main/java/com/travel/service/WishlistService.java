@@ -66,6 +66,14 @@ public class WishlistService {
     public List<WishlistResponseDTO> getAllWishlists() {
         return wishlistRepository.findAll().stream().map(wishlist -> wishlistMapper.toDTO(wishlist)).toList();
     }
+
+    public WishlistResponseDTO getWishlistByAttractionIdAndUserId(Long attractionId, Long userId) {
+        Optional<WishlistEntity> result = wishlistRepository.findByAttractionIdAndUserId(attractionId, userId);
+        if(result.isEmpty()){
+            throw new NoSuchElementException("The wishlist of user with the id:" + userId + "does not contains the attraction with the id: " + attractionId);
+        }
+        return wishlistMapper.toDTO(result.get());
+    }
     
     public WishlistResponseDTO addWishlist(WishlistRequestDTO wishlistRequestDTO) {
         WishlistEntity wishlist = wishlistMapper.toEntity(wishlistRequestDTO);
