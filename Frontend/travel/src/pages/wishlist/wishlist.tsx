@@ -17,7 +17,7 @@ export default function Wishlist() {
     const [mode, setMode] = useState<'wishlist' | 'visit'>('wishlist');
     const [data, setData] = useState<ItemType[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const userId = JSON.parse(localStorage.getItem("user") || "{}")?.id;
+    const userId = JSON.parse(localStorage.getItem("id") || "{}");
 
     const fetchData = async () => {
         try {

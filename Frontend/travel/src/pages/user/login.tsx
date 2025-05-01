@@ -1,7 +1,9 @@
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Card, Form, Input, Button, notification } from "antd";
-import { loginUser } from "../../api/user-api";
+import { TokenPayload } from "../../models/tokenModel";
 import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../../api/userApi";
+import { jwtDecode } from "jwt-decode";
 import "./login.css";
 
 export default function Login() {
@@ -10,8 +12,13 @@ export default function Login() {
 
   const handleSubmit = async (values: any) => {
     try {
-      const userData = await loginUser(values);
-      localStorage.setItem("user", JSON.stringify(userData));
+      const token = await loginUser(values);
+      const decoded = jwtDecode<TokenPayload>(token);
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("isAdmin", decoded.admin.toString());
+      localStorage.setItem("id", decoded.id.toString());
 
       notification.success({
         message: "Successfully logged in",

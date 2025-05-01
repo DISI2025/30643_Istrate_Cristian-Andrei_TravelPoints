@@ -1,7 +1,9 @@
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { Card, Form, Input, Button, notification } from "antd";
-import { registerUser } from "../../api/user-api";
+import { TokenPayload } from "../../models/tokenModel";
 import { Link, useNavigate } from "react-router-dom";
+import { registerUser } from "../../api/userApi";
+import { jwtDecode } from "jwt-decode";
 import "./registration.css";
 
 export default function Registration() {
@@ -10,7 +12,13 @@ export default function Registration() {
 
   const handleSubmit = async (values: any) => {
     try {
-      await registerUser(values);
+      const token = await registerUser(values);
+      const decoded = jwtDecode<TokenPayload>(token);
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("isAdmin", decoded.admin.toString());
+
       notification.success({
         message: "Registration Complete",
         description: "Welcome!",
