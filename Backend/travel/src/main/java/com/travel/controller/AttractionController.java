@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -135,6 +136,7 @@ public class AttractionController {
 
 
     @PostMapping("/add")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<?> addAttraction(@Valid @RequestBody AttractionRequestDTO attractionRequestDTO) {
         try {
             AttractionResponseDTO saved = attractionService.addAttraction(attractionRequestDTO);
@@ -147,6 +149,7 @@ public class AttractionController {
     }
 
     @PutMapping("/update/{id}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<?> updateAttraction(@PathVariable("id") Long id, @RequestBody AttractionRequestDTO attractionRequestDTO) {
         try {
             AttractionResponseDTO existing = attractionService.getAttractionById(id);
@@ -161,6 +164,7 @@ public class AttractionController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<?> deleteAttraction(@PathVariable("id") Long id) {
         try {
             attractionService.deleteAttraction(id);
