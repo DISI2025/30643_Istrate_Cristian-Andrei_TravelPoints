@@ -3,14 +3,28 @@ import { Card, Form, Input, Button, notification } from "antd";
 import { registerUser } from "../../api/user-api";
 import { Link, useNavigate } from "react-router-dom";
 import "./registration.css";
+import { jwtDecode } from "jwt-decode";
 
 export default function Registration() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
+  interface TokenPayload {
+    sub: string;
+    id: number;
+    admin: boolean;
+    exp: number;
+  }
+
   const handleSubmit = async (values: any) => {
     try {
-      await registerUser(values);
+      const token = await registerUser(values);
+      const decoded = jwtDecode<TokenPayload>(token);
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("isAdmin", decoded.admin.toString());
+
       notification.success({
         message: "Registration Complete",
         description: "Welcome!",

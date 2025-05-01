@@ -1,16 +1,30 @@
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Card, Form, Input, Button, notification } from "antd";
-import { loginUser } from "../../api/user-api";
 import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../../api/user-api";
+import { jwtDecode } from "jwt-decode";
 import "./login.css";
 
 export default function Login() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
+  interface TokenPayload {
+    sub: string;
+    id: number;
+    admin: boolean;
+    exp: number;
+  }
+
   const handleSubmit = async (values: any) => {
     try {
-      await loginUser(values);
+      const token = await loginUser(values);
+      const decoded = jwtDecode<TokenPayload>(token);
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("isAdmin", decoded.admin.toString());
+
       notification.success({
         message: "Successfully logged in",
         description: "Welcome back!",
