@@ -1,0 +1,37 @@
+.customNavbar {
+    background-color: #077a7d; /* Primary color */
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo {
+    color: #f5eedd;
+    font-size: 22px;
+    font-weight: bold;
+    margin-right: 30px;
+}
+
+.menu {
+    background-color: transparent;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.menu a {
+    color: #f5eedd !important;
+}
+
+.menu a:hover {
+    color: #7ae2cf !important;
+}
+
+.ant-menu-item-selected {
+    background-color: #06202b !important;
+    color: #7ae2cf !important;
+}
+
+.spacer {
+    flex-grow: 1;
+}

@@ -8,11 +8,15 @@ import Management from "./pages/admin/management";
 import AttractionDetail from "./pages/attractions/attractionsDetails";
 import ProtectedRoute from "./components/protected-route";
 import Wishlist from "./pages/wishlist/wishlist";
+import Navbar from "./components/navigation-bar"
 
 function App() {
     return (
+
         <BrowserRouter>
+            <Navbar />
             <Routes>
+
                 <Route path="/register" element={<Registration/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/attractions/:id" element={<AttractionDetail/>}/>
