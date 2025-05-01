@@ -45,3 +45,14 @@ export const getAttractionById = async (id: string) => {
     return res.data;
 };
 
+export const createAttraction = async (attraction: any) => {
+    const res = await axios.post(`${BASE_URL}/add`, attraction);
+    return res.data;
+};
+
+export const updateAttraction = async (attraction: any) => {
+    const res = await axios.put(`${BASE_URL}/update/${attraction.id}`, attraction);
+    return res.data;
+};
+
+
