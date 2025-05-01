@@ -48,6 +48,7 @@ public class WishlistController {
     }
 
     @GetMapping("/check")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> getWishlistByAttractionIdAndUserId(
             @RequestParam("attractionId") Long attractionId,
             @RequestParam("userId") Long userId

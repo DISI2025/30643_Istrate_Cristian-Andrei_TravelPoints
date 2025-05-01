@@ -19,6 +19,7 @@ export default function Wishlist() {
             setLoading(true);
             const all = await getAllWishlists();
             const userWishlists = all.filter((item: WishlistResponse) => item.user.id === userId);
+            console.log(userWishlists);
             setWishlists(userWishlists);
         } catch (error) {
             message.error("Failed to fetch wishlists");
