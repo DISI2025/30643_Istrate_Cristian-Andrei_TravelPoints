@@ -32,4 +32,5 @@ export const logoutUser = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("isAuthenticated");
   localStorage.removeItem("isAdmin");
+  localStorage.removeItem("id");
 };

@@ -1,5 +1,6 @@
 package com.travel.controller;
 
+import com.travel.dtos.AttractionPageResponseDTO;
 import com.travel.dtos.AttractionRequestDTO;
 import com.travel.dtos.AttractionResponseDTO;
 import com.travel.entity.AttractionEntity;
@@ -66,8 +67,6 @@ public class AttractionController {
         try {
             List<AttractionResponseDTO> attractions = attractionService.filterAttractionsByLocation(location);
             return new ResponseEntity<>(attractions, HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("No attractions found for the given location.", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -81,9 +80,7 @@ public class AttractionController {
         try {
             List<AttractionResponseDTO> attractions = attractionService.filterAttractionsByCategory(category);
             return new ResponseEntity<>(attractions, HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("No attractions found for the given category: " + category, HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
+        }catch (Exception e) {
             return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -100,8 +97,6 @@ public class AttractionController {
             return new ResponseEntity<>(attractions, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>("Invalid price range: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("No attractions found in the given price range.", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -114,8 +109,6 @@ public class AttractionController {
         try {
             List<AttractionResponseDTO> attractions = attractionService.filterAttractionsByName(name);
             return new ResponseEntity<>(attractions, HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("No attractions found with the name: " + name, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -127,7 +120,7 @@ public class AttractionController {
             @RequestParam(defaultValue = "5") int pageSize
     ) {
         try {
-            Page<AttractionResponseDTO> page = attractionService.getAllAttractionsPageable(pageNumber, pageSize);
+            AttractionPageResponseDTO page = attractionService.getAllAttractionsPageable(pageNumber, pageSize);
             return new ResponseEntity<>(page, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

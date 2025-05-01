@@ -48,4 +48,6 @@ public class AttractionEntity {
     @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VisitEntity> visits = new ArrayList<>();
 
+    @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WishlistEntity> wishlists = new ArrayList<>();
 }

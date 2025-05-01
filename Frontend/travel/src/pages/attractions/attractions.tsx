@@ -1,14 +1,14 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Attraction} from "../../models/attractionModel"
-import {notification} from "antd";
+import {Empty, notification} from "antd";
 import {Link} from "react-router-dom";
 import {
     Card, Button, Row, Select, Slider, Input, Pagination, message,
 } from "antd";
 import "./attractions.css";
 import generalImage from "../../assets/colosseum.jpg";
-import { getAllAttractions, getAttractionsPageable, getFilteredAttractions } from "../../api/attractionApi";
+import {getAllAttractions, getAttractionsPageable, getFilteredAttractions} from "../../api/attractionApi";
 
 const {Option} = Select;
 
@@ -62,7 +62,7 @@ export default function Attractions() {
     };
 
     const fetchFilteredAttractions = async () => {
-        const { name, location, category, priceRange } = filters;
+        const {name, location, category, priceRange} = filters;
         const isEmpty = !name && !location && !category && priceRange[0] === 0 && priceRange[1] === 100;
 
         if (isEmpty) {
@@ -72,21 +72,24 @@ export default function Attractions() {
 
         try {
             const data = await getFilteredAttractions(filters);
-            if (data) {
-                setAttractions(data);
-                setTotalAttractions(data.length);
-            } else {
+
+            if (!data) {
                 setAttractions([]);
                 setTotalAttractions(0);
-                notification.error({ message: "No attractions found with the given filters" });
+                notification.info({message: "No attractions matched your filters."});
+                return;
             }
+
+            setAttractions(data);
+            setTotalAttractions(data.length);
         } catch (err) {
             notification.error({
-                message: "No attractions found with the given filters",
-                description: err + ".",
+                message: "Unexpected error occurred",
+                description: String(err),
             });
         }
     };
+
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -147,7 +150,7 @@ export default function Attractions() {
                         onChange={value => {
                             setFilters(prev => ({...prev, category: value || ""}));
                             if (!value) {
-                                fetchAttractions(1); // refetch default results when cleared
+                                fetchAttractions(1);
                             }
                         }}
                     >
@@ -176,29 +179,38 @@ export default function Attractions() {
                 </div>
             )}
             <Row className="attractionsRow">
-                {attractions.map(attraction => (
-                    <Link
-                        to={`/attractions/${attraction.id}`}
-                        key={attraction.id}
-                        className="attractionCardLink"
-                    >
-                        <Card
-                            className="attractionCard"
-                            hoverable
-                            cover={<img alt="Attraction" src={generalImage} className="attractionImage"/>}
+                {attractions.length > 0 ? (
+                    attractions.map(attraction => (
+                        <Link
+                            to={`/attractions/${attraction.id}`}
+                            key={attraction.id}
+                            className="attractionCardLink"
                         >
-                            <div className="cardContent">
-                                <h3>{attraction.name}</h3>
-                                <p><strong>Location:</strong> {attraction.location}</p>
-                                <p><strong>Category:</strong> {attraction.category}</p>
-                                <p><strong>Price:</strong> ${attraction.price}</p>
-                            </div>
-                        </Card>
-
-
-                    </Link>
-                ))}
+                            <Card
+                                className="attractionCard"
+                                hoverable
+                                cover={<img alt="Attraction" src={generalImage} className="attractionImage"/>}
+                            >
+                                <div className="cardContent">
+                                    <h3>{attraction.name}</h3>
+                                    <p><strong>Location:</strong> {attraction.location}</p>
+                                    <p><strong>Category:</strong> {attraction.category}</p>
+                                    <p><strong>Price:</strong> ${attraction.price}
+                                        {attraction.oldPrice > 0 && (
+                                            <span className="oldPrice">${attraction.oldPrice}</span>
+                                        )}
+                                    </p>
+                                </div>
+                            </Card>
+                        </Link>
+                    ))
+                ) : (
+                    <div style={{width: '100%', textAlign: 'center', marginTop: 50}}>
+                        <Empty description="No attractions found"/>
+                    </div>
+                )}
             </Row>
+
 
             {!filters.name &&
                 !filters.location &&

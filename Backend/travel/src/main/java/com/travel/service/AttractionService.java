@@ -1,5 +1,6 @@
 package com.travel.service;
 
+import com.travel.dtos.AttractionPageResponseDTO;
 import com.travel.dtos.AttractionRequestDTO;
 import com.travel.dtos.AttractionResponseDTO;
 import com.travel.entity.AttractionEntity;
@@ -33,9 +34,7 @@ public class AttractionService {
 
     public AttractionResponseDTO getAttractionById(Long id) {
         Optional<AttractionEntity> result = attractionRepository.findAttractionById(id);
-        if(result.isEmpty()){
-            throw new NoSuchElementException("The attraction with the id: " + id + " does not exist");
-        }
+
         return attractionMapper.toDTO(result.get());
     }
 
@@ -47,10 +46,6 @@ public class AttractionService {
     public List<AttractionResponseDTO> filterAttractionsByLocation(String location) {
         List<AttractionEntity> filteredAttractions = attractionRepository.findByLocation(location);
 
-        if (filteredAttractions.isEmpty()) {
-            throw new NoSuchElementException("No attractions found for the given location.");
-        }
-
         return filteredAttractions.stream()
                 .map(attractionMapper::toDTO)
                 .toList();
@@ -59,10 +54,6 @@ public class AttractionService {
 
     public List<AttractionResponseDTO> filterAttractionsByCategory(String category) {
         List<AttractionEntity> filteredAttractions = attractionRepository.findByCategory(category);
-
-        if (filteredAttractions.isEmpty()) {
-            throw new NoSuchElementException("No attractions found for the given category: " + category);
-        }
 
         return filteredAttractions.stream()
                 .map(attractionMapper::toDTO)
@@ -77,10 +68,6 @@ public class AttractionService {
 
         List<AttractionEntity> filteredAttractions = attractionRepository.findByPriceBetween(minPrice, maxPrice);
 
-        if (filteredAttractions.isEmpty()) {
-            throw new NoSuchElementException("No attractions found in the given price range.");
-        }
-
         return filteredAttractions.stream()
                 .map(attractionMapper::toDTO)
                 .toList();
@@ -89,21 +76,20 @@ public class AttractionService {
     public List<AttractionResponseDTO> filterAttractionsByName(String name) {
         List<AttractionEntity> filteredAttractions = attractionRepository.findByNameContainingIgnoreCase(name);
 
-        if (filteredAttractions.isEmpty()) {
-            throw new NoSuchElementException("No attractions found with the name: " + name);
-        }
-
         return filteredAttractions.stream()
                 .map(attractionMapper::toDTO)
                 .toList();
     }
 
-    public Page<AttractionResponseDTO> getAllAttractionsPageable(int pageNumber, int pageSize) {
+    public AttractionPageResponseDTO getAllAttractionsPageable(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<AttractionEntity> page = attractionRepository.findAll(pageable);
-        return page.map(attractionMapper::toDTO);
-    }
 
+        AttractionPageResponseDTO response = new AttractionPageResponseDTO();
+        response.setContent(attractionMapper.listToDTO(page.getContent()));
+        response.setNumberOfElements(page.getNumberOfElements());
+        return response;
+    }
 
 
     public AttractionResponseDTO addAttraction(AttractionRequestDTO attraction) {

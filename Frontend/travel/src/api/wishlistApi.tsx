@@ -13,7 +13,7 @@ export const getWishlistById = async (id: string) => {
     return res.data;
 };
 
-export const getWishlistByUserIdAndAttractionId = async (userId: number, attractionId: number) => {
+export const getWishlistByUserIdAndAttractionId = async (userId: string, attractionId: string) => {
     const res = await axiosInstance.get(`${BASE_URL}/check`, {
         params: {
             attractionId,

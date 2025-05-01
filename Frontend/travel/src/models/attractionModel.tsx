@@ -4,4 +4,5 @@ export interface Attraction {
     location: string;
     category: string;
     price: number;
+    oldPrice: number
 };
