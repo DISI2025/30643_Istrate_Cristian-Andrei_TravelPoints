@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,12 +28,14 @@ public class WishlistController {
     }
 
     @GetMapping()
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<List<WishlistResponseDTO>> getAllWishlists() {
         List<WishlistResponseDTO> wishlists = wishlistService.getAllWishlists();
         return new ResponseEntity<>(wishlists, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> getWishlistById(@PathVariable("id") Long id) {
         try {
             WishlistResponseDTO existing = wishlistService.getWishlistById(id);
@@ -45,6 +48,7 @@ public class WishlistController {
     }
 
     @PostMapping()
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> addWishlist(@Valid @RequestBody WishlistRequestDTO wishlistRequestDTO) {
         try {
             WishlistResponseDTO saved = wishlistService.addWishlist(wishlistRequestDTO);
@@ -57,6 +61,7 @@ public class WishlistController {
     }
 
     @DeleteMapping("/{id}")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> deleteWishlist(@PathVariable("id") Long id) {
         try {
             wishlistService.deleteWishlist(id);
