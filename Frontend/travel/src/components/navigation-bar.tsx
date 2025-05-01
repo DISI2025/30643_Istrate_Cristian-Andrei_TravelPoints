@@ -1,44 +1,82 @@
 import React from "react";
-import { Menu, Layout } from "antd";
-import { NavLink, useLocation } from "react-router-dom";
+import { Menu, Layout, Button, MenuProps } from "antd";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
-    HomeOutlined,
-    HeartOutlined,
-    LoginOutlined,
-    AppstoreOutlined
+  HomeOutlined,
+  HeartOutlined,
+  LoginOutlined,
+  AppstoreOutlined,
 } from "@ant-design/icons";
 import "./navigation-bar.css";
 
 const { Header } = Layout;
 
 const Navbar: React.FC = () => {
-    const location = useLocation();
+  const location = useLocation();
+  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
+  const navigate = useNavigate();
 
-    return (
-        <Header className="customNavbar">
-            <div className="logo">TravelPoints</div>
-            <Menu
-                theme="dark"
-                mode="horizontal"
-                selectedKeys={[location.pathname]}
-                className="menu"
-            >
-                <Menu.Item key="/attractions" icon={<HomeOutlined />}>
-                    <NavLink to="/attractions">Attractions</NavLink>
-                </Menu.Item>
-                <Menu.Item key="/wishlist" icon={<HeartOutlined />}>
-                    <NavLink to="/wishlist">Wishlist</NavLink>
-                </Menu.Item>
-                <Menu.Item key="/admin" icon={<AppstoreOutlined />}>
-                    <NavLink to="/admin">Admin</NavLink>
-                </Menu.Item>
-                <div className="spacer" />
-                <Menu.Item key="/login" icon={<LoginOutlined />}>
-                    <NavLink to="/login">Sign Out</NavLink>
-                </Menu.Item>
-            </Menu>
-        </Header>
-    );
+  const logoutUser = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("isAdmin");
+    localStorage.removeItem("id");
+    navigate("/login");
+  };
+
+  const menuItems: MenuProps["items"] = [
+    {
+      key: "/attractions",
+      icon: <HomeOutlined />,
+      label: <NavLink to="/attractions">Attractions</NavLink>,
+    },
+    ...(isAuthenticated
+      ? [
+          {
+            key: "/wishlist",
+            icon: <HeartOutlined />,
+            label: <NavLink to="/wishlist">Wishlist</NavLink>,
+          },
+        ]
+      : []),
+    ...(isAdmin
+      ? [
+          {
+            key: "/admin",
+            icon: <AppstoreOutlined />,
+            label: <NavLink to="/admin">Admin</NavLink>,
+          },
+        ]
+      : []),
+    isAuthenticated
+      ? {
+          key: "/logout",
+          icon: <LoginOutlined />,
+          label: "Log out",
+          className: "loginItem",
+          onClick: logoutUser, // <-- hook up your logout function here
+        }
+      : {
+          key: "/login",
+          icon: <LoginOutlined />,
+          label: <NavLink to="/login">Log in</NavLink>,
+          className: "loginItem",
+        },
+  ];
+
+  return (
+    <Header className="customNavbar">
+      <div className="logo">TravelPoints</div>
+      <Menu
+        theme="dark"
+        mode="horizontal"
+        selectedKeys={[location.pathname]}
+        className="menu"
+        items={menuItems}
+      />
+    </Header>
+  );
 };
 
 export default Navbar;

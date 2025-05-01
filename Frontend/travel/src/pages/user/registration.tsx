@@ -18,6 +18,7 @@ export default function Registration() {
       localStorage.setItem("token", token);
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("isAdmin", decoded.admin.toString());
+      localStorage.setItem("id", decoded.id.toString());
 
       notification.success({
         message: "Registration Complete",
