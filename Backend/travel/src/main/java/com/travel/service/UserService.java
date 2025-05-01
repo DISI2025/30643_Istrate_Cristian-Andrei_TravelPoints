@@ -1,5 +1,6 @@
 package com.travel.service;
 
+import com.travel.config.JwtUtil;
 import com.travel.entity.UserEntity;
 import com.travel.mapper.UserMapper;
 import com.travel.dtos.UserRequestDTO;
@@ -19,12 +20,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     public UserResponseDTO addUser(UserRequestDTO userRequestDTO) {
@@ -68,7 +71,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public UserResponseDTO registerUser(UserRequestDTO userRequestDTO) {
+    public String registerUser(UserRequestDTO userRequestDTO) {
         if (userRepository.findByEmail(userRequestDTO.getEmail()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
@@ -76,15 +79,15 @@ public class UserService {
         if (user.getPassword() != null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        return userMapper.toDTO(userRepository.save(user));
+        return jwtUtil.generateToken(userMapper.toDTO(userRepository.save(user)));
     }
 
-    public UserResponseDTO loginUser(LoginRequestDTO loginRequest) {
+    public String loginUser(LoginRequestDTO loginRequest) {
         UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
-        return userMapper.toDTO(user);
+        return jwtUtil.generateToken(userMapper.toDTO(user));
     }
 }
