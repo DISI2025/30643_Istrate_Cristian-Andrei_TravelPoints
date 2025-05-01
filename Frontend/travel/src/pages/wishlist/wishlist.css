@@ -45,3 +45,18 @@
     flex-direction: column;
     justify-content: flex-end;
 }
+
+.filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: flex-start;
+    margin-left: 0;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+}
+
+.price-icon {
+    color: var(--deep-teal);
+    font-size: 25px;
+}
