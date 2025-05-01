@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -27,30 +28,35 @@ public class VisitController {
     }
 
     @GetMapping("/all")
+    @Secured("ROLE_USER")
     public ResponseEntity<List<VisitResponseDTO>> getAllVisits() {
         List<VisitResponseDTO> visits = visitService.getAllVisits();
         return new ResponseEntity<>(visits, HttpStatus.OK);
     }
 
     @GetMapping("/ofAttraction/{attractionId}")
+    @Secured("ROLE_USER")
     public ResponseEntity<List<VisitResponseDTO>> getVisitsOfAttraction(@PathVariable("attractionId") Long attractionId) {
         List<VisitResponseDTO> visits = visitService.getAttractionVisits(attractionId);
         return new ResponseEntity<>(visits, HttpStatus.OK);
     }
 
     @GetMapping("/ofUser/{userId}")
+    @Secured("ROLE_USER")
     public ResponseEntity<List<VisitResponseDTO>> getVisitsOfUser(@PathVariable("userId") Long userId) {
         List<VisitResponseDTO> visits = visitService.getUserVisits(userId);
         return new ResponseEntity<>(visits, HttpStatus.OK);
     }
 
     @GetMapping("/attractionAndUser/{attractionId}/{userId}")
+    @Secured("ROLE_USER")
     public ResponseEntity<List<VisitResponseDTO>> getVisitOfUserAndAttraction(@PathVariable("userId") Long userId,@PathVariable("attractionId") Long attractionId) {
         List<VisitResponseDTO> visits = visitService.getUserAndAttractionVisit(attractionId,userId);
         return new ResponseEntity<>(visits, HttpStatus.OK);
     }
 
     @GetMapping("find/{id}")
+    @Secured("ROLE_USER")
     public ResponseEntity<?> getVisitById(@PathVariable("id") Long id) {
         try {
             VisitResponseDTO existing = visitService.getVisitById(id);
@@ -63,6 +69,7 @@ public class VisitController {
     }
 
     @PostMapping("/add")
+    @Secured("ROLE_USER")
     public ResponseEntity<?> addVisit(@Valid @RequestBody VisitRequestDTO visitRequestDTO) {
         try {
             VisitResponseDTO saved = visitService.addVisit(visitRequestDTO);
@@ -75,6 +82,7 @@ public class VisitController {
     }
 
     @PutMapping("/update/{id}")
+    @Secured("ROLE_USER")
     public ResponseEntity<?> updateVisit(@PathVariable("id") Long id, @RequestBody VisitRequestDTO visitRequestDTO) {
         try {
             VisitResponseDTO existing = visitService.getVisitById(id);
@@ -89,6 +97,7 @@ public class VisitController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @Secured("ROLE_USER")
     public ResponseEntity<?> deleteVisit(@PathVariable("id") Long id) {
         try {
             visitService.deleteVisit(id);

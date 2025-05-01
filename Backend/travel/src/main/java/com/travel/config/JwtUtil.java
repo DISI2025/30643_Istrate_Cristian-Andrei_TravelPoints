@@ -27,6 +27,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .subject(userResponseDTO.getEmail())
                 .claim("id", userResponseDTO.getId())
+                .claim("admin", userResponseDTO.isAdmin())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
