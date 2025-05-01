@@ -7,15 +7,13 @@ export const getAllAttractions = async () => {
   return res.data;
 };
 
-export const getAttractionsPageable = async (
-  pageNumber: number = 0,
-  pageSize: number = 4
-) => {
+export const getAttractionsPageable = async (pageNumber: number = 0, pageSize: number = 4) => {
   const res = await axiosInstance.get(`${BASE_URL}/getAllPageable`, {
     params: { pageNumber, pageSize },
   });
   return res.data;
 };
+
 
 export const getFilteredAttractions = async (filters: any) => {
   const { name, location, category, priceRange } = filters;
@@ -38,17 +36,16 @@ export const getFilteredAttractions = async (filters: any) => {
     params = { minPrice, maxPrice: priceRange[1] };
   }
 
-  const res = await axiosInstance.get(
-    `http://localhost:9090/attraction${endpoint}`,
-    { params }
-  );
-  return res.data;
+  try {
+    const res = await axiosInstance.get(`${BASE_URL}${endpoint}`, { params });
+    return res.data;
+  } catch (err: any) {
+
+  }
 };
 
 export const getAttractionById = async (id: string) => {
-  const res = await axiosInstance.get(
-    `http://localhost:9090/attraction/find/${id}`
-  );
+  const res = await axiosInstance.get(`${BASE_URL}/find/${id}`);
   return res.data;
 };
 
@@ -58,10 +55,7 @@ export const createAttraction = async (attraction: any) => {
 };
 
 export const updateAttraction = async (attraction: any) => {
-  const res = await axiosInstance.put(
-    `${BASE_URL}/update/${attraction.id}`,
-    attraction
-  );
+  const res = await axiosInstance.put(`${BASE_URL}/update/${attraction.id}`, attraction);
   return res.data;
 };
 

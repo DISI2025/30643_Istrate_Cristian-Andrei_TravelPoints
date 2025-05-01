@@ -79,25 +79,27 @@ export default function Management() {
         }, 0);
     };
 
-    const handleSave = () => {
-        form.validateFields().then(async (values) => {
-            try {
-                if (editingItem) {
-                    await updateAttraction({ ...values, id: editingItem.id });
-                    notification.success({ message: 'Attraction updated successfully!' });
-                } else {
-                    await createAttraction(values);
-                    notification.success({ message: 'Attraction added successfully!' });
-                }
-                setIsModalOpen(false);
-                fetchData();
-            } catch (error) {
-                notification.error({
-                    message: 'Error saving/updating attraction',
-                    description: String(error),
-                });
+    const handleSave = async () => {
+        try {
+            const values = await form.validateFields();
+            values.oldPrice = -1;
+            if (editingItem) {
+                await updateAttraction({ ...values, id: editingItem.id, oldPrice: editingItem.oldPrice});
+                notification.success({ message: 'Attraction updated successfully!' });
+            } else {
+                await createAttraction(values);
+                notification.success({ message: 'Attraction added successfully!' });
             }
-        });
+            setIsModalOpen(false);
+            fetchData();
+        } catch (error) {
+            // Validation failed
+            console.warn("Validation Failed:", error);
+            notification.warning({
+                message: 'Validation Error',
+                description: 'Please fill in all required fields correctly.',
+            });
+        }
     };
 
     const filteredData = data.filter(item =>
@@ -187,9 +189,6 @@ export default function Management() {
                                     },
                                 ]}
                             >
-                                <Input type="number" />
-                            </Form.Item>
-                            <Form.Item name="oldPrice" label="Old Price" rules={[{ required: true }]}>
                                 <Input type="number" />
                             </Form.Item>
                         </Form>
