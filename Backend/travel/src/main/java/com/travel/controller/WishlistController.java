@@ -44,6 +44,21 @@ public class WishlistController {
         }
     }
 
+    @GetMapping("/check")
+    public ResponseEntity<?> getWishlistByAttractionIdAndUserId(
+            @RequestParam("attractionId") Long attractionId,
+            @RequestParam("userId") Long userId
+    ) {
+        try {
+            WishlistResponseDTO existing = wishlistService.getWishlistByAttractionIdAndUserId(attractionId, userId);
+            return new ResponseEntity<>(existing, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("No wishlist entry found for userId " + userId + " and attractionId " + attractionId, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping()
     public ResponseEntity<?> addWishlist(@Valid @RequestBody WishlistRequestDTO wishlistRequestDTO) {
         try {
