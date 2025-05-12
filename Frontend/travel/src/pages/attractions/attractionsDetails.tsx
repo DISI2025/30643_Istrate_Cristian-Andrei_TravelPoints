@@ -136,7 +136,7 @@ export default function AttractionDetail() {
                     <p className="detailField"><strong>Category:</strong> {attraction.category}</p>
                     <p className="detailField">
                         <strong>Price:</strong> ${attraction.price}
-                        {attraction.oldPrice > 0  && (
+                        {attraction.oldPrice > attraction.price  && (
                             <span className="oldPrice">${attraction.oldPrice}</span>
                         )}
                     </p>
