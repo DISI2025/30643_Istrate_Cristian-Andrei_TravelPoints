@@ -6,15 +6,18 @@ import {Card, Button} from "antd";
 import "./attractionsDetails.css";
 import generalImage from "../../assets/colosseum.jpg"
 import {getAttractionById} from "../../api/attractionApi";
-import {StarFilled, StarOutlined} from "@ant-design/icons";
+import {CheckCircleFilled, CheckCircleOutlined, StarFilled, StarOutlined} from "@ant-design/icons";
 import {createWishlist, deleteWishlist, getWishlistByUserIdAndAttractionId} from "../../api/wishlistApi";
 import {WishlistResponse} from "../../models/wishlist/wishlistResponse";
+import {addVisit, deleteVisit, getVisitOfUserAndAttraction} from "../../api/visitApi";
+import {VisitResponse} from "../../models/visit/visitResponse";
 
 export default function AttractionDetail() {
     const {id} = useParams();
     const navigate = useNavigate();
     const [attraction, setAttraction] = useState<any>(null);
     const [addToWishlist, setAddToWishlist] = useState<boolean>(false);
+    const [visit, setVisit] = useState<VisitResponse | null>();
 
     const userId = localStorage.getItem("id");
 
@@ -32,6 +35,9 @@ export default function AttractionDetail() {
             setAttraction(data);
             const auxId = localStorage.getItem("id");
             const wishlist: WishlistResponse = await getWishlistByUserIdAndAttractionId(auxId!, data.id);
+            let visit = await getVisitOfUserAndAttraction(data.id,auxId!)
+            setVisit(visit);
+
             wishlist ? setAddToWishlist(true) : setAddToWishlist(false);
         } catch (err) {
             notification.error({
@@ -40,6 +46,32 @@ export default function AttractionDetail() {
             });
         }
     };
+
+    const toggleVisited = async () => {
+        if (!userId || !attraction?.id) {
+            notification.warning({message: "You must be logged in to manage your wishlist."});
+            return;
+        }
+        try{
+            if(!visit){
+                const visitRequest = {
+                    userId,
+                    attractionId: attraction.id,
+                    visitTimestamp: new Date().toISOString(),
+                };
+                setVisit(await addVisit(visitRequest));
+                notification.success({message: "Attraction marked as visited!"});
+            }else{
+                await deleteVisit(visit?.id);
+                setVisit(null);
+                notification.success({message: "Attraction marked as unvisited"});
+            }
+        }catch (err) {
+            notification.error({message: "Visit update failed", description: String(err)});
+        }
+    }
+
+
 
     const toggleWishlist = async () => {
         if (!userId || !attraction?.id) {
@@ -80,6 +112,11 @@ export default function AttractionDetail() {
                         <Tooltip placement="left" title="Wishlist">
                             <Button shape="circle" className="starButton" onClick={toggleWishlist}>
                                 {addToWishlist ? <StarFilled/> : <StarOutlined/>}
+                            </Button>
+                        </Tooltip>
+                        <Tooltip placement="left" title={visit ? "Mark as Unvisited" : "Mark as Visited"}>
+                            <Button shape="circle" className="visitedButton" onClick={toggleVisited}>
+                                {visit ? <CheckCircleFilled /> : <CheckCircleOutlined />}
                             </Button>
                         </Tooltip>
                     </ConfigProvider>

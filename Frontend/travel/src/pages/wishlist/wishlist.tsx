@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { List, Card, Button, message, Typography, Modal, Select } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { getAllWishlists, deleteWishlist } from '../../api/wishlistApi';
-import { getVisitsOfUser } from '../../api/visitApi';
+import {deleteVisit, getVisitsOfUser} from '../../api/visitApi';
 import { WishlistResponse } from '../../models/wishlist/wishlistResponse';
 import { VisitResponse } from '../../models/visit/visitResponse';
 import generalImage from "../../assets/colosseum.jpg";
@@ -40,17 +40,25 @@ export default function Wishlist() {
     const handleDelete = (id: string) => {
         Modal.confirm({
             title: 'Are you sure?',
-            content: 'Do you really want to remove this item from your wishlist?',
+            content: mode === 'wishlist'
+                ? 'Do you really want to remove this item from your wishlist?'
+                : 'Do you really want to remove this visit?',
             okText: 'Yes, delete it',
             okType: 'danger',
             cancelText: 'Cancel',
             onOk: async () => {
                 try {
-                    await deleteWishlist(id);
-                    message.success("Wishlist item deleted");
+                    if(mode === 'wishlist') {
+                        await deleteWishlist(id);
+                        message.success("Wishlist item deleted");
+                    }
+                    else{
+                        await deleteVisit(id);
+                        message.success("Visit deleted");
+                    }
                     fetchData();
                 } catch (error) {
-                    message.error("Failed to delete wishlist item");
+                    message.error("Failed to delete wishlist/visit item");
                 }
             },
         });
