@@ -50,9 +50,9 @@ public class VisitController {
 
     @GetMapping("/attractionAndUser/{attractionId}/{userId}")
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
-    public ResponseEntity<List<VisitResponseDTO>> getVisitOfUserAndAttraction(@PathVariable("userId") Long userId,@PathVariable("attractionId") Long attractionId) {
-        List<VisitResponseDTO> visits = visitService.getUserAndAttractionVisit(attractionId,userId);
-        return new ResponseEntity<>(visits, HttpStatus.OK);
+    public ResponseEntity<VisitResponseDTO> getVisitOfUserAndAttraction(@PathVariable("userId") Long userId,@PathVariable("attractionId") Long attractionId) {
+        VisitResponseDTO visit = visitService.getUserAndAttractionVisit(attractionId,userId);
+        return new ResponseEntity<>(visit, HttpStatus.OK);
     }
 
     @GetMapping("find/{id}")

@@ -21,8 +21,8 @@ export const getVisitsOfUser = async (userId: number) => {
 };
 
 export const getVisitOfUserAndAttraction = async (
-  attractionId: number,
-  userId: number
+  attractionId: string,
+  userId: string
 ) => {
   const res = await axiosInstance.get(
     `${BASE_URL}/attractionAndUser/${attractionId}/${userId}`
@@ -45,7 +45,7 @@ export const updateVisit = async (id: number, visit: VisitRequest) => {
   return res.data;
 };
 
-export const deleteVisit = async (id: number) => {
+export const deleteVisit = async (id: string) => {
   const res = await axiosInstance.delete(`${BASE_URL}/delete/${id}`);
   return res.data;
 };

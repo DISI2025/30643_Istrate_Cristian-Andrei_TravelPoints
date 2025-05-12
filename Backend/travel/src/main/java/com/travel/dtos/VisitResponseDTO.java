@@ -12,7 +12,7 @@ import java.sql.Date;
 
 public class VisitResponseDTO {
     private Long id;
-    private AttractionResponseDTO attractionResponseDTO;
-    private UserResponseDTO userResponseDTO;
-    private Date visitTimestamp;
+    private AttractionResponseDTO attraction;
+    private UserResponseDTO user;
+    private Date addedAt;
 }

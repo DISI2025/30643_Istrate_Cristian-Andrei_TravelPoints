@@ -99,13 +99,10 @@ public class VisitService {
         return result.stream().map(visit -> visitMapper.toDTO(visit)).toList();
     }
 
-    public List<VisitResponseDTO> getUserAndAttractionVisit(Long attractionId, Long userId){
+    public VisitResponseDTO getUserAndAttractionVisit(Long attractionId, Long userId){
         Optional<VisitEntity> result = visitRepository.findVisitEntityByAttractionIdAndUserId(attractionId,userId);
         checkAttraction(attractionId);
         checkUser(userId);
-        if(result.isEmpty()){
-            throw new RuntimeException("Visit with userId: " + userId + " and attractionId: " + attractionId + " does not exist");
-        }
-        return result.stream().map(visit -> visitMapper.toDTO(visit)).toList();
+        return result.isPresent() ? visitMapper.toDTO(result.get()) : null;
     }
 }

@@ -10,8 +10,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = {UserMapper.class, AttractionMapper.class})
 public interface VisitMapper {
-    @Mapping(source = "user", target = "userResponseDTO")
-    @Mapping(source = "attraction", target = "attractionResponseDTO")
     VisitResponseDTO toDTO (VisitEntity visitEntity);
     VisitEntity toEntity (VisitRequestDTO visitRequestDTO);
 }
