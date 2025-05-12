@@ -97,8 +97,11 @@ public class AttractionService {
     }
 
     public AttractionResponseDTO updateAttraction(Long id, AttractionRequestDTO attractionRequestDTO) {
+        Optional<AttractionEntity> originalEntity = attractionRepository.findAttractionById(id);
         AttractionEntity attractionEntity = attractionMapper.toEntity(attractionRequestDTO);
         attractionEntity.setId(id);
+        System.out.println("!!" + originalEntity.get().getPrice());
+        attractionEntity.setOldPrice(originalEntity.get().getPrice());
         return attractionMapper.toDTO(attractionRepository.save(attractionEntity));
     }
 
