@@ -50,7 +50,4 @@ public class AttractionEntity {
 
     @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishlistEntity> wishlists = new ArrayList<>();
-
-    @OneToMany(mappedBy = "attraction", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NotificationEntity> notifications = new ArrayList<>();
 }

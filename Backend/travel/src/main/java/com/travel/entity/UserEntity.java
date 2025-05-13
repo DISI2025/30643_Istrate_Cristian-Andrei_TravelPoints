@@ -26,8 +26,4 @@ public class UserEntity {
 
     @Column(nullable = false)
     private boolean admin;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NotificationEntity> notifications = new ArrayList<>();
-
 }
