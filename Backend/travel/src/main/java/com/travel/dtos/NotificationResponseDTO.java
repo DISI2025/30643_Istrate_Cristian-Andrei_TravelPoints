@@ -8,4 +8,7 @@ public class NotificationResponseDTO {
     private UserResponseDTO user;
     private AttractionResponseDTO attraction;
     private String message;
+
+    public NotificationResponseDTO(UserResponseDTO user, AttractionResponseDTO attraction, String offers) {
+    }
 }
