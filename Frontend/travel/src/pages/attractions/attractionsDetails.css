@@ -27,8 +27,8 @@
 .detailTitle {
     color: var(--teal);
     font-size: 32px;
-    margin-bottom: 24px;
     text-align: center;
+    margin: 20px 0 5px 0;
 }
 
 .detailField {
@@ -37,10 +37,27 @@
     color: var(--deep-teal);
 }
 
+.priceField {
+    display: flex;
+    align-items: center;
+}
+
 .oldPrice {
+    font-size: 17px;
     text-decoration: line-through;
-    color: red;
+    display: flex;
+    position: relative;
     margin-left: 10px;
+}
+
+.newPrice {
+    color: white;
+    background-color: red;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 5px 10px;
+    border-radius: 20px;
+
 }
 
 .loading {
@@ -51,14 +68,25 @@
 }
 
 .locationLink {
+    margin-left: 10px;
     color: var(--teal);
-    text-decoration: underline;
+    font-size: 16px;
 }
 
 .locationLink:hover {
     color: var(--deep-teal);
 }
 
+.locationDetail {
+    display: flex;
+    justify-content: center;
+    margin: 0 0 40px 0;
+}
+
+.locationIcon {
+    color: var(--teal);
+    font-size: 20px;
+}
 
 .imageGallery {
     display: flex;
@@ -69,8 +97,8 @@
 }
 
 .galleryImage {
-    width: 180px;
-    height: 120px;
+    width: 200px;
+    height: auto;
     object-fit: cover;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -97,3 +125,16 @@
     background: transparent;
     box-shadow: var(--deep-teal) 0 1px 1px;
 }
+
+.categoryAndPriceDetails {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px 0 15px;
+}
+
+.categoryField {
+
+}
+
+

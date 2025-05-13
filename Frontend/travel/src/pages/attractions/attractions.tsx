@@ -226,7 +226,7 @@ export default function Attractions() {
                   <p>
                     <strong>Price:</strong> ${attraction.price}
                     {attraction.oldPrice > attraction.price && (
-                      <span className="oldPrice">${attraction.oldPrice}</span>
+                      <span className="oldPriceTag">${attraction.oldPrice}</span>
                     )}
                   </p>
                 </div>
