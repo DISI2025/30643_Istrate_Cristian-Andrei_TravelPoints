@@ -8,6 +8,7 @@ import {
   AppstoreOutlined,
 } from "@ant-design/icons";
 import "./navigation-bar.css";
+import {logoutUser} from "../api/userApi";
 
 const { Header } = Layout;
 
@@ -17,15 +18,7 @@ const Navbar: React.FC = () => {
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const navigate = useNavigate();
 
-  const logoutUser = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("isAuthenticated");
-    localStorage.removeItem("isAdmin");
-    localStorage.removeItem("id");
-    navigate("/login");
-  };
-
-  const menuItems: MenuProps["items"] = [
+    const menuItems: MenuProps["items"] = [
     {
       key: "/attractions",
       icon: <HomeOutlined />,
@@ -55,7 +48,10 @@ const Navbar: React.FC = () => {
           icon: <LoginOutlined />,
           label: "Log out",
           className: "loginItem",
-          onClick: logoutUser, // <-- hook up your logout function here
+            onClick: () => {
+                logoutUser();
+                navigate("/login")
+            }, // <-- hook up your logout function here
         }
       : {
           key: "/login",
