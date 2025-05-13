@@ -3,6 +3,9 @@ package com.travel.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @Table(name = "users")
@@ -23,5 +26,4 @@ public class UserEntity {
 
     @Column(nullable = false)
     private boolean admin;
-
 }
