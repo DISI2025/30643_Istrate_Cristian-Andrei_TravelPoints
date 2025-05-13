@@ -1,12 +1,18 @@
 import {useParams, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {ConfigProvider, notification, Tooltip} from "antd";
+import {Carousel, ConfigProvider, notification, Tooltip} from "antd";
 import axios from "axios";
 import {Card, Button} from "antd";
 import "./attractionsDetails.css";
 import generalImage from "../../assets/colosseum.jpg"
 import {getAttractionById} from "../../api/attractionApi";
-import {CheckCircleFilled, CheckCircleOutlined, StarFilled, StarOutlined} from "@ant-design/icons";
+import {
+    CheckCircleFilled,
+    CheckCircleOutlined,
+    EnvironmentFilled, PushpinFilled,
+    StarFilled,
+    StarOutlined
+} from "@ant-design/icons";
 import {createWishlist, deleteWishlist, getWishlistByUserIdAndAttractionId} from "../../api/wishlistApi";
 import {WishlistResponse} from "../../models/wishlist/wishlistResponse";
 import {addVisit, deleteVisit, getVisitOfUserAndAttraction} from "../../api/visitApi";
@@ -103,9 +109,6 @@ export default function AttractionDetail() {
 
     return (
         <div className="attractionDetailContainer">
-            <Button onClick={() => navigate(-1)} className="backButton">
-                ← Back
-            </Button>
             <Card className="attractionDetailCard">
                 <div className="cardContent">
                     <ConfigProvider componentSize="large">
@@ -116,13 +119,13 @@ export default function AttractionDetail() {
                         </Tooltip>
                         <Tooltip placement="left" title={visit ? "Mark as Unvisited" : "Mark as Visited"}>
                             <Button shape="circle" className="visitedButton" onClick={toggleVisited}>
-                                {visit ? <CheckCircleFilled /> : <CheckCircleOutlined />}
+                                {visit ? <CheckCircleFilled/> : <CheckCircleOutlined/>}
                             </Button>
                         </Tooltip>
                     </ConfigProvider>
                     <h1 className="detailTitle">{attraction.name}</h1>
-                    <p className="detailField">
-                        <strong>Location:</strong>{" "}
+                    <p className="locationDetail">
+                        <EnvironmentFilled className={"locationIcon"}/>
                         <a
                             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(attraction.location)}`}
                             target="_blank"
@@ -133,30 +136,31 @@ export default function AttractionDetail() {
                         </a>
                     </p>
 
-                    <p className="detailField"><strong>Category:</strong> {attraction.category}</p>
-                    <p className="detailField">
-                        <strong>Price:</strong> ${attraction.price}
-                        {attraction.oldPrice > attraction.price  && (
-                            <span className="oldPrice">${attraction.oldPrice}</span>
-                        )}
-                    </p>
+                    <Carousel autoplay={{dotDuration: true}} autoplaySpeed={3000} arrows infinite={true}>
+                        {[...Array(5)].map((_, index) => (
+                            <img
+                                key={index}
+                                src={generalImage}
+                                alt={`Attraction ${index + 1}`}
+                                className="galleryImage"
+                            />
+                        ))}
+                    </Carousel>
+                    <div className="categoryAndPriceDetails">
+                        <span className="detailField">
+                            <PushpinFilled /> {attraction.category}
+                        </span>
+                        <p className="priceField">
+                            <span className="newPrice"> ${attraction.price}</span>
+                            {attraction.oldPrice > attraction.price && (
+                                <span className="oldPrice">${attraction.oldPrice}</span>
+                            )}
+                        </p>
+                    </div>
                     <p className="detailField"><strong>Description:</strong> {attraction.descriptionText}</p>
                     <p className="detailField"><strong>Offers:</strong> {attraction.offers}</p>
                 </div>
             </Card>
-
-
-            <div className="imageGallery">
-                {[...Array(5)].map((_, index) => (
-                    <img
-                        key={index}
-                        src={generalImage}
-                        alt={`Attraction ${index + 1}`}
-                        className="galleryImage"
-                    />
-                ))}
-            </div>
-
         </div>
     );
 }
