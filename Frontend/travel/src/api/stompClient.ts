@@ -33,7 +33,7 @@ export const connectStomp = (onMessage: (msg: any) => void) => {
                     }
                 });
             } else {
-                console.warn("⚠️ No user ID found in localStorage. Cannot subscribe.");
+                console.warn("No user ID found in localStorage. Cannot subscribe.");
             }
         },
         onStompError: (frame) => {

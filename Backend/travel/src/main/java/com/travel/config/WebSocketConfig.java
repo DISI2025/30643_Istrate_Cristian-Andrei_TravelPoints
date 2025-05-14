@@ -14,7 +14,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .setAllowedOrigins("http://localhost:3000")
-                .withSockJS(); // ✅ supports fallback for SockJS
+                .withSockJS();
     }
 
 
@@ -22,6 +22,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableSimpleBroker("/topic", "/queue");
         registry.setApplicationDestinationPrefixes("/app");
-        registry.setUserDestinationPrefix("/user"); // 🔔 Required for per-user messaging
+        registry.setUserDestinationPrefix("/user");
     }
 }

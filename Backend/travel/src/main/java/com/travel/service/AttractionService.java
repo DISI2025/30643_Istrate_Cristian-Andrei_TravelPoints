@@ -14,10 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * attraction service class
@@ -109,18 +106,13 @@ public class AttractionService {
         AttractionEntity existing = attractionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Attraction not found"));
 
-        existing.setOldPrice(existing.getPrice());
-        existing.setName(dto.getName());
-        existing.setLocation(dto.getLocation());
-        existing.setPrice(dto.getPrice());
-        existing.setDescriptionText(dto.getDescriptionText());
-        existing.setDescriptionAudio(dto.getDescriptionAudio());
-        existing.setCategory(dto.getCategory());
-        existing.setOffers(dto.getOffers());
-        existing.setLatitude(dto.getLatitude());
-        existing.setLongitude(dto.getLongitude());
+        double oldPrice = existing.getPrice();
+        attractionMapper.updateEntityFromDTO(dto, existing);
+        existing.setOldPrice(oldPrice);
 
-        if(existing.getPrice() < existing.getOldPrice()) {
+
+        if (existing.getPrice() < existing.getOldPrice() ||
+                !Objects.equals(existing.getOffers(), dto.getOffers())) {
             notifyInterestedUsers(existing);
         }
 
@@ -139,7 +131,8 @@ public class AttractionService {
 
         for (WishlistEntity wishlist : wishlists) {
             WishlistResponseDTO aux = wishlistMapper.toDTO(wishlist);
-            NotificationResponseDTO msg = new NotificationResponseDTO(aux.getUser(),aux.getAttraction(),aux.getAttraction().getOffers());
+            NotificationResponseDTO msg = new NotificationResponseDTO(aux.getUser(),aux.getAttraction(),"The attraction you have added to wishlist got new offers");
+            System.out.print(msg);
             messagingTemplate.convertAndSend(
                     "/topic/notifications/" + aux.getUser().getId(),
                     msg
