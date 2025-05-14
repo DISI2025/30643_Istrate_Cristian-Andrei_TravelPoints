@@ -1,7 +1,7 @@
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const BASE_URL = "http://localhost:9090/user";
-
 export const registerUser = async (values: {
   name: string;
   email: string;
@@ -26,4 +26,11 @@ export const loginUser = async (values: { name: string; password: string }) => {
     const match = rawMessage.match(/"(.*?)"/);
     throw match ? match[1] : rawMessage;
   }
+};
+
+export const logoutUser = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("isAuthenticated");
+  localStorage.removeItem("isAdmin");
+  localStorage.removeItem("id");
 };
