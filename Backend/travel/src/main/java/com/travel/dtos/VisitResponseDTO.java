@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Data
 
@@ -14,5 +15,5 @@ public class VisitResponseDTO {
     private Long id;
     private AttractionResponseDTO attraction;
     private UserResponseDTO user;
-    private Date addedAt;
+    private LocalDateTime addedAt;
 }
