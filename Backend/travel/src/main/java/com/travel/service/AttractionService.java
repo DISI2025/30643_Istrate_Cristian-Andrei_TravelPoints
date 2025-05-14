@@ -13,10 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * attraction service class
@@ -108,7 +105,8 @@ public class AttractionService {
         attractionEntity.setId(id);
         attractionEntity.setOldPrice(originalEntity.get().getPrice());
 
-        if(attractionEntity.getPrice() < attractionEntity.getOldPrice()) {
+        if (attractionEntity.getPrice() < attractionEntity.getOldPrice() ||
+                !Objects.equals(originalEntity.get().getOffers(), attractionEntity.getOffers())) {
             notifyInterestedUsers(attractionEntity);
         }
         return attractionMapper.toDTO(attractionRepository.save(attractionEntity));
@@ -119,14 +117,14 @@ public class AttractionService {
         attractionRepository.deleteById(id);
     }
 
-    public List<NotificationResponseDTO> notifyInterestedUsers(AttractionEntity attraction){
+    public List<NotificationResponseDTO> notifyInterestedUsers(AttractionEntity attraction) {
         List<WishlistEntity> wishlists = wishlistRepository.findByAttractionId(attraction.getId());
 
         List<NotificationResponseDTO> messages = new ArrayList<>();
 
         for (WishlistEntity wishlist : wishlists) {
             WishlistResponseDTO aux = wishlistMapper.toDTO(wishlist);
-            NotificationResponseDTO msg = new NotificationResponseDTO(aux.getUser(),aux.getAttraction(),aux.getAttraction().getOffers());
+            NotificationResponseDTO msg = new NotificationResponseDTO(aux.getUser(), aux.getAttraction(), "The attraction you have added to wishlist got new offers");
             messages.add(msg);
         }
 
