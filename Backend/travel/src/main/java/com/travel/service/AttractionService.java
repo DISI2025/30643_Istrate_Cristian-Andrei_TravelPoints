@@ -1,20 +1,25 @@
 package com.travel.service;
 
 import com.travel.dtos.AttractionPageResponseDTO;
+import com.travel.dtos.AttractionPageResponseDTOPagination;
 import com.travel.dtos.AttractionRequestDTO;
 import com.travel.dtos.AttractionResponseDTO;
 import com.travel.entity.AttractionEntity;
 import com.travel.mapper.AttractionMapper;
 import com.travel.repository.AttractionRepository;
+import com.travel.utils.AttractionSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * attraction service class
@@ -40,6 +45,25 @@ public class AttractionService {
 
     public List<AttractionResponseDTO> getAllAttractions() {
         return attractionRepository.findAll().stream().map(attraction -> attractionMapper.toDTO(attraction)).toList();
+    }
+
+    public AttractionPageResponseDTOPagination getFilteredAttractions(String name, String location, String category, Double minPrice, Double maxPrice, Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        Page<AttractionEntity> page = attractionRepository.findAll(
+                AttractionSpecification.filterBy(name, location, category, minPrice, maxPrice),
+                pageable
+        );
+
+        return new AttractionPageResponseDTOPagination(
+                page.getContent()
+                        .stream()
+                        .map(attractionMapper::toDTO)
+                        .toList(),
+                page.getTotalPages(),
+                page.getTotalElements(),
+                page.getNumber()
+        );
     }
 
 

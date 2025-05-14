@@ -1,6 +1,7 @@
 package com.travel.controller;
 
 import com.travel.dtos.AttractionPageResponseDTO;
+import com.travel.dtos.AttractionPageResponseDTOPagination;
 import com.travel.dtos.AttractionRequestDTO;
 import com.travel.dtos.AttractionResponseDTO;
 import com.travel.entity.AttractionEntity;
@@ -47,7 +48,17 @@ public class AttractionController {
         List<AttractionResponseDTO> attractions = attractionService.getAllAttractions();
         return new ResponseEntity<>(attractions, HttpStatus.OK);
     }
-
+    @GetMapping("/getFilteredAttractions")
+    public ResponseEntity<AttractionPageResponseDTOPagination> getFilteredAttractions(@RequestParam(required = false) String name,
+                                                                                      @RequestParam(required = false) String location,
+                                                                                      @RequestParam(required = false) String category,
+                                                                                      @RequestParam(required = false) Double minPrice,
+                                                                                      @RequestParam(required = false) Double maxPrice,
+                                                                                      @RequestParam(defaultValue = "0") int pageNumber,
+                                                                                      @RequestParam(defaultValue = "5") int pageSize) {
+        AttractionPageResponseDTOPagination attractions = attractionService.getFilteredAttractions(name, location, category, minPrice, maxPrice, pageNumber, pageSize);
+        return new ResponseEntity<>(attractions, HttpStatus.OK);
+    }
     @GetMapping("find/{id}")
     public ResponseEntity<?> getAttractionById(@PathVariable("id") Long id) {
         try {
