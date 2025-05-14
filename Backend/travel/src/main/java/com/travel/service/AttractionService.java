@@ -124,7 +124,7 @@ public class AttractionService {
         attractionRepository.deleteById(id);
     }
 
-    public List<NotificationResponseDTO> notifyInterestedUsers(AttractionEntity attraction){
+    public List<NotificationResponseDTO> notifyInterestedUsers(AttractionEntity attraction) {
         List<WishlistEntity> wishlists = wishlistRepository.findByAttractionId(attraction.getId());
 
         List<NotificationResponseDTO> messages = new ArrayList<>();
@@ -132,7 +132,6 @@ public class AttractionService {
         for (WishlistEntity wishlist : wishlists) {
             WishlistResponseDTO aux = wishlistMapper.toDTO(wishlist);
             NotificationResponseDTO msg = new NotificationResponseDTO(aux.getUser(),aux.getAttraction(),"The attraction you have added to wishlist got new offers");
-            System.out.print(msg);
             messagingTemplate.convertAndSend(
                     "/topic/notifications/" + aux.getUser().getId(),
                     msg
