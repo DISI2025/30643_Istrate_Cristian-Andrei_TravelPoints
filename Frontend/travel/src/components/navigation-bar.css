@@ -1,43 +1,169 @@
 .customNavbar {
-  background-color: var(--teal);
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
+    background-color: var(--teal);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
 }
 
 .logo {
-  color: var(--cream);
-  font-size: 22px;
-  font-weight: bold;
-  margin-right: 30px;
+    color: var(--cream);
+    font-size: 22px;
+    font-weight: bold;
+    margin-right: 30px;
 }
 
 .menu {
-  background-color: transparent;
-  flex: 1;
-  display: flex;
-  align-items: center;
+    background-color: transparent;
+    flex: 1;
+    display: flex;
+    align-items: center;
 }
 
 .menu a {
-  color: var(--cream) !important;
+    color: var(--cream) !important;
 }
 
 .menu a:hover {
-  color: var(--aqua) !important;
+    color: var(--aqua) !important;
 }
 
 .ant-menu-item-selected {
-  background-color: var(--deep-teal) !important;
-  color: var(--teal) !important;
+    background-color: var(--deep-teal) !important;
+    color: var(--teal) !important;
 }
 
 .menu .loginItem {
-  margin-left: auto;
+    margin-left: auto;
 }
 
 .logoutButton {
-  background-color: var(--teal) !important;
-  border-color: var(--teal) !important;
-  box-shadow: none !important;
+    background-color: var(--teal) !important;
+    border-color: var(--teal) !important;
+    box-shadow: none !important;
 }
+
+.notificationDropdown {
+    background-color: white;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    width: 250px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    z-index: 1000;
+}
+
+.notificationDivider {
+    height: 1px;
+    background-color: #f0f0f0;
+    margin: 6px 0;
+}
+
+.notificationEmpty {
+    text-align: center;
+    color: gray;
+    font-style: italic;
+    font-size: 13px;
+}
+
+.notificationsMenuItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.notificationBell {
+    font-size: 20px;
+    color: var(--cream);
+    transition: color 0.3s ease;
+}
+
+.notificationBadge .ant-badge-count {
+    background-color: var(--aqua);
+    color: white;
+    font-size: 11px;
+    padding: 0 5px;
+    min-width: 16px;
+    height: 16px;
+    line-height: 16px;
+    box-shadow: 0 0 0 1px var(--teal);
+}
+
+.notificationsText {
+    color: var(--cream);
+    transition: color 0.3s ease;
+}
+
+.ant-menu-item-selected .notificationsText {
+    color: var(--aqua);
+}
+
+.notificationItem {
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    word-break: break-word;
+    padding: 6px 0;
+    position: relative;
+}
+
+.notificationClose {
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 4px;
+    line-height: 1;
+}
+
+.notificationMessage {
+    flex: 1;
+}
+
+.notificationDivider {
+    height: 1px;
+    background-color: #f0f0f0;
+    margin: 6px 0;
+    width: 100%;
+}
+
+.notificationItem {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 6px 0;
+    width: 100%;
+}
+
+.notificationMessage {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.notificationClose {
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    margin-top: 1px;
+}
+
+.notificationClose:hover {
+    color: red;
+}
+

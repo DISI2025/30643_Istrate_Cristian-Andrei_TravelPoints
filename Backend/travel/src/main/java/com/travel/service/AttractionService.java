@@ -131,7 +131,7 @@ public class AttractionService {
 
         for (WishlistEntity wishlist : wishlists) {
             WishlistResponseDTO aux = wishlistMapper.toDTO(wishlist);
-            NotificationResponseDTO msg = new NotificationResponseDTO(aux.getUser(),aux.getAttraction(),"The attraction you have added to wishlist got new offers");
+            NotificationResponseDTO msg = new NotificationResponseDTO(aux.getUser(),aux.getAttraction(),"The " + aux.getAttraction().getName() +  " got new offers");
             messagingTemplate.convertAndSend(
                     "/topic/notifications/" + aux.getUser().getId(),
                     msg

@@ -26,19 +26,6 @@ export default function Login() {
         description: "Welcome back!",
       });
 
-      disconnectStomp();
-
-      connectStomp((msg) => {
-        notification.success({
-          message: "New Offer",
-          description: msg.message,
-          duration: 3
-        });
-
-        console.log("For:", msg.user.name);
-        console.log("Attraction:", msg.attraction.name);
-      });
-
       navigate("/");
     } catch (err: any) {
       notification.error({ message: "Login Failed", description: err + "." });
