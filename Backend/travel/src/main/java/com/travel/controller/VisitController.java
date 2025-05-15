@@ -119,4 +119,15 @@ public class VisitController {
         List<Long> byMonth = visitStatisticsService.getVisitsByMonth();
         return ResponseEntity.ok(new VisitStatsResponseDTO(byHour, byMonth));
     }
+
+    @GetMapping("/top-stats/{limit}")
+    @Secured({"ROLE_ADMIN"})
+    public ResponseEntity<VisitTopStatsResponseDTO> getTopAttractionsAndLocations(
+            @PathVariable("limit") int limit) {
+
+        List<VisitTopAttractionDTO> topAttractions = visitStatisticsService.getTopVisitedAttractions(limit);
+        List<VisitTopLocationDTO> topLocations = visitStatisticsService.getTopVisitedLocations(limit);
+
+        return ResponseEntity.ok(new VisitTopStatsResponseDTO(topAttractions, topLocations));
+    }
 }
