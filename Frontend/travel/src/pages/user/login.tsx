@@ -30,8 +30,9 @@ export default function Login() {
 
       connectStomp((msg) => {
         notification.success({
-          message: "New Notification",
+          message: "New Offer",
           description: msg.message,
+          duration: 3
         });
 
         console.log("For:", msg.user.name);
