@@ -51,7 +51,7 @@ const Navbar: React.FC = () => {
             onClick: () => {
                 logoutUser();
                 navigate("/login")
-            }, 
+            },
         }
       : {
           key: "/login",
