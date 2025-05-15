@@ -42,10 +42,8 @@ public class ReviewService {
 
         }
 
-        ReviewEntity review = reviewMapper.toEntity(reviewRequestDTO);
-        review.setUser(optionalUser.get());
-        review.setAttraction(optionalAttraction.get());
-        review.setCreatedAt(new Date(System.currentTimeMillis()));
+        ReviewEntity review = new ReviewEntity();
+        reviewMapper.updateFromDTO(reviewRequestDTO, review, optionalUser.get(), optionalAttraction.get());
 
         return reviewMapper.toDTO(reviewRepository.save(review));
     }
