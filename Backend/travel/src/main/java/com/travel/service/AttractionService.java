@@ -1,20 +1,20 @@
 package com.travel.service;
 
-import com.travel.dtos.AttractionPageResponseDTO;
-import com.travel.dtos.AttractionRequestDTO;
-import com.travel.dtos.AttractionResponseDTO;
+import com.travel.dtos.*;
 import com.travel.entity.AttractionEntity;
+import com.travel.entity.WishlistEntity;
 import com.travel.mapper.AttractionMapper;
+import com.travel.mapper.WishlistMapper;
 import com.travel.repository.AttractionRepository;
+import com.travel.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * attraction service class
@@ -24,12 +24,18 @@ import java.util.Optional;
 @Service
 public class AttractionService {
     private final AttractionRepository attractionRepository;
+    private final WishlistRepository wishlistRepository;
     private final AttractionMapper attractionMapper;
+    private final WishlistMapper wishlistMapper;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    public AttractionService(AttractionRepository attractionRepository, AttractionMapper attractionMapper) {
+    public AttractionService(AttractionRepository attractionRepository, AttractionMapper attractionMapper, WishlistRepository wishlistRepository, WishlistMapper wishlistMapper, SimpMessagingTemplate simpMessagingTemplate) {
         this.attractionRepository = attractionRepository;
         this.attractionMapper = attractionMapper;
+        this.wishlistRepository = wishlistRepository;
+        this.wishlistMapper = wishlistMapper;
+        this.messagingTemplate = simpMessagingTemplate;
     }
 
     public AttractionResponseDTO getAttractionById(Long id) {
@@ -96,16 +102,43 @@ public class AttractionService {
         return attractionMapper.toDTO(attractionRepository.save(attractionMapper.toEntity(attraction)));
     }
 
-    public AttractionResponseDTO updateAttraction(Long id, AttractionRequestDTO attractionRequestDTO) {
-        Optional<AttractionEntity> originalEntity = attractionRepository.findAttractionById(id);
-        AttractionEntity attractionEntity = attractionMapper.toEntity(attractionRequestDTO);
-        attractionEntity.setId(id);
-        attractionEntity.setOldPrice(originalEntity.get().getPrice());
-        return attractionMapper.toDTO(attractionRepository.save(attractionEntity));
+    public AttractionResponseDTO updateAttraction(Long id, AttractionRequestDTO dto) {
+        AttractionEntity existing = attractionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Attraction not found"));
+
+        double oldPrice = existing.getPrice();
+        attractionMapper.updateEntityFromDTO(dto, existing);
+        existing.setOldPrice(oldPrice);
+
+
+        if (existing.getPrice() < existing.getOldPrice() ||
+                !Objects.equals(existing.getOffers(), dto.getOffers())) {
+            notifyInterestedUsers(existing);
+        }
+
+        return attractionMapper.toDTO(attractionRepository.save(existing));
     }
 
     public void deleteAttraction(Long id) {
         this.getAttractionById(id);
         attractionRepository.deleteById(id);
+    }
+
+    public List<NotificationResponseDTO> notifyInterestedUsers(AttractionEntity attraction) {
+        List<WishlistEntity> wishlists = wishlistRepository.findByAttractionId(attraction.getId());
+
+        List<NotificationResponseDTO> messages = new ArrayList<>();
+
+        for (WishlistEntity wishlist : wishlists) {
+            WishlistResponseDTO aux = wishlistMapper.toDTO(wishlist);
+            NotificationResponseDTO msg = new NotificationResponseDTO(aux.getUser(),aux.getAttraction(),"The attraction you have added to wishlist got new offers");
+            messagingTemplate.convertAndSend(
+                    "/topic/notifications/" + aux.getUser().getId(),
+                    msg
+            );
+            messages.add(msg);
+        }
+
+        return messages;
     }
 }
