@@ -12,6 +12,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/review")
@@ -24,6 +26,14 @@ public class ReviewController {
     @Autowired
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
+    }
+
+    @GetMapping("/attractions/{attraction_id}/reviews")
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
+    public ResponseEntity<List<ReviewResponseDTO>> getAllReviewsOfAttraction(@PathVariable("attraction_id") Long attractionId)
+    {
+        List<ReviewResponseDTO> reviews = reviewService.getAllReviewsByAttractionId(attractionId);
+        return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
     @PostMapping("/{user_id}")
