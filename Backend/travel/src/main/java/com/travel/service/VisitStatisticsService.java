@@ -1,12 +1,15 @@
 package com.travel.service;
 
 import com.travel.dtos.VisitStatisticsDTO;
+import com.travel.dtos.VisitTopAttractionDTO;
+import com.travel.dtos.VisitTopLocationDTO;
 import com.travel.repository.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VisitStatisticsService {
@@ -42,5 +45,17 @@ public class VisitStatisticsService {
         }
 
         return Arrays.asList(visits);
+    }
+
+    public List<VisitTopAttractionDTO> getTopVisitedAttractions(int limit) {
+        return visitRepository.findTopVisitedAttractions().stream()
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    public List<VisitTopLocationDTO> getTopVisitedLocations(int limit) {
+        return visitRepository.findTopVisitedLocations().stream()
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 }
