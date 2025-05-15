@@ -1,6 +1,6 @@
 import React from "react";
 import { Menu, Layout, Button, MenuProps } from "antd";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import {Link, NavLink, useLocation, useNavigate} from "react-router-dom";
 import {
   HomeOutlined,
   HeartOutlined,
@@ -9,6 +9,7 @@ import {
 } from "@ant-design/icons";
 import "./navigation-bar.css";
 import {logoutUser} from "../api/userApi";
+import logo from "../assets/logo.svg";
 
 const { Header } = Layout;
 
@@ -63,10 +64,12 @@ const Navbar: React.FC = () => {
 
   return (
     <Header className="customNavbar">
-      <div className="logo">TravelPoints</div>
-      <Menu
-        theme="dark"
-        mode="horizontal"
+        <Link to="/" className="logoLink">
+            <img src={logo} alt="logo" className="logo"/>
+        </Link>
+        <Menu
+            theme="dark"
+            mode="horizontal"
         selectedKeys={[location.pathname]}
         className="menu"
         items={menuItems}

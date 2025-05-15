@@ -9,6 +9,7 @@ import AttractionDetail from "./pages/attractions/attractionsDetails";
 import ProtectedRoute from "./components/protected-route";
 import Wishlist from "./pages/wishlist/wishlist";
 import Navbar from "./components/navigation-bar"
+import Home from "./pages/home/home";
 
 function App() {
     return (
@@ -16,7 +17,7 @@ function App() {
         <BrowserRouter>
             <Navbar />
             <Routes>
-
+                <Route path="/" element={<Home/>}/>
                 <Route path="/register" element={<Registration/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/attractions/:id" element={<AttractionDetail/>}/>

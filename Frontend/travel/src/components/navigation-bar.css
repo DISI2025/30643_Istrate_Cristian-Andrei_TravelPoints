@@ -2,15 +2,19 @@
   background-color: var(--teal);
   display: flex;
   align-items: center;
-  padding: 0 20px;
+  padding: 5px 30px;
 }
 
 .logo {
-  color: var(--cream);
-  font-size: 22px;
-  font-weight: bold;
-  margin-right: 30px;
+  width: 50px;
 }
+
+.logoLink {
+  margin: 0 40px 0 20px;
+  display: flex;
+  justify-content: center;
+}
+
 
 .menu {
   background-color: transparent;
