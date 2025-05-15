@@ -2,6 +2,7 @@ package com.travel.controller;
 
 import com.travel.dtos.*;
 import com.travel.service.VisitService;
+import com.travel.service.VisitStatisticsService;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -21,10 +22,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/visit")
 public class VisitController {
     private final VisitService visitService;
+    private final VisitStatisticsService visitStatisticsService;
 
     @Autowired
-    public VisitController(VisitService visitService) {
+    public VisitController(VisitService visitService, VisitStatisticsService visitStatisticsService) {
         this.visitService = visitService;
+        this.visitStatisticsService = visitStatisticsService;
     }
 
     @GetMapping("/all")
@@ -107,5 +110,13 @@ public class VisitController {
         } catch (Exception e) {
             return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/stats")
+    @Secured({"ROLE_ADMIN"})
+    public ResponseEntity<VisitStatsResponseDTO> getVisitStats() {
+        List<Long> byHour = visitStatisticsService.getVisitsByHour();
+        List<Long> byMonth = visitStatisticsService.getVisitsByMonth();
+        return ResponseEntity.ok(new VisitStatsResponseDTO(byHour, byMonth));
     }
 }
