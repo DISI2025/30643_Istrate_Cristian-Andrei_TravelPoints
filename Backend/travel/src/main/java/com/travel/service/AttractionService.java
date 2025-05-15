@@ -8,6 +8,7 @@ import com.travel.mapper.WishlistMapper;
 import com.travel.repository.AttractionRepository;
 import com.travel.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,13 +27,15 @@ public class AttractionService {
     private final WishlistRepository wishlistRepository;
     private final AttractionMapper attractionMapper;
     private final WishlistMapper wishlistMapper;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    public AttractionService(AttractionRepository attractionRepository, AttractionMapper attractionMapper, WishlistRepository wishlistRepository, WishlistMapper wishlistMapper) {
+    public AttractionService(AttractionRepository attractionRepository, AttractionMapper attractionMapper, WishlistRepository wishlistRepository, WishlistMapper wishlistMapper, SimpMessagingTemplate simpMessagingTemplate) {
         this.attractionRepository = attractionRepository;
         this.attractionMapper = attractionMapper;
         this.wishlistRepository = wishlistRepository;
         this.wishlistMapper = wishlistMapper;
+        this.messagingTemplate = simpMessagingTemplate;
     }
 
     public AttractionResponseDTO getAttractionById(Long id) {
@@ -99,17 +102,21 @@ public class AttractionService {
         return attractionMapper.toDTO(attractionRepository.save(attractionMapper.toEntity(attraction)));
     }
 
-    public AttractionResponseDTO updateAttraction(Long id, AttractionRequestDTO attractionRequestDTO) {
-        Optional<AttractionEntity> originalEntity = attractionRepository.findAttractionById(id);
-        AttractionEntity attractionEntity = attractionMapper.toEntity(attractionRequestDTO);
-        attractionEntity.setId(id);
-        attractionEntity.setOldPrice(originalEntity.get().getPrice());
+    public AttractionResponseDTO updateAttraction(Long id, AttractionRequestDTO dto) {
+        AttractionEntity existing = attractionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Attraction not found"));
 
-        if (attractionEntity.getPrice() < attractionEntity.getOldPrice() ||
-                !Objects.equals(originalEntity.get().getOffers(), attractionEntity.getOffers())) {
-            notifyInterestedUsers(attractionEntity);
+        double oldPrice = existing.getPrice();
+        attractionMapper.updateEntityFromDTO(dto, existing);
+        existing.setOldPrice(oldPrice);
+
+
+        if (existing.getPrice() < existing.getOldPrice() ||
+                !Objects.equals(existing.getOffers(), dto.getOffers())) {
+            notifyInterestedUsers(existing);
         }
-        return attractionMapper.toDTO(attractionRepository.save(attractionEntity));
+
+        return attractionMapper.toDTO(attractionRepository.save(existing));
     }
 
     public void deleteAttraction(Long id) {
@@ -124,7 +131,11 @@ public class AttractionService {
 
         for (WishlistEntity wishlist : wishlists) {
             WishlistResponseDTO aux = wishlistMapper.toDTO(wishlist);
-            NotificationResponseDTO msg = new NotificationResponseDTO(aux.getUser(), aux.getAttraction(), "The attraction you have added to wishlist got new offers");
+            NotificationResponseDTO msg = new NotificationResponseDTO(aux.getUser(),aux.getAttraction(),"The attraction you have added to wishlist got new offers");
+            messagingTemplate.convertAndSend(
+                    "/topic/notifications/" + aux.getUser().getId(),
+                    msg
+            );
             messages.add(msg);
         }
 

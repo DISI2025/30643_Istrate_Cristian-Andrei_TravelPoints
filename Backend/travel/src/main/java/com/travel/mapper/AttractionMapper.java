@@ -4,6 +4,7 @@ import com.travel.dtos.AttractionRequestDTO;
 import com.travel.dtos.AttractionResponseDTO;
 import com.travel.entity.AttractionEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ public interface AttractionMapper {
     AttractionEntity toEntity (AttractionRequestDTO attractionRequestDTO);
 
     List<AttractionResponseDTO> listToDTO (List<AttractionEntity> attractions);
+
+    void updateEntityFromDTO(AttractionRequestDTO dto, @MappingTarget AttractionEntity entity);
 }

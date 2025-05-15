@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/userApi";
 import { jwtDecode } from "jwt-decode";
 import "./login.css";
+import { connectStomp, disconnectStomp } from "../../api/stompClient";
 
 export default function Login() {
   const [form] = Form.useForm();
@@ -24,6 +25,19 @@ export default function Login() {
         message: "Successfully logged in",
         description: "Welcome back!",
       });
+
+      disconnectStomp();
+
+      connectStomp((msg) => {
+        notification.success({
+          message: "New Notification",
+          description: msg.message,
+        });
+
+        console.log("For:", msg.user.name);
+        console.log("Attraction:", msg.attraction.name);
+      });
+
       navigate("/");
     } catch (err: any) {
       notification.error({ message: "Login Failed", description: err + "." });
