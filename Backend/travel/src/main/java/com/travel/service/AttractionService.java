@@ -1,20 +1,19 @@
 package com.travel.service;
 
-import com.travel.dtos.AttractionPageResponseDTO;
-import com.travel.dtos.AttractionRequestDTO;
-import com.travel.dtos.AttractionResponseDTO;
+import com.travel.dtos.*;
 import com.travel.entity.AttractionEntity;
+import com.travel.entity.WishlistEntity;
 import com.travel.mapper.AttractionMapper;
+import com.travel.mapper.WishlistMapper;
 import com.travel.repository.AttractionRepository;
+import com.travel.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * attraction service class
@@ -24,12 +23,16 @@ import java.util.Optional;
 @Service
 public class AttractionService {
     private final AttractionRepository attractionRepository;
+    private final WishlistRepository wishlistRepository;
     private final AttractionMapper attractionMapper;
+    private final WishlistMapper wishlistMapper;
 
     @Autowired
-    public AttractionService(AttractionRepository attractionRepository, AttractionMapper attractionMapper) {
+    public AttractionService(AttractionRepository attractionRepository, AttractionMapper attractionMapper, WishlistRepository wishlistRepository, WishlistMapper wishlistMapper) {
         this.attractionRepository = attractionRepository;
         this.attractionMapper = attractionMapper;
+        this.wishlistRepository = wishlistRepository;
+        this.wishlistMapper = wishlistMapper;
     }
 
     public AttractionResponseDTO getAttractionById(Long id) {
@@ -101,11 +104,30 @@ public class AttractionService {
         AttractionEntity attractionEntity = attractionMapper.toEntity(attractionRequestDTO);
         attractionEntity.setId(id);
         attractionEntity.setOldPrice(originalEntity.get().getPrice());
+
+        if (attractionEntity.getPrice() < attractionEntity.getOldPrice() ||
+                !Objects.equals(originalEntity.get().getOffers(), attractionEntity.getOffers())) {
+            notifyInterestedUsers(attractionEntity);
+        }
         return attractionMapper.toDTO(attractionRepository.save(attractionEntity));
     }
 
     public void deleteAttraction(Long id) {
         this.getAttractionById(id);
         attractionRepository.deleteById(id);
+    }
+
+    public List<NotificationResponseDTO> notifyInterestedUsers(AttractionEntity attraction) {
+        List<WishlistEntity> wishlists = wishlistRepository.findByAttractionId(attraction.getId());
+
+        List<NotificationResponseDTO> messages = new ArrayList<>();
+
+        for (WishlistEntity wishlist : wishlists) {
+            WishlistResponseDTO aux = wishlistMapper.toDTO(wishlist);
+            NotificationResponseDTO msg = new NotificationResponseDTO(aux.getUser(), aux.getAttraction(), "The attraction you have added to wishlist got new offers");
+            messages.add(msg);
+        }
+
+        return messages;
     }
 }
