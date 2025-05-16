@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { Menu, Layout, MenuProps, Dropdown, Badge } from "antd";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Menu, Layout, MenuProps} from "antd";
+import {NavLink, useLocation, useNavigate} from "react-router-dom";
 import {
     HomeOutlined,
     HeartOutlined,
     LoginOutlined,
     AppstoreOutlined,
-    BellOutlined,
 } from "@ant-design/icons";
 import "./navigation-bar.css";
+import Notifications from "./notifiactions";
 
-const { Header } = Layout;
+const {Header} = Layout;
 
 const Navbar: React.FC = () => {
     const location = useLocation();
@@ -64,7 +64,7 @@ const Navbar: React.FC = () => {
     const menuItems: MenuProps["items"] = [
         {
             key: "/attractions",
-            icon: <HomeOutlined />,
+            icon: <HomeOutlined/>,
             label: (
                 <NavLink to="/attractions" onClick={() => setSelectedKey("/attractions")}>
                     Attractions
@@ -75,7 +75,7 @@ const Navbar: React.FC = () => {
             ? [
                 {
                     key: "/wishlist",
-                    icon: <HeartOutlined />,
+                    icon: <HeartOutlined/>,
                     label: (
                         <NavLink to="/wishlist" onClick={() => setSelectedKey("/wishlist")}>
                             Wishlist
@@ -88,7 +88,7 @@ const Navbar: React.FC = () => {
             ? [
                 {
                     key: "/admin",
-                    icon: <AppstoreOutlined />,
+                    icon: <AppstoreOutlined/>,
                     label: (
                         <NavLink to="/admin" onClick={() => setSelectedKey("/admin")}>
                             Admin
@@ -102,54 +102,11 @@ const Navbar: React.FC = () => {
                 {
                     key: "/notifications",
                     label: (
-                        <Dropdown
-                            dropdownRender={() => (
-                                <div className="notificationDropdown">
-                                    {notificationCount > 0 ? (
-                                        JSON.parse(sessionStorage.getItem("notifications") || "[]").map(
-                                            (msg: any, index: number) => (
-                                                <div className="notificationItem" key={index}>
-                                                    <button
-                                                        className="notificationClose"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            removeNotification(index);
-                                                        }}
-                                                    >
-                                                        ×
-                                                    </button>
-                                                    <div className="notificationMessage">
-                                                        {msg.message}
-                                                        <div className="notificationDivider" />
-                                                    </div>
-                                                </div>
-                                            )
-                                        )
-                                    ) : (
-                                        <div className="notificationEmpty">No notifications</div>
-                                    )}
-                                </div>
-                            )}
-                            placement="bottom"
-                            trigger={["click"]}
-                            onOpenChange={(open) => {
-                                if (open) {
-                                    setSelectedKey("/notifications");
-                                }
-                            }}
-                        >
-                            <div className="notificationsMenuItem">
-                                <Badge
-                                    count={notificationCount}
-                                    size="small"
-                                    offset={[100, 0]}
-                                    className="notificationBadge"
-                                >
-                                    <BellOutlined className="notificationBell" />
-                                </Badge>
-                                <span className="notificationsText">Notifications</span>
-                            </div>
-                        </Dropdown>
+                        <Notifications
+                            notifications={JSON.parse(sessionStorage.getItem("notifications") || "[]")}
+                            onRemove={removeNotification}
+                            onOpen={() => setSelectedKey("/notifications")}
+                        />
                     ),
                 },
             ]
@@ -157,14 +114,14 @@ const Navbar: React.FC = () => {
         isAuthenticated
             ? {
                 key: "/logout",
-                icon: <LoginOutlined />,
+                icon: <LoginOutlined/>,
                 label: "Log out",
                 className: "loginItem",
                 onClick: logoutUser,
             }
             : {
                 key: "/login",
-                icon: <LoginOutlined />,
+                icon: <LoginOutlined/>,
                 label: (
                     <NavLink to="/login" onClick={() => setSelectedKey("/login")}>
                         Log in
