@@ -1,13 +1,46 @@
-import React from "react";
-import { Card, Col, Row } from "antd";
+import React, { useEffect, useState } from "react";
+import { StatsResponse } from "../../models/stats/statsResponse";
+import { getStatistics } from "../../api/statisticsApi";
+import { Card, Col, notification, Row } from "antd";
+import { Column } from "@ant-design/charts";
 import "./statistics.css";
 
 export default function Statistics() {
+  const [hourData, setHourData] = useState<{ Hour: string; Visits: number }[]>(
+    []
+  );
+
+  useEffect(() => {
+    getStatistics()
+      .then((res: StatsResponse) => {
+        const hours = res.visitsByHour.map((count, index) => ({
+          Hour: index.toString().padStart(2, "0"),
+          Visits: count,
+        }));
+
+        setHourData(hours);
+      })
+      .catch((err) =>
+        notification.error({
+          message: "Failed to load statistics. Please try again later.",
+          description: String(err),
+        })
+      );
+  }, []);
+
+  const hourChartConfig = {
+    data: hourData,
+    xField: "Hour",
+    yField: "Visits",
+  };
+
   return (
     <div className="statisticsPage">
       <Row className="statisticsRow" gutter={[30, 30]}>
         <Col xs={24} md={11}>
-          <Card className="statisticsCard" title="Hourly Visits"></Card>
+          <Card className="statisticsCard" title="Hourly Visits">
+            <Column {...hourChartConfig} />
+          </Card>
         </Col>
         <Col xs={24} md={11}>
           <Card className="statisticsCard" title="Monthly Visits"></Card>
