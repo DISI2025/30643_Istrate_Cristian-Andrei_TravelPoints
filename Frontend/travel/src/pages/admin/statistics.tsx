@@ -5,10 +5,28 @@ import { Card, Col, notification, Row } from "antd";
 import { Column } from "@ant-design/charts";
 import "./statistics.css";
 
+const months = [
+  "Ian",
+  "Feb",
+  "Mar",
+  "Apr",
+  "Mai",
+  "Iun",
+  "Iul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 export default function Statistics() {
   const [hourData, setHourData] = useState<{ Hour: string; Visits: number }[]>(
     []
   );
+  const [monthData, setMonthData] = useState<
+    { Month: string; Visits: number }[]
+  >([]);
 
   useEffect(() => {
     getStatistics()
@@ -18,7 +36,13 @@ export default function Statistics() {
           Visits: count,
         }));
 
+        const monthsTransformed = res.visitsByMonth.map((count, index) => ({
+          Month: months[index],
+          Visits: count,
+        }));
+
         setHourData(hours);
+        setMonthData(monthsTransformed);
       })
       .catch((err) =>
         notification.error({
@@ -34,6 +58,12 @@ export default function Statistics() {
     yField: "Visits",
   };
 
+  const monthChartConfig = {
+    data: monthData,
+    xField: "Month",
+    yField: "Visits",
+  };
+
   return (
     <div className="statisticsPage">
       <Row className="statisticsRow" gutter={[30, 30]}>
@@ -43,7 +73,9 @@ export default function Statistics() {
           </Card>
         </Col>
         <Col xs={24} md={11}>
-          <Card className="statisticsCard" title="Monthly Visits"></Card>
+          <Card className="statisticsCard" title="Monthly Visits">
+            <Column {...monthChartConfig} />
+          </Card>
         </Col>
       </Row>
       <Row className="statisticsRow" gutter={[30, 30]}>
