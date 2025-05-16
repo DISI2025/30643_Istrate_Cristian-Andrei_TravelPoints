@@ -6,9 +6,10 @@ import {
   HeartOutlined,
   LoginOutlined,
   AppstoreOutlined,
+  BarChartOutlined,
 } from "@ant-design/icons";
 import "./navigation-bar.css";
-import {logoutUser} from "../api/userApi";
+import { logoutUser } from "../api/userApi";
 
 const { Header } = Layout;
 
@@ -18,7 +19,7 @@ const Navbar: React.FC = () => {
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const navigate = useNavigate();
 
-    const menuItems: MenuProps["items"] = [
+  const menuItems: MenuProps["items"] = [
     {
       key: "/attractions",
       icon: <HomeOutlined />,
@@ -42,16 +43,25 @@ const Navbar: React.FC = () => {
           },
         ]
       : []),
+    ...(isAdmin
+      ? [
+          {
+            key: "/statistics",
+            icon: <BarChartOutlined />,
+            label: <NavLink to="/statistics">Statistics</NavLink>,
+          },
+        ]
+      : []),
     isAuthenticated
       ? {
           key: "/logout",
           icon: <LoginOutlined />,
           label: "Log out",
           className: "loginItem",
-            onClick: () => {
-                logoutUser();
-                navigate("/login")
-            },
+          onClick: () => {
+            logoutUser();
+            navigate("/login");
+          },
         }
       : {
           key: "/login",
