@@ -126,6 +126,15 @@
     box-shadow: var(--deep-teal) 0 1px 1px;
 }
 
+.audioButton{
+    position: absolute;
+    top: -16px;
+    left: 0;
+    color: var(--teal);
+    background: transparent;
+    box-shadow: var(--deep-teal) 0 1px 1px;
+}
+
 .categoryAndPriceDetails {
     display: flex;
     justify-content: space-between;

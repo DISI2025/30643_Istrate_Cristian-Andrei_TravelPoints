@@ -7,9 +7,10 @@ import "./attractionsDetails.css";
 import generalImage from "../../assets/colosseum.jpg"
 import {getAttractionById} from "../../api/attractionApi";
 import {
+    CaretRightOutlined,
     CheckCircleFilled,
     CheckCircleOutlined,
-    EnvironmentFilled, PushpinFilled,
+    EnvironmentFilled, PauseOutlined, PushpinFilled,
     StarFilled,
     StarOutlined
 } from "@ant-design/icons";
@@ -24,6 +25,10 @@ export default function AttractionDetail() {
     const [attraction, setAttraction] = useState<any>(null);
     const [addToWishlist, setAddToWishlist] = useState<boolean>(false);
     const [visit, setVisit] = useState<VisitResponse | null>();
+    const [audio, setAudio] = useState<boolean>(false);
+    const [audioPlayer, setAudioPlayer] = useState<HTMLAudioElement | null>(null);
+
+
 
     const userId = localStorage.getItem("id");
 
@@ -105,6 +110,30 @@ export default function AttractionDetail() {
         }
     }
 
+    const togglePlayAudio = () => {
+        if (!attraction?.descriptionAudio) {
+            notification.warning({message: "No audio description available."});
+            return;
+        }
+
+        if (!audioPlayer) {
+            const newAudio = new Audio(attraction.descriptionAudio);
+            newAudio.play();
+            setAudioPlayer(newAudio);
+            setAudio(true);
+
+            newAudio.onended = () => {
+                setAudio(false);
+                setAudioPlayer(null);
+            };
+        } else {
+            audioPlayer.pause();
+            setAudio(false);
+            setAudioPlayer(null);
+        }
+    };
+
+
     if (!attraction) return <div className="loading">Loading attraction...</div>;
 
     return (
@@ -112,14 +141,19 @@ export default function AttractionDetail() {
             <Card className="attractionDetailCard">
                 <div className="cardContent">
                     <ConfigProvider componentSize="large">
-                        <Tooltip placement="left" title="Wishlist">
+                        <Tooltip placement="top" title="Wishlist">
                             <Button shape="circle" className="starButton" onClick={toggleWishlist}>
                                 {addToWishlist ? <StarFilled/> : <StarOutlined/>}
                             </Button>
                         </Tooltip>
-                        <Tooltip placement="left" title={visit ? "Mark as Unvisited" : "Mark as Visited"}>
+                        <Tooltip placement="top" title={visit ? "Mark as Unvisited" : "Mark as Visited"}>
                             <Button shape="circle" className="visitedButton" onClick={toggleVisited}>
                                 {visit ? <CheckCircleFilled/> : <CheckCircleOutlined/>}
+                            </Button>
+                        </Tooltip>
+                        <Tooltip placement="top" title={audio ? "Stop" : "Play"}>
+                            <Button shape="circle" className="audioButton" onClick={togglePlayAudio}>
+                                {audio ? <PauseOutlined/> : <CaretRightOutlined/>}
                             </Button>
                         </Tooltip>
                     </ConfigProvider>
