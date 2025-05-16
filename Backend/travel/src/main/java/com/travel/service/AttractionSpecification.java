@@ -1,4 +1,4 @@
-package com.travel.utils;
+package com.travel.service;
 
 import com.travel.entity.AttractionEntity;
 import jakarta.persistence.criteria.Predicate;
@@ -31,8 +31,6 @@ public class AttractionSpecification {
             if (minPrice != null && maxPrice != null) {
                 predicates.add(cb.between(root.get("price"), minPrice, maxPrice));
             }
-
-            // combine with AND
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
