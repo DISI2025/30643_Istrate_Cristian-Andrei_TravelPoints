@@ -1,25 +1,28 @@
-import React, {useEffect, useState} from "react";
-import {Menu, Layout, MenuProps, Dropdown   } from "antd";
-import {Badge} from "antd";
-import {NavLink, useLocation, useNavigate} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Menu, Layout, MenuProps, Dropdown, Badge } from "antd";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
     HomeOutlined,
     HeartOutlined,
     LoginOutlined,
-    AppstoreOutlined, BellOutlined,
+    AppstoreOutlined,
+    BellOutlined,
 } from "@ant-design/icons";
 import "./navigation-bar.css";
 
-const {Header} = Layout;
+const { Header } = Layout;
 
 const Navbar: React.FC = () => {
     const location = useLocation();
     const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
     const isAdmin = localStorage.getItem("isAdmin") === "true";
     const navigate = useNavigate();
+
     const [notificationCount, setNotificationCount] = useState(
         JSON.parse(sessionStorage.getItem("notifications") || "[]").length
     );
+
+    const [selectedKey, setSelectedKey] = useState(location.pathname);
 
     const logoutUser = () => {
         localStorage.removeItem("token");
@@ -36,7 +39,7 @@ const Navbar: React.FC = () => {
 
     const removeNotification = (indexToRemove: number) => {
         const current = JSON.parse(sessionStorage.getItem("notifications") || "[]");
-        const updated = current.filter((_ : Record<string, any>, index: number) => index !== indexToRemove);
+        const updated = current.filter((_: Record<string, any>, index: number) => index !== indexToRemove);
         sessionStorage.setItem("notifications", JSON.stringify(updated));
         setNotificationCount(updated.length);
         window.dispatchEvent(new Event("new-notification"));
@@ -54,18 +57,30 @@ const Navbar: React.FC = () => {
         };
     }, []);
 
+    useEffect(() => {
+        setSelectedKey(location.pathname); // update selected key on route change
+    }, [location.pathname]);
+
     const menuItems: MenuProps["items"] = [
         {
             key: "/attractions",
-            icon: <HomeOutlined/>,
-            label: <NavLink to="/attractions">Attractions</NavLink>,
+            icon: <HomeOutlined />,
+            label: (
+                <NavLink to="/attractions" onClick={() => setSelectedKey("/attractions")}>
+                    Attractions
+                </NavLink>
+            ),
         },
         ...(isAuthenticated
             ? [
                 {
                     key: "/wishlist",
-                    icon: <HeartOutlined/>,
-                    label: <NavLink to="/wishlist">Wishlist</NavLink>,
+                    icon: <HeartOutlined />,
+                    label: (
+                        <NavLink to="/wishlist" onClick={() => setSelectedKey("/wishlist")}>
+                            Wishlist
+                        </NavLink>
+                    ),
                 },
             ]
             : []),
@@ -73,8 +88,12 @@ const Navbar: React.FC = () => {
             ? [
                 {
                     key: "/admin",
-                    icon: <AppstoreOutlined/>,
-                    label: <NavLink to="/admin">Admin</NavLink>,
+                    icon: <AppstoreOutlined />,
+                    label: (
+                        <NavLink to="/admin" onClick={() => setSelectedKey("/admin")}>
+                            Admin
+                        </NavLink>
+                    ),
                 },
             ]
             : []),
@@ -89,7 +108,7 @@ const Navbar: React.FC = () => {
                                     {notificationCount > 0 ? (
                                         JSON.parse(sessionStorage.getItem("notifications") || "[]").map(
                                             (msg: any, index: number) => (
-                                                <div className="notificationItem">
+                                                <div className="notificationItem" key={index}>
                                                     <button
                                                         className="notificationClose"
                                                         onClick={(e) => {
@@ -101,7 +120,7 @@ const Navbar: React.FC = () => {
                                                     </button>
                                                     <div className="notificationMessage">
                                                         {msg.message}
-                                                        <div className="notificationDivider"/>
+                                                        <div className="notificationDivider" />
                                                     </div>
                                                 </div>
                                             )
@@ -113,12 +132,17 @@ const Navbar: React.FC = () => {
                             )}
                             placement="bottom"
                             trigger={["click"]}
+                            onOpenChange={(open) => {
+                                if (open) {
+                                    setSelectedKey("/notifications");
+                                }
+                            }}
                         >
                             <div className="notificationsMenuItem">
                                 <Badge
                                     count={notificationCount}
                                     size="small"
-                                    offset={[10, -4]}
+                                    offset={[100, 0]}
                                     className="notificationBadge"
                                 >
                                     <BellOutlined className="notificationBell" />
@@ -133,15 +157,19 @@ const Navbar: React.FC = () => {
         isAuthenticated
             ? {
                 key: "/logout",
-                icon: <LoginOutlined/>,
+                icon: <LoginOutlined />,
                 label: "Log out",
                 className: "loginItem",
                 onClick: logoutUser,
             }
             : {
                 key: "/login",
-                icon: <LoginOutlined/>,
-                label: <NavLink to="/login">Log in</NavLink>,
+                icon: <LoginOutlined />,
+                label: (
+                    <NavLink to="/login" onClick={() => setSelectedKey("/login")}>
+                        Log in
+                    </NavLink>
+                ),
                 className: "loginItem",
             },
     ];
@@ -152,7 +180,7 @@ const Navbar: React.FC = () => {
             <Menu
                 theme="dark"
                 mode="horizontal"
-                selectedKeys={[location.pathname]}
+                selectedKeys={[selectedKey]}
                 className="menu"
                 items={menuItems}
             />

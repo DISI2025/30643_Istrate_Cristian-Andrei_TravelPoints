@@ -32,6 +32,14 @@
     color: var(--teal) !important;
 }
 
+.ant-menu-item-selected .notificationsText {
+    color: var(--aqua);
+}
+
+.ant-menu-item-selected .notificationBell {
+    color: var(--aqua);
+}
+
 .menu .loginItem {
     margin-left: auto;
 }
@@ -53,83 +61,11 @@
     z-index: 1000;
 }
 
-.notificationDivider {
-    height: 1px;
-    background-color: #f0f0f0;
-    margin: 6px 0;
-}
-
 .notificationEmpty {
     text-align: center;
     color: gray;
     font-style: italic;
     font-size: 13px;
-}
-
-.notificationsMenuItem {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-}
-
-.notificationBell {
-    font-size: 20px;
-    color: var(--cream);
-    transition: color 0.3s ease;
-}
-
-.notificationBadge .ant-badge-count {
-    background-color: var(--aqua);
-    color: white;
-    font-size: 11px;
-    padding: 0 5px;
-    min-width: 16px;
-    height: 16px;
-    line-height: 16px;
-    box-shadow: 0 0 0 1px var(--teal);
-}
-
-.notificationsText {
-    color: var(--cream);
-    transition: color 0.3s ease;
-}
-
-.ant-menu-item-selected .notificationsText {
-    color: var(--aqua);
-}
-
-.notificationItem {
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    word-break: break-word;
-    padding: 6px 0;
-    position: relative;
-}
-
-.notificationClose {
-    background: transparent;
-    border: none;
-    color: #888;
-    font-size: 14px;
-    cursor: pointer;
-    padding: 0;
-    margin-right: 4px;
-    line-height: 1;
-}
-
-.notificationMessage {
-    flex: 1;
-}
-
-.notificationDivider {
-    height: 1px;
-    background-color: #f0f0f0;
-    margin: 6px 0;
-    width: 100%;
 }
 
 .notificationItem {
@@ -138,6 +74,9 @@
     justify-content: space-between;
     padding: 6px 0;
     width: 100%;
+    font-size: 13px;
+    gap: 8px;
+    word-break: break-word;
 }
 
 .notificationMessage {
@@ -167,3 +106,47 @@
     color: red;
 }
 
+.notificationDivider {
+    height: 1px;
+    background-color: #f0f0f0;
+    margin: 6px 0;
+    width: 100%;
+}
+
+.notificationsMenuItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 0 16px;
+    height: 100%;
+}
+
+.notificationBell {
+    font-size: 20px;
+    color: var(--cream);
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.notificationBadge {
+    display: flex;
+    align-items: center;
+}
+
+.notificationBadge .ant-badge-count {
+    background-color: var(--aqua);
+    color: white;
+    font-size: 11px;
+    padding: 0 5px;
+    min-width: 16px;
+    height: 16px;
+    line-height: 16px;
+    box-shadow: 0 0 0 1px var(--teal);
+}
+
+.notificationsText {
+    color: var(--cream);
+    transition: color 0.3s ease;
+}
