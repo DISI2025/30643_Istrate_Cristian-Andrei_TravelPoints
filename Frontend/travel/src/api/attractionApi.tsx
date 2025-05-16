@@ -15,29 +15,20 @@ export const getAttractionsPageable = async (pageNumber: number = 0, pageSize: n
 };
 
 
-export const getFilteredAttractions = async (filters: any) => {
+export const getFilteredAttractions = async (filters: any, page: any, pageSize:any) => {
   const { name, location, category, priceRange } = filters;
   const minPrice = priceRange[0] === 0 ? 1 : priceRange[0];
-
-  let endpoint = "";
-  let params: any = {};
-
-  if (name) {
-    endpoint = "/filterByName";
-    params = { name };
-  } else if (location) {
-    endpoint = "/filterByLocation";
-    params = { location };
-  } else if (category) {
-    endpoint = "/filterByCategory";
-    params = { category };
-  } else if (priceRange) {
-    endpoint = "/filterByPriceRange";
-    params = { minPrice, maxPrice: priceRange[1] };
-  }
-
+  let params: any = {
+    name:name,
+    location:location,
+    category:category,
+    minPrice,
+    maxPrice: priceRange[1],
+    pageNumber: page - 1,
+    pageSize: pageSize,
+  };
   try {
-    const res = await axiosInstance.get(`${BASE_URL}${endpoint}`, { params });
+    const res = await axiosInstance.get(`${BASE_URL}/getFilteredAttractions`, { params });
     return res.data;
   } catch (err: any) {
 

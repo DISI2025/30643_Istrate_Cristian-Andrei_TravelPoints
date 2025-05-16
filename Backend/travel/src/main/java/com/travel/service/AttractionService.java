@@ -1,5 +1,6 @@
 package com.travel.service;
 
+
 import com.travel.dtos.*;
 import com.travel.entity.AttractionEntity;
 import com.travel.entity.WishlistEntity;
@@ -46,6 +47,25 @@ public class AttractionService {
 
     public List<AttractionResponseDTO> getAllAttractions() {
         return attractionRepository.findAll().stream().map(attraction -> attractionMapper.toDTO(attraction)).toList();
+    }
+
+    public AttractionPageResponseDTOPagination getFilteredAttractions(String name, String location, String category, Double minPrice, Double maxPrice, Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        Page<AttractionEntity> page = attractionRepository.findAll(
+                AttractionSpecification.filterBy(name, location, category, minPrice, maxPrice),
+                pageable
+        );
+
+        return new AttractionPageResponseDTOPagination(
+                page.getContent()
+                        .stream()
+                        .map(attractionMapper::toDTO)
+                        .toList(),
+                page.getTotalPages(),
+                page.getTotalElements(),
+                page.getNumber()
+        );
     }
 
 
