@@ -4,13 +4,11 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Date;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "visits")
-
-public class VisitEntity {
+@Table(name = "reviews")
+public class ReviewEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +23,13 @@ public class VisitEntity {
     private UserEntity user;
 
     @Column(nullable = false)
-    private LocalDateTime visitTimestamp;
+    private Integer rating;
+
+    @Column(nullable = false)
+    private String comment;
+
+    @Column(nullable = false)
+    private Date createdAt;
+
 
 }

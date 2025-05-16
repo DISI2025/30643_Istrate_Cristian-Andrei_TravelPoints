@@ -124,7 +124,7 @@
 
 .notificationBell {
     font-size: 20px;
-    color: var(--cream);
+    color: var(--aqua);
     transition: color 0.3s ease;
     display: flex;
     align-items: center;
@@ -149,4 +149,12 @@
 .notificationsText {
     color: var(--cream);
     transition: color 0.3s ease;
+}
+
+.notificationsMenuItem:hover .notificationBell {
+    color: white;
+}
+
+.notificationsMenuItem:hover .notificationsText {
+    color: var(--aqua);
 }

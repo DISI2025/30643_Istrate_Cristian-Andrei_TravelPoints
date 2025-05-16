@@ -8,7 +8,7 @@ import {
     AppstoreOutlined,
 } from "@ant-design/icons";
 import "./navigation-bar.css";
-import Notifications from "./notifiactions";
+import Notifications from "./notifications";
 
 const {Header} = Layout;
 

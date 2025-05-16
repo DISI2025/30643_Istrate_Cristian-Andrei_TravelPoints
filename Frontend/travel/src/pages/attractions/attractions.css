@@ -151,3 +151,8 @@
   margin-top: 20px;
   text-align: center;
 }
+
+.oldPriceTag{
+  margin-left: 5px;
+  text-decoration: line-through;
+}

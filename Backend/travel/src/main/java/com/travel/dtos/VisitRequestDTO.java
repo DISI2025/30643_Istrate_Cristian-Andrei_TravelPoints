@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Data
 
@@ -14,5 +15,5 @@ public class VisitRequestDTO {
     @NotNull
     private Long userId;
     @NotNull
-    private Date visitTimestamp;
+    private LocalDateTime visitTimestamp;
 }
