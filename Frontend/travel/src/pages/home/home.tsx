@@ -6,8 +6,6 @@ import {SizeType} from "antd/es/config-provider/SizeContext";
 import {Link} from "react-router-dom";
 
 export default function Home() {
-    const [size, setSize] = useState<SizeType>('large'); // default is 'middle'
-
     return (
         <div className="homeContainer">
             <div>
@@ -22,7 +20,7 @@ export default function Home() {
                     It's more than travel — it's your next great story waiting to unfold.
                 </p>
                 <Link to="attractions">
-                    <Button size={size} className="travelButton">Let's travel !</Button>
+                    <Button size={"large"} className="travelButton">Let's travel !</Button>
                 </Link>
             </div>
             <img src={car} alt="car" className="carSvg"/>
