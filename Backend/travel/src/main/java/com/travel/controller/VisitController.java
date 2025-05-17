@@ -125,8 +125,8 @@ public class VisitController {
     public ResponseEntity<VisitTopStatsResponseDTO> getTopAttractionsAndLocations(
             @PathVariable("limit") int limit) {
 
-        List<VisitTopAttractionDTO> topAttractions = visitStatisticsService.getTopVisitedAttractions(limit);
-        List<VisitTopLocationDTO> topLocations = visitStatisticsService.getTopVisitedLocations(limit);
+        List<VisitTopStatsDTO> topAttractions = visitStatisticsService.getTopVisitedAttractions(limit);
+        List<VisitTopStatsDTO> topLocations = visitStatisticsService.getTopVisitedLocations(limit);
 
         return ResponseEntity.ok(new VisitTopStatsResponseDTO(topAttractions, topLocations));
     }

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { StatsResponse } from "../../models/stats/statsResponse";
-import { getStatistics } from "../../api/statisticsApi";
+import {
+  StatsResponse,
+  TopStatsResponse,
+} from "../../models/stats/statsResponse";
+import { getStatistics, getTopStatistics } from "../../api/statisticsApi";
 import { Card, Col, notification, Row } from "antd";
 import { Column } from "@ant-design/charts";
 import "./statistics.css";
@@ -27,6 +30,12 @@ export default function Statistics() {
   const [monthData, setMonthData] = useState<
     { Month: string; Visits: number }[]
   >([]);
+  const [topAttractions, setTopAttractions] = useState<
+    { Name: string; Visits: number }[]
+  >([]);
+  const [topLocations, setTopLocations] = useState<
+    { Name: string; Visits: number }[]
+  >([]);
 
   useEffect(() => {
     getStatistics()
@@ -50,6 +59,28 @@ export default function Statistics() {
           description: String(err),
         })
       );
+
+    getTopStatistics()
+      .then((res: TopStatsResponse) => {
+        const attractions = res.topAttractions.map((a) => ({
+          Name: a.name,
+          Visits: a.visitsCount,
+        }));
+
+        const locations = res.topLocations.map((l) => ({
+          Name: l.name,
+          Visits: l.visitsCount,
+        }));
+
+        setTopAttractions(attractions);
+        setTopLocations(locations);
+      })
+      .catch((err) =>
+        notification.error({
+          message: "Failed to load top statistics. Please try again later.",
+          description: String(err),
+        })
+      );
   }, []);
 
   const hourChartConfig = {
@@ -63,6 +94,21 @@ export default function Statistics() {
     xField: "Month",
     yField: "Visits",
   };
+
+  const topAttChartConfig = {
+    data: topAttractions,
+    xField: "Name",
+    yField: "Visits",
+  };
+
+  const topLocChartConfig = {
+    data: topLocations,
+    xField: "Name",
+    yField: "Visits",
+  };
+
+  console.log(topAttractions);
+  console.log(topLocations);
 
   return (
     <div className="statisticsPage">
@@ -80,10 +126,14 @@ export default function Statistics() {
       </Row>
       <Row className="statisticsRow" gutter={[30, 30]}>
         <Col xs={24} md={11}>
-          <Card className="statisticsCard" title="Top Attractions"></Card>
+          <Card className="statisticsCard" title="Top Attractions">
+            <Column {...topAttChartConfig} />
+          </Card>
         </Col>
         <Col xs={24} md={11}>
-          <Card className="statisticsCard" title="Top Locations"></Card>
+          <Card className="statisticsCard" title="Top Locations">
+            <Column {...topLocChartConfig} />
+          </Card>
         </Col>
       </Row>
     </div>
