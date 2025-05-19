@@ -3,28 +3,27 @@ package com.travel.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "visits")
-
-public class VisitEntity {
-
+@Table(name = "contact_messages")
+public class ContactMessageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "attraction_id", nullable = false)
-    private AttractionEntity attraction;
-
-    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @Column(nullable = false)
-    private LocalDateTime visitTimestamp;
+    @Column
+    private String subject;
+
+    @Column
+    private String message;
+
+    @Column
+    private LocalDateTime sent_at;
 
 }

@@ -10,12 +10,12 @@ import ProtectedRoute from "./components/protected-route";
 import Wishlist from "./pages/wishlist/wishlist";
 import Navbar from "./components/navigation-bar"
 import Home from "./pages/home/home";
+import Statistics from "./pages/admin/statistics";
 
 function App() {
     return (
-
         <BrowserRouter>
-            <Navbar />
+            <Navbar/>
             <Routes>
                 <Route path="/" element={<Home/>}/>
                 <Route path="/register" element={<Registration/>}/>
@@ -28,6 +28,14 @@ function App() {
                     element={
                         <ProtectedRoute adminOnly>
                             <Management/>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/statistics"
+                    element={
+                        <ProtectedRoute adminOnly>
+                            <Statistics/>
                         </ProtectedRoute>
                     }
                 />
