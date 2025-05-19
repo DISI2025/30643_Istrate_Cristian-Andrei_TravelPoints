@@ -1,0 +1,42 @@
+.homeContainer {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.textMoto {
+    margin-bottom: 4rem;
+    font-size: 3.5rem;
+}
+.textKeyword {
+    color: var(--teal);
+    font-weight: bold;
+    font-style: oblique;
+}
+.textParagraph {
+    max-width: 550px;
+    width: 100%;
+    word-wrap: break-word;
+    line-height: 1.6;
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 3rem;
+}
+
+.travelButton {
+    background-color: var(--teal);
+    color: white;
+    font-weight: bold;
+}
+
+.travelButton:hover {
+    background-color: white !important;
+    color: var(--teal) !important;
+    font-weight: bold;
+    border: 1px solid var(--teal) !important;
+}
+
+.carSvg {
+    width: 500px;
+}
