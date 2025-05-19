@@ -116,7 +116,7 @@ export default function AttractionDetail() {
         }
     }
 
-    const togglePlayAudio = () => {
+    const togglePlayAudio = async () => {
         if (!attraction?.descriptionAudio) {
             notification.warning({message: "No audio description available."});
             return;
@@ -124,7 +124,12 @@ export default function AttractionDetail() {
 
         if (!audioPlayer) {
             const newAudio = new Audio(attraction.descriptionAudio);
-            newAudio.play();
+            try {
+                await newAudio.play();
+            } catch (err) {
+                notification.warning({message: "Failed to load audio player!"});
+                return;
+            }
             setAudioPlayer(newAudio);
             setAudio(true);
 
@@ -261,7 +266,9 @@ export default function AttractionDetail() {
 
                 </div>
             </Card>
-            <Link to={`/reviews/${attraction.id}`} className="reviewsLink">Reviews</Link>
+            <Button type="primary" className="reviewsLink" onClick={() => navigate(`/reviews/${attraction.id}`)}>
+                <span>Show Reviews</span>
+            </Button>
         </div>
     );
 }
