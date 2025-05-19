@@ -4,8 +4,15 @@ import {
   TopStatsResponse,
 } from "../../models/stats/statsResponse";
 import { getStatistics, getTopStatistics } from "../../api/statisticsApi";
-import { Card, Col, notification, Row } from "antd";
-import { Column } from "@ant-design/charts";
+import {
+  Card,
+  Col,
+  InputNumber,
+  InputNumberProps,
+  notification,
+  Row,
+} from "antd";
+import { Column, Line } from "@ant-design/charts";
 import "./statistics.css";
 
 const months = [
@@ -36,6 +43,7 @@ export default function Statistics() {
   const [topLocations, setTopLocations] = useState<
     { Name: string; Visits: number }[]
   >([]);
+  const [limit, setLimit] = useState<number>(10);
 
   useEffect(() => {
     getStatistics()
@@ -60,7 +68,15 @@ export default function Statistics() {
         })
       );
 
-    getTopStatistics()
+    fetchTopStats(limit);
+  }, []);
+
+  useEffect(() => {
+    fetchTopStats(limit);
+  }, [limit]);
+
+  const fetchTopStats = (limit: number) => {
+    getTopStatistics(limit)
       .then((res: TopStatsResponse) => {
         const attractions = res.topAttractions.map((a) => ({
           Name: a.name,
@@ -81,7 +97,7 @@ export default function Statistics() {
           description: String(err),
         })
       );
-  }, []);
+  };
 
   const hourChartConfig = {
     data: hourData,
@@ -107,24 +123,39 @@ export default function Statistics() {
     yField: "Visits",
   };
 
-  console.log(topAttractions);
-  console.log(topLocations);
-
   return (
     <div className="statisticsPage">
       <Row className="statisticsRow" gutter={[30, 30]}>
         <Col xs={24} md={11}>
           <Card className="statisticsCard" title="Hourly Visits">
-            <Column {...hourChartConfig} />
+            <Line {...hourChartConfig} />
           </Card>
         </Col>
         <Col xs={24} md={11}>
           <Card className="statisticsCard" title="Monthly Visits">
-            <Column {...monthChartConfig} />
+            <Line {...monthChartConfig} />
           </Card>
         </Col>
       </Row>
       <Row className="statisticsRow" gutter={[30, 30]}>
+        <Col xs={24} md={11}>
+          <InputNumber
+            min={1}
+            max={10}
+            size="large"
+            defaultValue={10}
+            addonBefore="Top limit: "
+            className="statisticsLimit"
+            onChange={(value) => {
+              if (typeof value === "number") {
+                setLimit(value);
+              }
+            }}
+          />
+        </Col>
+        <Col xs={24} md={11} />
+      </Row>
+      <Row gutter={[30, 30]}>
         <Col xs={24} md={11}>
           <Card className="statisticsCard" title="Top Attractions">
             <Column {...topAttChartConfig} />

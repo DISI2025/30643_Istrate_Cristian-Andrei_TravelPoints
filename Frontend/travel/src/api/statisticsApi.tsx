@@ -8,9 +8,11 @@ export const getStatistics = async (): Promise<StatsResponse> => {
   return res.data;
 };
 
-export const getTopStatistics = async (): Promise<TopStatsResponse> => {
+export const getTopStatistics = async (
+  limit: number
+): Promise<TopStatsResponse> => {
   const res = await axiosInstance.get<TopStatsResponse>(
-    `${BASE_URL}/top-stats/10`
+    `${BASE_URL}/top-stats/${limit}`
   );
   return res.data;
 };
