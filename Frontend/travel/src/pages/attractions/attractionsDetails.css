@@ -139,4 +139,8 @@
     color: var(--teal);
 }
 
+.reviewButton {
+    margin-top: 12px;
+}
+
 
