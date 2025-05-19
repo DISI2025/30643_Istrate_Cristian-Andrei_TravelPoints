@@ -142,8 +142,10 @@
     padding: 0 15px 0 15px;
 }
 
-.categoryField {
-
+.reviewsLink {
+    padding-top: 20px;
+    text-decoration: none;
+    color: var(--teal);
 }
 
 

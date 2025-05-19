@@ -11,6 +11,7 @@ import Wishlist from "./pages/wishlist/wishlist";
 import Navbar from "./components/navigation-bar"
 import Home from "./pages/home/home";
 import Statistics from "./pages/admin/statistics";
+import Review from "./pages/review/review";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/attractions/:id" element={<AttractionDetail/>}/>
                 <Route path="/attractions" element={<Attractions/>}/>
+                <Route path="/reviews/:id" element={<Review/>}/>
                 <Route path="/wishlist" element={<Wishlist/>}/>
                 <Route
                     path="/admin"
