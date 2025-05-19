@@ -1,4 +1,4 @@
-import {useParams, useNavigate} from "react-router-dom";
+import {useParams, useNavigate, Link} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {Carousel, ConfigProvider, notification, Tooltip} from "antd";
 import axios from "axios";
@@ -161,6 +161,7 @@ export default function AttractionDetail() {
                     <p className="detailField"><strong>Offers:</strong> {attraction.offers}</p>
                 </div>
             </Card>
+            <Link to={`/reviews/${attraction.id}`} className="reviewsLink">Reviews</Link>
         </div>
     );
 }

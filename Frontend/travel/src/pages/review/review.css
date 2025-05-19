@@ -1,0 +1,31 @@
+.reviewContainer {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    margin-top: 40px;
+}
+
+.reviewList {
+    width: 75%;
+    padding: 0;
+}
+
+.reviewCard {
+    margin-bottom: 15px;
+}
+
+.reviewUsernameAndDateContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.reviewUsername {
+    color: var(--teal);
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.reviewRate {
+    margin-bottom: 16px;
+}
