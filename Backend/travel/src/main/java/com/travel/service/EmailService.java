@@ -2,6 +2,7 @@ package com.travel.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,9 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private final JavaMailSender mailSender;
+
+    @Value("${mail.from}")
+    private String fromEmail;
 
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
@@ -24,7 +28,7 @@ public class EmailService {
             message.setContent(body, "text/plain");
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setFrom("alexandruivan2002@gmail.com");
+            helper.setFrom(fromEmail);
 
             mailSender.send(message);
             System.out.println("Email sent successfully!");

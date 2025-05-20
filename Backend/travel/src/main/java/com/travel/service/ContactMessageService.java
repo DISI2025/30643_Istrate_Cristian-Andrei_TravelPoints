@@ -6,6 +6,7 @@ import com.travel.entity.UserEntity;
 import com.travel.mapper.ContactMessageMapper;
 import com.travel.repository.ContactMessageRepository;
 import com.travel.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,6 +19,9 @@ public class ContactMessageService {
     private final ContactMessageMapper contactMessageMapper;
 
     private final EmailService emailService;
+
+    @Value("${mail.from}")
+    private String toEmail;
 
     public ContactMessageService(ContactMessageRepository contactMessageRepository,
                                  UserRepository userRepository,
@@ -40,7 +44,7 @@ public class ContactMessageService {
 
         try {
             emailService.sendSimpleEmail(
-                    "alexandruivan2002@gmail.com",
+                    toEmail,
                     dto.getSubject(),
                     dto.getMessage()
             );
