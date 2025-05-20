@@ -11,5 +11,5 @@ public class ContactMessageResponseDTO {
     private UserResponseDTO user;
     private String subject;
     private String message;
-    private LocalDateTime sentAt;
+    private LocalDateTime sent_at;
 }
