@@ -1,8 +1,7 @@
 package com.travel.repository;
 
 import com.travel.dtos.VisitStatisticsDTO;
-import com.travel.dtos.VisitTopAttractionDTO;
-import com.travel.dtos.VisitTopLocationDTO;
+import com.travel.dtos.VisitTopStatsDTO;
 import com.travel.entity.VisitEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,12 +27,12 @@ public interface VisitRepository extends JpaRepository<VisitEntity,Long> {
             "FROM visits GROUP BY time ORDER BY time", nativeQuery = true)
     List<VisitStatisticsDTO> countVisitsGroupedByMonth();
 
-    @Query(value = "SELECT attraction_id, COUNT(*) AS visits_count FROM visits " +
-            "GROUP BY attraction_id ORDER BY visits_count DESC", nativeQuery = true)
-    List<VisitTopAttractionDTO> findTopVisitedAttractions();
+    @Query(value = "SELECT a.name AS name, COUNT(*) AS visitsCount FROM visits v JOIN attractions a " +
+            "ON v.attraction_id = a.id GROUP BY a.name ORDER BY visitsCount DESC", nativeQuery = true)
+    List<VisitTopStatsDTO> findTopVisitedAttractions();
 
     @Query(value = "SELECT a.location AS location, COUNT(*) AS visits_count FROM visits v " +
             "JOIN attractions a ON v.attraction_id = a.id GROUP BY a.location ORDER BY visits_count DESC",
             nativeQuery = true)
-    List<VisitTopLocationDTO> findTopVisitedLocations();
+    List<VisitTopStatsDTO> findTopVisitedLocations();
 }
