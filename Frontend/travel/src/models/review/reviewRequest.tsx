@@ -1,5 +1,5 @@
 export interface ReviewRequest {
-    id: string,
+    attractionId: string,
     rating: number,
     comment: string
 }
