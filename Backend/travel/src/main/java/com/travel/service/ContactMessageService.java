@@ -17,12 +17,15 @@ public class ContactMessageService {
     private final UserRepository userRepository;
     private final ContactMessageMapper contactMessageMapper;
 
+    private final EmailService emailService;
+
     public ContactMessageService(ContactMessageRepository contactMessageRepository,
                                  UserRepository userRepository,
-                                 ContactMessageMapper contactMessageMapper) {
+                                 ContactMessageMapper contactMessageMapper, EmailService emailService) {
         this.contactMessageRepository = contactMessageRepository;
         this.userRepository = userRepository;
         this.contactMessageMapper = contactMessageMapper;
+        this.emailService = emailService;
     }
 
     public void addMessage(ContactMessageRequestDTO dto) {
@@ -34,5 +37,15 @@ public class ContactMessageService {
         ContactMessageEntity entity = contactMessageMapper.toEntity(dto);
         entity.setUser(optionalUser.get());
         contactMessageRepository.save(entity);
+
+        try {
+            emailService.sendSimpleEmail(
+                    "alexandruivan2002@gmail.com",
+                    dto.getSubject(),
+                    dto.getMessage()
+            );
+        } catch (Exception e) {
+            System.err.println("Email sending failed: " + e.getMessage());
+        }
     }
 }
