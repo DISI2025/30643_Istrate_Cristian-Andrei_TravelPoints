@@ -1,13 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {Menu, Layout, MenuProps} from "antd";
-import {NavLink, useLocation, useNavigate} from "react-router-dom";
+import {Link, NavLink, useLocation, useNavigate} from "react-router-dom";
 import {
-    HomeOutlined,
-    HeartOutlined,
-    LoginOutlined,
-    AppstoreOutlined,
+  HomeOutlined,
+  HeartOutlined,
+  LoginOutlined,
+  AppstoreOutlined,
+  BarChartOutlined,
 } from "@ant-design/icons";
 import "./navigation-bar.css";
+import {logoutUser} from "../api/userApi";
+import logo from "../assets/logo.svg";
 import Notifications from "./notifications";
 
 const {Header} = Layout;
@@ -61,88 +64,86 @@ const Navbar: React.FC = () => {
         setSelectedKey(location.pathname); // update selected key on route change
     }, [location.pathname]);
 
-    const menuItems: MenuProps["items"] = [
-        {
-            key: "/attractions",
-            icon: <HomeOutlined/>,
-            label: (
-                <NavLink to="/attractions" onClick={() => setSelectedKey("/attractions")}>
-                    Attractions
-                </NavLink>
-            ),
+  const menuItems: MenuProps["items"] = [
+    {
+      key: "/attractions",
+      icon: <HomeOutlined />,
+      label: <NavLink to="/attractions">Attractions</NavLink>,
+    },
+    ...(isAuthenticated
+      ? [
+          {
+            key: "/wishlist",
+            icon: <HeartOutlined />,
+            label: <NavLink to="/wishlist">Wishlist</NavLink>,
+          },
+        ]
+      : []),
+    ...(isAdmin
+      ? [
+          {
+            key: "/admin",
+            icon: <AppstoreOutlined />,
+            label: <NavLink to="/admin">Admin</NavLink>,
+          },
+        ]
+      : []),
+      ...(isAuthenticated
+          ? [
+              {
+                  key: "/notifications",
+                  label: (
+                      <Notifications
+                          notifications={JSON.parse(sessionStorage.getItem("notifications") || "[]")}
+                          onRemove={removeNotification}
+                          onOpen={() => setSelectedKey("/notifications")}
+                      />
+                  ),
+              },
+          ]
+          : []),
+    ...(isAdmin
+      ? [
+          {
+            key: "/statistics",
+            icon: <BarChartOutlined />,
+            label: <NavLink to="/statistics">Statistics</NavLink>,
+          },
+        ]
+      : []),
+    isAuthenticated
+      ? {
+          key: "/logout",
+          icon: <LoginOutlined />,
+          label: "Log out",
+          className: "loginItem",
+          onClick: () => {
+            logoutUser();
+            navigate("/login");
+          },
+        }
+      : {
+          key: "/login",
+          icon: <LoginOutlined />,
+          label: <NavLink to="/login">Log in</NavLink>,
+          className: "loginItem",
         },
-        ...(isAuthenticated
-            ? [
-                {
-                    key: "/wishlist",
-                    icon: <HeartOutlined/>,
-                    label: (
-                        <NavLink to="/wishlist" onClick={() => setSelectedKey("/wishlist")}>
-                            Wishlist
-                        </NavLink>
-                    ),
-                },
-            ]
-            : []),
-        ...(isAdmin
-            ? [
-                {
-                    key: "/admin",
-                    icon: <AppstoreOutlined/>,
-                    label: (
-                        <NavLink to="/admin" onClick={() => setSelectedKey("/admin")}>
-                            Admin
-                        </NavLink>
-                    ),
-                },
-            ]
-            : []),
-        ...(isAuthenticated
-            ? [
-                {
-                    key: "/notifications",
-                    label: (
-                        <Notifications
-                            notifications={JSON.parse(sessionStorage.getItem("notifications") || "[]")}
-                            onRemove={removeNotification}
-                            onOpen={() => setSelectedKey("/notifications")}
-                        />
-                    ),
-                },
-            ]
-            : []),
-        isAuthenticated
-            ? {
-                key: "/logout",
-                icon: <LoginOutlined/>,
-                label: "Log out",
-                className: "loginItem",
-                onClick: logoutUser,
-            }
-            : {
-                key: "/login",
-                icon: <LoginOutlined/>,
-                label: (
-                    <NavLink to="/login" onClick={() => setSelectedKey("/login")}>
-                        Log in
-                    </NavLink>
-                ),
-                className: "loginItem",
-            },
-    ];
+  ];
 
-    return (
-        <Header className="customNavbar">
-            <div className="logo">TravelPoints</div>
-            <Menu
-                theme="dark"
-                mode="horizontal"
-                selectedKeys={[selectedKey]}
-                className="menu"
-                items={menuItems}
-            />
-        </Header>
-    );
+  return (
+    <Header className="customNavbar">
+        <Link to="/" className="logoLink">
+            <img src={logo} alt="logo" className="logo"/>
+        </Link>
+        <Menu
+            theme="dark"
+            mode="horizontal"
+        selectedKeys={[location.pathname]}
+        className="menu"
+        items={menuItems}
+      />
+    </Header>
+  );
 };
 
 export default Navbar;

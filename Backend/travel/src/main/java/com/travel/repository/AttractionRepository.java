@@ -2,7 +2,10 @@ package com.travel.repository;
 
 
 import com.travel.entity.AttractionEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,7 +16,7 @@ import java.util.Optional;
  * needed for the CRUD operations on the attractions table
  */
 @Repository
-public interface AttractionRepository extends JpaRepository<AttractionEntity,Long> {
+public interface AttractionRepository extends JpaRepository<AttractionEntity,Long> , JpaSpecificationExecutor<AttractionEntity> {
     Optional<AttractionEntity> findAttractionById(Long id);
 
     List<AttractionEntity> findByLocation(String location);
@@ -23,4 +26,6 @@ public interface AttractionRepository extends JpaRepository<AttractionEntity,Lon
     List<AttractionEntity> findByNameContainingIgnoreCase(String name);
 
     List<AttractionEntity> findByPriceBetween(Double minPrice, Double maxPrice);
+
+
 }

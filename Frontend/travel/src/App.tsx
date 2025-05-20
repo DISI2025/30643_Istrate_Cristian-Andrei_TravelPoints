@@ -11,6 +11,9 @@ import Wishlist from "./pages/wishlist/wishlist";
 import Navbar from "./components/navigation-bar"
 import {connectStomp, disconnectStomp} from "./api/stompClient";
 import {notification} from "antd";
+import Home from "./pages/home/home";
+import Statistics from "./pages/admin/statistics";
+import Review from "./pages/review/review";
 
 function App() {
 
@@ -39,21 +42,29 @@ function App() {
     }, []);
 
     return (
-
         <BrowserRouter>
-            <Navbar />
+            <Navbar/>
             <Routes>
-
+                <Route path="/" element={<Home/>}/>
                 <Route path="/register" element={<Registration/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/attractions/:id" element={<AttractionDetail/>}/>
                 <Route path="/attractions" element={<Attractions/>}/>
+                <Route path="/reviews/:id" element={<Review/>}/>
                 <Route path="/wishlist" element={<Wishlist/>}/>
                 <Route
                     path="/admin"
                     element={
                         <ProtectedRoute adminOnly>
                             <Management/>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/statistics"
+                    element={
+                        <ProtectedRoute adminOnly>
+                            <Statistics/>
                         </ProtectedRoute>
                     }
                 />
