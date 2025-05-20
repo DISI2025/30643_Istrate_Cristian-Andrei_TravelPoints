@@ -20,7 +20,7 @@ public class ContactMessageService {
 
     private final EmailService emailService;
 
-    @Value("${mail.from}")
+    @Value("${mail.to}")
     private String toEmail;
 
     public ContactMessageService(ContactMessageRepository contactMessageRepository,

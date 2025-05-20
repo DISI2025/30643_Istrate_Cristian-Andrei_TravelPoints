@@ -21,7 +21,6 @@ public class EmailService {
 
     public void sendSimpleEmail(String to, String subject, String body) {
         try {
-            System.out.println("Sending email to: " + to);
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, false, "utf-8");
 
