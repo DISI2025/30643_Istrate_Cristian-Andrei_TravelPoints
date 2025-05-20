@@ -30,7 +30,6 @@ public class EmailService {
             helper.setFrom(fromEmail);
 
             mailSender.send(message);
-            System.out.println("Email sent successfully!");
 
         } catch (MessagingException e) {
             e.printStackTrace();
