@@ -11,8 +11,10 @@
 
 .lbAvatar {
     background-color: var(--teal);
+    margin-left: 5px;
 }
 
 .lbItem {
     text-align: center;
+    border-radius: 8px;
 }
