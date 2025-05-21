@@ -24,12 +24,15 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final AttractionRepository attractionRepository;
 
+    private final LeaderboardCache leaderboardCache;
+
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository, ReviewMapper reviewMapper, UserRepository userRepository, AttractionRepository attractionRepository) {
+    public ReviewService(ReviewRepository reviewRepository, ReviewMapper reviewMapper, UserRepository userRepository, AttractionRepository attractionRepository, LeaderboardCache leaderboardCache) {
         this.reviewRepository = reviewRepository;
         this.reviewMapper = reviewMapper;
         this.userRepository = userRepository;
         this.attractionRepository = attractionRepository;
+        this.leaderboardCache = leaderboardCache;
     }
 
     public List<ReviewResponseDTO> getAllReviewsByAttractionId(Long attractionId) {
@@ -50,7 +53,7 @@ public class ReviewService {
         ReviewEntity review = new ReviewEntity();
         reviewMapper.updateFromDTO(reviewRequestDTO, review, optionalUser.get(), optionalAttraction.get());
 
-
+        leaderboardCache.incrementScore(reviewRequestDTO.getAttractionId(),1);
 
         return reviewMapper.toDTO(reviewRepository.save(review));
     }

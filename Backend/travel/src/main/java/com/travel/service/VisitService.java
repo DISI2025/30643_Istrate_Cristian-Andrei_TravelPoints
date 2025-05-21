@@ -1,5 +1,6 @@
 package com.travel.service;
 
+import com.fasterxml.jackson.databind.ser.std.StdArraySerializers;
 import com.travel.dtos.VisitRequestDTO;
 import com.travel.dtos.VisitResponseDTO;
 import com.travel.entity.AttractionEntity;
@@ -17,21 +18,21 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
-// TODO: need to add the check for existing user with userId  for add and update methods
-// TODO: add method get visits of user and visit by attraction and user
 @Service
 public class VisitService {
     private final VisitRepository visitRepository;
     private final AttractionRepository attractionRepository;
     private final UserRepository userRepository;
     private final VisitMapper visitMapper;
+    private  final LeaderboardCache leaderboardCache;
 
     @Autowired
-    public VisitService(VisitRepository visitRepository, VisitMapper visitMapper, AttractionRepository attractionRepository, UserRepository userRepository) {
+    public VisitService(VisitRepository visitRepository, VisitMapper visitMapper, AttractionRepository attractionRepository, UserRepository userRepository, LeaderboardCache leaderboardCache) {
         this.visitRepository = visitRepository;
         this.attractionRepository = attractionRepository;
         this.userRepository = userRepository;
         this.visitMapper = visitMapper;
+        this.leaderboardCache = leaderboardCache;
     }
 
     private UserEntity checkUser(Long userId){
@@ -70,6 +71,7 @@ public class VisitService {
         }
         visit.setAttraction(checkAttraction(visitRequestDTO.getAttractionId()));
         visit.setUser(checkUser(visitRequestDTO.getUserId()));
+        leaderboardCache.incrementScore(visitRequestDTO.getAttractionId(), 1);
         return visitMapper.toDTO(visitRepository.save(visit));
     }
 
