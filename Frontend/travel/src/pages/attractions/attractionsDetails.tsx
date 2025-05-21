@@ -1,6 +1,6 @@
 import {useParams, useNavigate, Link} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {Carousel, ConfigProvider, notification, Tooltip} from "antd";
+import {Carousel, ConfigProvider, Modal, notification, Rate, Tooltip} from "antd";
 import axios from "axios";
 import {Card, Button} from "antd";
 import "./attractionsDetails.css";
@@ -18,6 +18,12 @@ import {createWishlist, deleteWishlist, getWishlistByUserIdAndAttractionId} from
 import {WishlistResponse} from "../../models/wishlist/wishlistResponse";
 import {addVisit, deleteVisit, getVisitOfUserAndAttraction} from "../../api/visitApi";
 import {VisitResponse} from "../../models/visit/visitResponse";
+import {Form, Input} from "antd";
+import {ReviewRequest} from "../../models/review/reviewRequest";
+import {createReview} from "../../api/reviewApi";
+
+const {TextArea} = Input;
+
 
 export default function AttractionDetail() {
     const {id} = useParams();
@@ -27,8 +33,8 @@ export default function AttractionDetail() {
     const [visit, setVisit] = useState<VisitResponse | null>();
     const [audio, setAudio] = useState<boolean>(false);
     const [audioPlayer, setAudioPlayer] = useState<HTMLAudioElement | null>(null);
-
-
+    const [isModalVisible, setModalVisible] = useState<boolean>(false);
+    const [form] = Form.useForm();
 
     const userId = localStorage.getItem("id");
 
@@ -110,7 +116,7 @@ export default function AttractionDetail() {
         }
     }
 
-    const togglePlayAudio = () => {
+    const togglePlayAudio = async () => {
         if (!attraction?.descriptionAudio) {
             notification.warning({message: "No audio description available."});
             return;
@@ -118,7 +124,12 @@ export default function AttractionDetail() {
 
         if (!audioPlayer) {
             const newAudio = new Audio(attraction.descriptionAudio);
-            newAudio.play();
+            try {
+                await newAudio.play();
+            } catch (err) {
+                notification.warning({message: "Failed to load audio player!"});
+                return;
+            }
             setAudioPlayer(newAudio);
             setAudio(true);
 
@@ -130,6 +141,35 @@ export default function AttractionDetail() {
             audioPlayer.pause();
             setAudio(false);
             setAudioPlayer(null);
+        }
+    };
+
+
+    const handleSubmit = async () => {
+        try {
+            const values = await form.validateFields();
+
+            const review: ReviewRequest = {
+                attractionId: attraction.id,
+                rating: values.rating,
+                comment: values.comment
+            };
+
+            await createReview(userId!, review);
+
+            notification.success({ message: "Review submitted successfully!" });
+            setModalVisible(false);
+            form.resetFields();
+        } catch (err: any) {
+            if (err?.errorFields) {
+                console.log('Validation Failed:', err);
+            } else {
+                console.error("Review submission failed:", err);
+                notification.error({
+                    message: "Failed to submit review",
+                    description: err?.response?.data?.message || "An unexpected error occurred.",
+                });
+            }
         }
     };
 
@@ -193,9 +233,42 @@ export default function AttractionDetail() {
                     </div>
                     <p className="detailField"><strong>Description:</strong> {attraction.descriptionText}</p>
                     <p className="detailField"><strong>Offers:</strong> {attraction.offers}</p>
+                    <Button type="primary" className="reviewButton" onClick={() => setModalVisible(true)}>
+                        Add Review
+                    </Button>
+                    <Modal
+                        title="Share your experience"
+                        open={isModalVisible}
+                        onCancel={() => setModalVisible(false)}
+                        footer={[
+                            <Button key="submit" type="primary" onClick={handleSubmit}>
+                                Submit
+                            </Button>
+                        ]}
+                    >
+                        <Form form={form} layout="vertical">
+                            <Form.Item
+                                name="rating"
+                                label="Rating"
+                                rules={[{required: true, message: 'Please provide a rating!'}]}
+                            >
+                                <Rate/>
+                            </Form.Item>
+                            <Form.Item
+                                name="comment"
+                                label="Your Comment"
+                                rules={[{required: true, message: 'Please write your review!'}]}
+                            >
+                                <TextArea rows={4} placeholder="Write here..."/>
+                            </Form.Item>
+                        </Form>
+                    </Modal>
+
                 </div>
             </Card>
-            <Link to={`/reviews/${attraction.id}`} className="reviewsLink">Reviews</Link>
+            <Button type="primary" className="reviewsLink" onClick={() => navigate(`/reviews/${attraction.id}`)}>
+                <span>Show Reviews</span>
+            </Button>
         </div>
     );
 }

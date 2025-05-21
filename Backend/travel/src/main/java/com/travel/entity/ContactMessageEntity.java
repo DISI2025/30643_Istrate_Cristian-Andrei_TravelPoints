@@ -23,7 +23,8 @@ public class ContactMessageEntity {
     @Column
     private String message;
 
-    @Column
-    private LocalDateTime sent_at;
+    @Column(name = "sent_at")
+    private LocalDateTime sentAt;
+
 
 }

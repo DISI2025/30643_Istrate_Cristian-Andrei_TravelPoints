@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class VisitTopStatsResponseDTO {
-    private List<VisitTopAttractionDTO> topAttractions;
-    private List<VisitTopLocationDTO> topLocations;
+    private List<VisitTopStatsDTO> topAttractions;
+    private List<VisitTopStatsDTO> topLocations;
 }
