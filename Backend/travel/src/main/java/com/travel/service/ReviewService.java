@@ -50,6 +50,8 @@ public class ReviewService {
         ReviewEntity review = new ReviewEntity();
         reviewMapper.updateFromDTO(reviewRequestDTO, review, optionalUser.get(), optionalAttraction.get());
 
+
+
         return reviewMapper.toDTO(reviewRepository.save(review));
     }
 }
