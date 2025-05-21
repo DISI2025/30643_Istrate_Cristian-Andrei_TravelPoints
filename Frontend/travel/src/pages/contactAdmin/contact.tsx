@@ -55,7 +55,7 @@ export default function Contact() {
                     />
 
                     <Button htmlType="submit" size="large" className="travelButton">
-                        Trimite
+                        Send
                     </Button>
                 </form>
             </div>
