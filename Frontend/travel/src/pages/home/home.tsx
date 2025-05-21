@@ -11,16 +11,22 @@ export default function Home() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardResponse[]>([]);
 
   useEffect(() => {
+    const fetchLeaderboardStats = async () => {
+      try {
+        const data = await getLeaderboardStats();
+        setLeaderboard(data);
+      } catch (err: any) {
+        notification.error({
+          message: "Leaderboard Fetch Failed",
+          description: err + ".",
+        });
+      }
+    };
     fetchLeaderboardStats();
-  }, []);
 
-  const fetchLeaderboardStats = async () => {
-    try {
-      await getLeaderboardStats().then(setLeaderboard);
-    } catch (err: any) {
-      notification.error({ message: "Login Failed", description: err + "." });
-    }
-  };
+    const intervalId = setInterval(fetchLeaderboardStats, 30000); //30.000 ms = 30 s
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <>
