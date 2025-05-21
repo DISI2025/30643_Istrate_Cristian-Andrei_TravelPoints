@@ -18,7 +18,7 @@ export default function Leaderboard() {
   return (
     <Card
       className="lbCard"
-      title="Top 10 Attractions"
+      title="Attractions Leaderboard"
       styles={{
         header: { backgroundColor: "var(--deep-teal)", color: "white" },
         body: { backgroundColor: "var(--teal)" },
