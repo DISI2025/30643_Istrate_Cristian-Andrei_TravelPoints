@@ -7,6 +7,7 @@ import {
     LoginOutlined,
     AppstoreOutlined,
     BarChartOutlined,
+    FileTextOutlined,
 } from "@ant-design/icons";
 import "./navigation-bar.css";
 import logo from "../assets/logo.svg";
@@ -75,7 +76,10 @@ const Navbar: React.FC = () => {
             setSelectedKey("/notifications");
         } else if (location.pathname.startsWith("/login")) {
             setSelectedKey("/login");
-        } else {
+        }
+        else if (location.pathname.startsWith("/contact")) {
+            setSelectedKey("/contact");
+        }else {
             setSelectedKey(location.pathname);
         }
     }, [location.pathname]);
@@ -98,6 +102,16 @@ const Navbar: React.FC = () => {
                     label: (
                         <NavLink to="/wishlist" onClick={() => setSelectedKey("/wishlist")}>
                             Wishlist
+                        </NavLink>
+                    ),
+                },
+
+                {
+                    key: "/contact",
+                    icon: <FileTextOutlined />,
+                    label: (
+                        <NavLink to="/contact" onClick={() => setSelectedKey("/contact")}>
+                            Contact Admin
                         </NavLink>
                     ),
                 },

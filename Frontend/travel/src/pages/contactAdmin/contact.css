@@ -1,0 +1,52 @@
+
+.contactContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 2rem;
+}
+
+.contactForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 500px;
+    width: 100%;
+}
+
+.contactLabel {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--deep-teal);
+}
+
+.contactInput,
+.contactTextarea {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    resize: none;
+}
+
+.contactInput:focus,
+.contactTextarea:focus {
+    border-color: var(--teal);
+    outline: none;
+}
+
+.travelButton {
+    background-color: var(--teal);
+    color: white;
+    font-weight: bold;
+}
+
+.travelButton:hover {
+    background-color: white !important;
+    color: var(--teal) !important;
+    font-weight: bold;
+    border: 1px solid var(--teal) !important;
+}
+
+

@@ -14,6 +14,7 @@ import {notification} from "antd";
 import Home from "./pages/home/home";
 import Statistics from "./pages/admin/statistics";
 import Review from "./pages/review/review";
+import Contact from "./pages/contactAdmin/contact";
 
 function App() {
 
@@ -52,6 +53,7 @@ function App() {
                 <Route path="/attractions" element={<Attractions/>}/>
                 <Route path="/reviews/:id" element={<Review/>}/>
                 <Route path="/wishlist" element={<Wishlist/>}/>
+                <Route path="/contact" element={<Contact/>}/>
                 <Route
                     path="/admin"
                     element={
