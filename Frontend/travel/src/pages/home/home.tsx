@@ -1,11 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { LeaderboardResponse } from "../../models/stats/leaderboardResponse";
+import { getLeaderboardStats } from "../../api/leaderboardApi";
 import Leaderboard from "../../components/leaderboard";
 import car from "../../assets/travel_car.svg";
+import { Button, notification } from "antd";
 import { Link } from "react-router-dom";
-import { Button } from "antd";
 import "./home.css";
 
 export default function Home() {
+  const [leaderboard, setLeaderboard] = useState<LeaderboardResponse[]>([]);
+
+  useEffect(() => {
+    fetchLeaderboardStats();
+  }, []);
+
+  const fetchLeaderboardStats = async () => {
+    try {
+      await getLeaderboardStats().then(setLeaderboard);
+    } catch (err: any) {
+      notification.error({ message: "Login Failed", description: err + "." });
+    }
+  };
+
   return (
     <>
       <div className="homeContainer">
@@ -29,7 +45,7 @@ export default function Home() {
         <img src={car} alt="car" className="carSvg" />
       </div>
       <div className="homeLeaderboard">
-        <Leaderboard />
+        <Leaderboard data={leaderboard} />
       </div>
     </>
   );
