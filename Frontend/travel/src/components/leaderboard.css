@@ -1,0 +1,18 @@
+.lbCard {
+    width: 500px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.lbList {
+    background-color: var(--cream);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.lbAvatar {
+    background-color: var(--teal);
+}
+
+.lbItem {
+    text-align: center;
+}
