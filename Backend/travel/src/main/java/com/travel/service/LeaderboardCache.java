@@ -26,4 +26,8 @@ public class LeaderboardCache {
     public Set<ZSetOperations.TypedTuple<String>> getTop(int n) {
         return zSetOps.reverseRangeWithScores(LEADERBOARD_KEY, 0, n - 1);
     }
+
+    public void clear() {
+        zSetOps.getOperations().delete(LEADERBOARD_KEY);
+    }
 }
