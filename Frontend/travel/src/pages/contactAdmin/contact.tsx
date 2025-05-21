@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Button, Input, notification } from "antd";
 import "./contact.css";
+import { sendContactMessage } from "../../api/contactApi";
 
 export default function Contact() {
     const [subject, setSubject] = useState<string>("");
     const [message, setMessage] = useState<string>("");
+    const userId = localStorage.getItem("id");
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -17,14 +19,36 @@ export default function Contact() {
             return;
         }
 
-        notification.success({
-            message: "Message Prepared",
-            description: "Your message is ready to be sent!",
-        });
+        if (!userId) {
+            notification.error({
+                message: "You must be logged in",
+                description: "User ID not found. Please log in.",
+            });
+            return;
+        }
 
-        setSubject("");
-        setMessage("");
+        try {
+            await sendContactMessage({
+                userId: Number(userId),
+                subject,
+                message,
+            });
+
+            notification.success({
+                message: "Message sent successfully",
+                description: "Your message has been sent to the admin.",
+            });
+
+            setSubject("");
+            setMessage("");
+        } catch (error: any) {
+            notification.error({
+                message: "Failed to send message",
+                description: error?.response?.data?.message || error.message,
+            });
+        }
     };
+
 
     return (
         <div className="contactContainer">
