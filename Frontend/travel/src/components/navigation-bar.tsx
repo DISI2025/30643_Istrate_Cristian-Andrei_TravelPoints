@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Menu, Layout, MenuProps } from "antd";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Menu, Layout, MenuProps} from "antd";
+import {Link, NavLink, useLocation, useNavigate} from "react-router-dom";
 import {
     HomeOutlined,
     HeartOutlined,
@@ -13,7 +13,7 @@ import "./navigation-bar.css";
 import logo from "../assets/logo.svg";
 import Notifications from "./notifications";
 
-const { Header } = Layout;
+const {Header} = Layout;
 
 const Navbar: React.FC = () => {
     const location = useLocation();
@@ -76,10 +76,9 @@ const Navbar: React.FC = () => {
             setSelectedKey("/notifications");
         } else if (location.pathname.startsWith("/login")) {
             setSelectedKey("/login");
-        }
-        else if (location.pathname.startsWith("/contact")) {
+        } else if (location.pathname.startsWith("/contact")) {
             setSelectedKey("/contact");
-        }else {
+        } else {
             setSelectedKey(location.pathname);
         }
     }, [location.pathname]);
@@ -87,7 +86,7 @@ const Navbar: React.FC = () => {
     const menuItems: MenuProps["items"] = [
         {
             key: "/attractions",
-            icon: <HomeOutlined />,
+            icon: <HomeOutlined/>,
             label: (
                 <NavLink to="/attractions" onClick={() => setSelectedKey("/attractions")}>
                     Attractions
@@ -98,17 +97,20 @@ const Navbar: React.FC = () => {
             ? [
                 {
                     key: "/wishlist",
-                    icon: <HeartOutlined />,
+                    icon: <HeartOutlined/>,
                     label: (
                         <NavLink to="/wishlist" onClick={() => setSelectedKey("/wishlist")}>
                             Wishlist
                         </NavLink>
                     ),
                 },
-
+            ]
+            : []),
+        ...(isAuthenticated && !isAdmin
+            ? [
                 {
                     key: "/contact",
-                    icon: <FileTextOutlined />,
+                    icon: <FileTextOutlined/>,
                     label: (
                         <NavLink to="/contact" onClick={() => setSelectedKey("/contact")}>
                             Contact Admin
@@ -121,7 +123,7 @@ const Navbar: React.FC = () => {
             ? [
                 {
                     key: "/admin",
-                    icon: <AppstoreOutlined />,
+                    icon: <AppstoreOutlined/>,
                     label: (
                         <NavLink to="/admin" onClick={() => setSelectedKey("/admin")}>
                             Admin
@@ -148,7 +150,7 @@ const Navbar: React.FC = () => {
             ? [
                 {
                     key: "/statistics",
-                    icon: <BarChartOutlined />,
+                    icon: <BarChartOutlined/>,
                     label: (
                         <NavLink to="/statistics" onClick={() => setSelectedKey("/statistics")}>
                             Statistics
@@ -160,7 +162,7 @@ const Navbar: React.FC = () => {
         isAuthenticated
             ? {
                 key: "/logout",
-                icon: <LoginOutlined />,
+                icon: <LoginOutlined/>,
                 label: "Log out",
                 className: "loginItem",
                 onClick: () => {
@@ -170,7 +172,7 @@ const Navbar: React.FC = () => {
             }
             : {
                 key: "/login",
-                icon: <LoginOutlined />,
+                icon: <LoginOutlined/>,
                 label: (
                     <NavLink to="/login" onClick={() => setSelectedKey("/login")}>
                         Log in
@@ -183,7 +185,7 @@ const Navbar: React.FC = () => {
     return (
         <Header className="customNavbar">
             <Link to="/" className="logoLink">
-                <img src={logo} alt="logo" className="logo" />
+                <img src={logo} alt="logo" className="logo"/>
             </Link>
             <Menu
                 theme="dark"

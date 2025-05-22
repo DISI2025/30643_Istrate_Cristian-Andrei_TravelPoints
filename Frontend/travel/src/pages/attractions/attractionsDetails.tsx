@@ -5,6 +5,10 @@ import axios from "axios";
 import {Card, Button} from "antd";
 import "./attractionsDetails.css";
 import generalImage from "../../assets/colosseum.jpg"
+import generalImage1 from "../../assets/aquarium.jpg"
+import generalImage2 from "../../assets/washington.jpg"
+import generalImage3 from "../../assets/eiffel.jpg"
+import generalImage4 from "../../assets/louvre.jpg"
 import {getAttractionById} from "../../api/attractionApi";
 import {
     CaretRightOutlined,
@@ -37,10 +41,10 @@ export default function AttractionDetail() {
     const [form] = Form.useForm();
 
     const userId = localStorage.getItem("id");
+    const photos = [generalImage,generalImage1,generalImage2,generalImage3,generalImage4];
 
     useEffect(() => {
         if (!id) return;
-
         fetchAttraction(id);
 
     }, [id]);
@@ -51,11 +55,12 @@ export default function AttractionDetail() {
             const data = await getAttractionById(id);
             setAttraction(data);
             const auxId = localStorage.getItem("id");
-            const wishlist: WishlistResponse = await getWishlistByUserIdAndAttractionId(auxId!, data.id);
-            let visit = await getVisitOfUserAndAttraction(data.id,auxId!)
-            setVisit(visit);
-
-            wishlist ? setAddToWishlist(true) : setAddToWishlist(false);
+            if (auxId) {
+                const wishlist: WishlistResponse = await getWishlistByUserIdAndAttractionId(auxId!, data.id);
+                let visit = await getVisitOfUserAndAttraction(data.id, auxId!)
+                setVisit(visit);
+                wishlist ? setAddToWishlist(true) : setAddToWishlist(false);
+            }
         } catch (err) {
             notification.error({
                 message: "Failed to load attraction details. Please try again later.",
@@ -66,7 +71,7 @@ export default function AttractionDetail() {
 
     const toggleVisited = async () => {
         if (!userId || !attraction?.id) {
-            notification.warning({message: "You must be logged in to manage your wishlist."});
+            notification.warning({message: "You must be logged in to mark attraction as visited."});
             return;
         }
         try{
@@ -211,10 +216,10 @@ export default function AttractionDetail() {
                     </p>
 
                     <Carousel autoplay={{dotDuration: true}} autoplaySpeed={3000} arrows infinite={true}>
-                        {[...Array(5)].map((_, index) => (
+                        {photos.map((imgSrc, index) => (
                             <img
                                 key={index}
-                                src={generalImage}
+                                src={imgSrc}
                                 alt={`Attraction ${index + 1}`}
                                 className="galleryImage"
                             />
@@ -233,7 +238,8 @@ export default function AttractionDetail() {
                     </div>
                     <p className="detailField"><strong>Description:</strong> {attraction.descriptionText}</p>
                     <p className="detailField"><strong>Offers:</strong> {attraction.offers}</p>
-                    <Button type="primary" className="reviewButton" onClick={() => setModalVisible(true)}>
+                    <Button type="primary" className="reviewButton" onClick={() => {userId ?
+                        setModalVisible(true) : notification.warning({message: "You must be logged in to leave reviews."}); }}>
                         Add Review
                     </Button>
                     <Modal

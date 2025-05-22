@@ -112,7 +112,7 @@ export default function Attractions() {
 
 
     useEffect(() => {
-        fetchAttractions(1);
+        fetchFilteredAttractions(1, 4);
         fetchAllAttractions();
     }, []);
 
@@ -150,7 +150,7 @@ export default function Attractions() {
                         }}
                     >
                         {locations.map((loc) => (
-                            <Option key={loc} value={loc}>
+                            <Option key={loc} value={loc} label={loc}>
                                 {loc}
                             </Option>
                         ))}
@@ -169,7 +169,7 @@ export default function Attractions() {
                         }}
                     >
                         {categories.map((cat) => (
-                            <Option key={cat} value={cat}>
+                            <Option key={cat} value={cat} label={cat}>
                                 {cat}
                             </Option>
                         ))}
@@ -248,7 +248,7 @@ export default function Attractions() {
                     style={{width: 120}}
                 >
                     {[4, 8, 12].map((size) => (
-                        <Option key={size} value={size}>
+                        <Option key={size} value={size} label={size}>
                             {size} / page
                         </Option>
                     ))}

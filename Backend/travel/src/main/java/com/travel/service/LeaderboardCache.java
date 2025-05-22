@@ -27,6 +27,10 @@ public class LeaderboardCache {
         return zSetOps.reverseRangeWithScores(LEADERBOARD_KEY, 0, n - 1);
     }
 
+    public void remove(Long attractionId){
+        zSetOps.remove(LEADERBOARD_KEY,String.valueOf(attractionId));
+    }
+
     public void clear() {
         zSetOps.getOperations().delete(LEADERBOARD_KEY);
     }
