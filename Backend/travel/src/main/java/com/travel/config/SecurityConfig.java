@@ -35,7 +35,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .requestMatchers("/user/login", "/user/register", "attraction/getAllPageable",
                                 "attraction/filterByName", "attraction/filterByPriceRange", "attraction/filterByCategory",
-                                "attraction/filterByLocation", "attraction/find", "attraction/all", "ws/**", "/leaderboard").permitAll()
+                                "attraction/filterByLocation", "attraction/find/{id}", "attraction/all", "ws/**", "/leaderboard",
+                                "attraction/getFilteredAttractions", "review/attractions/{id}/reviews").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

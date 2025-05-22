@@ -8,6 +8,7 @@ import com.travel.entity.AttractionEntity;
 import com.travel.exceptions.ItemNotFoundException;
 import com.travel.mapper.AttractionMapper;
 import com.travel.service.AttractionService;
+import com.travel.service.LeaderboardCache;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -38,9 +39,12 @@ import java.util.Optional;
 public class AttractionController {
     private final AttractionService attractionService;
 
+    private final LeaderboardCache leaderboardCache;
+
     @Autowired
-    public AttractionController(AttractionService attractionService) {
+    public AttractionController(AttractionService attractionService, LeaderboardCache leaderboardCache) {
         this.attractionService = attractionService;
+        this.leaderboardCache = leaderboardCache;
     }
 
     @GetMapping("/all")
@@ -171,6 +175,7 @@ public class AttractionController {
     @Secured("ROLE_ADMIN")
     public ResponseEntity<?> deleteAttraction(@PathVariable("id") Long id) {
         try {
+            leaderboardCache.remove(id);
             attractionService.deleteAttraction(id);
             return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (NoSuchElementException e) {
