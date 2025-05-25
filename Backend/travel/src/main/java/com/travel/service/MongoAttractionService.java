@@ -7,6 +7,7 @@ import com.travel.repository.AttractionRepository;
 import com.travel.repository.MongoAttractionRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class MongoAttractionService {
             geo.setName(a.getName());
             geo.setLatitude(a.getLatitude());
             geo.setLongitude(a.getLongitude());
+            geo.setLocation(new GeoJsonPoint(a.getLongitude(),a.getLatitude()));
 
             mongoAttractionRepository.save(geo);
         }
@@ -50,6 +52,7 @@ public class MongoAttractionService {
         result.setName(attraction.getName());
         result.setLatitude(attraction.getLatitude());
         result.setLongitude(attraction.getLongitude());
+        result.setLocation(new GeoJsonPoint(attraction.getLongitude(),attraction.getLatitude()));
         mongoAttractionRepository.save(result);
     }
 
