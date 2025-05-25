@@ -9,6 +9,7 @@ import com.travel.exceptions.ItemNotFoundException;
 import com.travel.mapper.AttractionMapper;
 import com.travel.service.AttractionService;
 import com.travel.service.LeaderboardCache;
+import com.travel.service.MongoAttractionService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -41,10 +42,13 @@ public class AttractionController {
 
     private final LeaderboardCache leaderboardCache;
 
+    private final MongoAttractionService mongoAttractionService;
+
     @Autowired
-    public AttractionController(AttractionService attractionService, LeaderboardCache leaderboardCache) {
+    public AttractionController(AttractionService attractionService, LeaderboardCache leaderboardCache, MongoAttractionService mongoAttractionService) {
         this.attractionService = attractionService;
         this.leaderboardCache = leaderboardCache;
+        this.mongoAttractionService = mongoAttractionService;
     }
 
     @GetMapping("/all")
@@ -148,6 +152,7 @@ public class AttractionController {
     public ResponseEntity<?> addAttraction(@Valid @RequestBody AttractionRequestDTO attractionRequestDTO) {
         try {
             AttractionResponseDTO saved = attractionService.addAttraction(attractionRequestDTO);
+            mongoAttractionService.addAttraction(saved);
             return new ResponseEntity<>(saved, HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<>("Missing required field: " + e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -162,6 +167,7 @@ public class AttractionController {
         try {
             AttractionResponseDTO existing = attractionService.getAttractionById(id);
             existing = attractionService.updateAttraction(id, attractionRequestDTO);
+            mongoAttractionService.addAttraction(existing);
             return new ResponseEntity<>(existing, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("Attraction with id: " + id + " not found", HttpStatus.NOT_FOUND);
@@ -177,6 +183,7 @@ public class AttractionController {
         try {
             leaderboardCache.remove(id);
             attractionService.deleteAttraction(id);
+            mongoAttractionService.deleteAttraction(id);
             return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>("Attraction with id: " + id + " not found", HttpStatus.NOT_FOUND);
