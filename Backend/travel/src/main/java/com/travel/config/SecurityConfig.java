@@ -36,7 +36,7 @@ public class SecurityConfig {
                         .requestMatchers("/user/login", "/user/register", "attraction/getAllPageable",
                                 "attraction/filterByName", "attraction/filterByPriceRange", "attraction/filterByCategory",
                                 "attraction/filterByLocation", "attraction/find/{id}", "attraction/all", "ws/**", "/leaderboard",
-                                "attraction/getFilteredAttractions", "review/attractions/{id}/reviews").permitAll()
+                                "attraction/getFilteredAttractions", "review/attractions/{id}/reviews", "proximity/attractions").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
