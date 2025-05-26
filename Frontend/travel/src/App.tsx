@@ -1,78 +1,99 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import Attractions from "./pages/attractions/attractions";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Registration from "./pages/user/registration";
 import Login from "./pages/user/login";
 import Management from "./pages/admin/management";
 import AttractionDetail from "./pages/attractions/attractionsDetails";
 import ProtectedRoute from "./components/protected-route";
 import Wishlist from "./pages/wishlist/wishlist";
-import Navbar from "./components/navigation-bar"
-import {connectStomp, disconnectStomp} from "./api/stompClient";
-import {notification} from "antd";
+import Navbar from "./components/navigation-bar";
+import { connectStomp, disconnectStomp } from "./api/stompClient";
+import { notification } from "antd";
 import Home from "./pages/home/home";
 import Statistics from "./pages/admin/statistics";
 import Review from "./pages/review/review";
 import Contact from "./pages/contactAdmin/contact";
 
 function App() {
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
 
-    useEffect(() => {
-        const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+    sessionStorage.removeItem("notifications");
 
-        sessionStorage.removeItem("notifications");
+    if (isAuthenticated) {
+      disconnectStomp();
 
-        if (isAuthenticated) {
-            disconnectStomp()
+      connectStomp((msg) => {
+        const notifications = JSON.parse(
+          sessionStorage.getItem("notifications") || "[]"
+        );
+        notifications.push(msg);
 
-            connectStomp((msg) => {
-                const notifications = JSON.parse(sessionStorage.getItem("notifications") || "[]");
-                notifications.push(msg);
+        sessionStorage.setItem("notifications", JSON.stringify(notifications));
+        window.dispatchEvent(new Event("new-notification"));
 
-                sessionStorage.setItem("notifications", JSON.stringify(notifications));
-                window.dispatchEvent(new Event("new-notification"));
+        notification.success({
+          message: "New Offer",
+          description: msg.message,
+          duration: 3,
+        });
+      });
+    }
 
-                notification.success({
-                    message: "New Offer",
-                    description: msg.message,
-                    duration: 3,
-                });
-            });
+    getAndStoreUserLocation();
+  }, []);
+
+  const getAndStoreUserLocation = (): void => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+
+          localStorage.setItem("latitude", latitude.toString());
+          localStorage.setItem("longitude", longitude.toString());
+        },
+        (error) => {
+          console.error("Error getting geolocation:", error);
         }
-    }, []);
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  };
 
-    return (
-        <BrowserRouter>
-            <Navbar/>
-            <Routes>
-                <Route path="/" element={<Home/>}/>
-                <Route path="/register" element={<Registration/>}/>
-                <Route path="/login" element={<Login/>}/>
-                <Route path="/attractions/:id" element={<AttractionDetail/>}/>
-                <Route path="/attractions" element={<Attractions/>}/>
-                <Route path="/reviews/:id" element={<Review/>}/>
-                <Route path="/wishlist" element={<Wishlist/>}/>
-                <Route path="/contact" element={<Contact/>}/>
-                <Route
-                    path="/admin"
-                    element={
-                        <ProtectedRoute adminOnly>
-                            <Management/>
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/statistics"
-                    element={
-                        <ProtectedRoute adminOnly>
-                            <Statistics/>
-                        </ProtectedRoute>
-                    }
-                />
-            </Routes>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/register" element={<Registration />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/attractions/:id" element={<AttractionDetail />} />
+        <Route path="/attractions" element={<Attractions />} />
+        <Route path="/reviews/:id" element={<Review />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute adminOnly>
+              <Management />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/statistics"
+          element={
+            <ProtectedRoute adminOnly>
+              <Statistics />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
