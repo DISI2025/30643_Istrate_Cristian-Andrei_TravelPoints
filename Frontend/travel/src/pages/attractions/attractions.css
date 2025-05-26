@@ -156,3 +156,43 @@
   margin-left: 5px;
   text-decoration: line-through;
 }
+
+.attractionsRadius {
+  background-color: white;
+  border-radius: 10px;
+  width: 200px;
+  height: 100%;
+  margin-right: 20px;
+}
+
+.nearbyAttractionsItem {
+  background-color: var(--cream);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.custom-modal .ant-modal-header {
+  background-color: var(--deep-teal) !important;
+  padding: 10px;
+  margin: 0;
+}
+
+.custom-modal .ant-modal-title {
+  color: white;
+  margin-left: 5px;
+}
+
+.custom-modal .ant-modal-close {
+  color: white;
+  margin: -5px;
+}
+
+.custom-modal .ant-modal-content {
+  padding: 0;
+}
+
+.custom-modal .ant-modal-body {
+  background-color: var(--teal);
+  padding: 15px;
+}
