@@ -51,8 +51,8 @@ function App() {
         (position) => {
           const { latitude, longitude } = position.coords;
 
-          localStorage.setItem("latitude", latitude.toString());
-          localStorage.setItem("longitude", longitude.toString());
+          sessionStorage.setItem("latitude", latitude.toString());
+          sessionStorage.setItem("longitude", longitude.toString());
         },
         (error) => {
           console.error("Error getting geolocation:", error);
