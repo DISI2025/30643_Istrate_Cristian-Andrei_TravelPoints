@@ -249,7 +249,9 @@ export default function Attractions() {
                   <List.Item className="nearbyAttractionsItem">
                     <List.Item.Meta
                       title={item.name}
-                      description={`Lat: ${item.latitude}, Lng: ${item.longitude}`}
+                      description={`Distance: ${Math.trunc(
+                        item.distance / 1000
+                      )} km`}
                     />
                   </List.Item>
                 )}
