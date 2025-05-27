@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Attraction } from "../../models/attractionModel";
 import { Empty, InputNumber, List, Modal, notification } from "antd";
 import { Link } from "react-router-dom";
@@ -12,6 +12,19 @@ import {
   getNearbyAttractions,
 } from "../../api/attractionApi";
 import { NearbyAttraction } from "../../models/attraction/nearbyAttractionResponse";
+import {
+  Circle,
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  Tooltip,
+} from "react-leaflet";
+import customMarkerBlue from "../../assets/custom-marker-blue.png";
+import customMarkerRed from "../../assets/custom-marker-red.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 
 const { Option } = Select;
 
@@ -36,6 +49,22 @@ export default function Attractions() {
   >([]);
   const [radius, setRadius] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [position, setPosition] = useState<[number, number] | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
+
+  const CustomIconRed = L.icon({
+    iconUrl: customMarkerRed,
+    shadowUrl: markerShadow,
+    iconSize: [25, 40],
+    iconAnchor: [12, 40],
+  });
+
+  const CustomIconBlue = L.icon({
+    iconUrl: customMarkerBlue,
+    shadowUrl: markerShadow,
+    iconSize: [25, 40],
+    iconAnchor: [12, 40],
+  });
 
   const fetchAllAttractions = async () => {
     try {
@@ -109,7 +138,22 @@ export default function Attractions() {
   useEffect(() => {
     fetchFilteredAttractions(1, 4);
     fetchAllAttractions();
+
+    const lat = parseFloat(sessionStorage.getItem("latitude") || "0");
+    const lng = parseFloat(sessionStorage.getItem("longitude") || "0");
+
+    if (lat && lng) {
+      setPosition([lat, lng]);
+    }
   }, []);
+
+  useEffect(() => {
+    if (isModalOpen && mapRef.current) {
+      setTimeout(() => {
+        mapRef.current?.invalidateSize();
+      }, 300);
+    }
+  }, [isModalOpen]);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -236,6 +280,7 @@ export default function Attractions() {
             </Button>
 
             <Modal
+              width={1000}
               title="Nearby attractions"
               rootClassName="custom-modal"
               closable={{ "aria-label": "Custom Close Button" }}
@@ -243,6 +288,39 @@ export default function Attractions() {
               onCancel={toggleModal}
               footer={null}
             >
+              {position && (
+                <MapContainer
+                  className="attractionsMap"
+                  center={position || [45, 25]}
+                  zoom={5}
+                  ref={(ref) => {
+                    if (ref) {
+                      mapRef.current = ref;
+                      requestAnimationFrame(() => {
+                        mapRef.current?.invalidateSize();
+                      });
+                    }
+                  }}
+                >
+                  <TileLayer
+                    attribution="&copy; OpenStreetMap contributors"
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <Marker position={position} icon={CustomIconRed}>
+                    <Tooltip>Your location</Tooltip>
+                  </Marker>
+                  {nearbyAttractions.map((loc, index) => (
+                    <Marker
+                      key={index}
+                      icon={CustomIconBlue}
+                      position={{ lat: loc.latitude, lng: loc.longitude }}
+                    >
+                      <Tooltip>{loc.name}</Tooltip>
+                    </Marker>
+                  ))}
+                  <Circle center={position} radius={radius} />
+                </MapContainer>
+              )}
               <List
                 dataSource={nearbyAttractions}
                 renderItem={(item) => (
