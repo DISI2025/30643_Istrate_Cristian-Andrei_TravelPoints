@@ -1,8 +1,10 @@
 export interface Attraction {
-    id: number;
-    name: string;
-    location: string;
-    category: string;
-    price: number;
-    oldPrice: number
-};
+  id: number;
+  name: string;
+  location: string;
+  category: string;
+  price: number;
+  oldPrice: number;
+  latitude: number;
+  longitude: number;
+}

@@ -168,7 +168,7 @@
 .nearbyAttractionsItem {
   background-color: var(--cream);
   border-radius: 10px;
-  margin-bottom: 10px;
+  margin: 10px 30px;
   text-align: center;
 }
 
@@ -195,4 +195,11 @@
 .custom-modal .ant-modal-body {
   background-color: var(--teal);
   padding: 15px;
+}
+
+.attractionsMap {
+  height: 500px;
+  margin: 10px 30px 20px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
